@@ -8,6 +8,8 @@ project(xtensor-fftw)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 # .. xtensor (TODO: make more general! Use e.g. subrepo in include or use cmake find_package.)
 include_directories(/Users/pbos/sw/miniconda3/include)
+# .. fftw
+include_directories(/Users/pbos/sw/include)
 # warnings
 add_compile_options(-Wundef -Wshadow -Wwrite-strings -Wredundant-decls -Woverloaded-virtual -Wcast-qual -Wcast-align -Wpointer-arith -Wconversion -Wold-style-cast -Wall -Wextra)
 # miscellaneous build options

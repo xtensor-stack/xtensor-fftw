@@ -22,6 +22,8 @@
 #include <iostream>
 #include <xtensor/xio.hpp>
 
+#include <xtensor-fftw/fft.hpp>
+
 int main() {
   xt::xarray<float> a = xt::arange<float>(8);
 
@@ -29,5 +31,12 @@ int main() {
 
   auto should_be_a = xt::fftw::ifft(a_fourier);
 
-  std::cout << "input: " << a << std::endl;
+  std::cout << "real input:  " << a << std::endl;
+  std::cout << "real output: " << should_be_a << std::endl;
+  if (a == should_be_a) {
+    std::cout << "test successful!" << std::endl;
+  } else {
+    std::cout << "real input and output should be equal, test failed!" << std::endl;
+  }
+  std::cout << "fourier transform of input: " << a_fourier << std::endl;
 }
