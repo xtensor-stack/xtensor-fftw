@@ -26,22 +26,30 @@
 
 namespace xt {
   namespace fftw {
-//    // TODO: replace T with some generic xarray<T> thing, so that I can get T = e.g. float out and use that for the Fourier-space output type (complex array of same precision)
-//    template <typename T>
-//    fourier_t<T> fft(T input) {
-//
-//    }
+    // NOTE: when making more performant functions, keep in mind that many FFTW functions destroy input and/or output
+    //       arrays! E.g. FFTW_MEASURE destroys both during measurement, c2r functions always destroy input by default
+    //       (unless for 1D transforms if you pass FFTW_PRESERVE_INPUT,
+    //       http://www.fftw.org/fftw3_doc/One_002dDimensional-DFTs-of-Real-Data.html#One_002dDimensional-DFTs-of-Real-Data),
+    //       etc.
+    //       http://www.fftw.org/fftw3_doc/Complex-One_002dDimensional-DFTs.html#Complex-One_002dDimensional-DFTs
+
     xt::xarray<std::complex<float>> fft(const xt::xarray<float> &input) {
       xt::xarray<std::complex<float>> output(input.shape(), input.strides());
-      fftwf_plan plan = fftwf_plan_dft_r2c_1d(static_cast<int>(input.size()), input, output, FFTW_ESTIMATE);
+      fftwf_plan plan = fftwf_plan_dft_r2c_1d(static_cast<int>(input.size()),
+                                              const_cast<float *>(input.raw_data()), // this function will not modify input, see http://www.fftw.org/fftw3_doc/One_002dDimensional-DFTs-of-Real-Data.html#One_002dDimensional-DFTs-of-Real-Data
+                                              reinterpret_cast<fftwf_complex*>(output.raw_data()), // reinterpret_cast suggested by http://www.fftw.org/fftw3_doc/Complex-numbers.html
+                                              FFTW_ESTIMATE);
       fftwf_execute(plan);
       return output;
     }
 
-    xt::xarray<float> ifft(xt::xarray<std::complex<float>> &input) {
-      std::cout << "WARNING: the inverse c2r fftw transform by default destroys its input array, but in xt::fftw::ifft this has been disabled at the cost of some performance."
+    xt::xarray<float> ifft(const xt::xarray<std::complex<float>> &input) {
+      std::cout << "WARNING: the inverse c2r fftw transform by default destroys its input array, but in xt::fftw::ifft this has been disabled at the cost of some performance." << std::endl;
       xt::xarray<float> output(input.shape(), input.strides());
-      fftwf_plan plan = fftwf_plan_dft_c2r_1d(static_cast<int>(input.size()), input, output, FFTW_ESTIMATE | FFTW_PRESERVE_INPUT);
+      fftwf_plan plan = fftwf_plan_dft_c2r_1d(static_cast<int>(input.size()),
+                                              const_cast<fftwf_complex *>(reinterpret_cast<const fftwf_complex *>(input.raw_data())), // this function will not modify input, see http://www.fftw.org/fftw3_doc/One_002dDimensional-DFTs-of-Real-Data.html#One_002dDimensional-DFTs-of-Real-Data; reinterpret_cast suggested by http://www.fftw.org/fftw3_doc/Complex-numbers.html
+                                              output.raw_data(),
+                                              FFTW_ESTIMATE | FFTW_PRESERVE_INPUT);
       fftwf_execute(plan);
       return output;
     }
