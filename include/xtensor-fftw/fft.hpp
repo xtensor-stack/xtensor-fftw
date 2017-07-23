@@ -34,7 +34,7 @@ namespace xt {
     //       http://www.fftw.org/fftw3_doc/Complex-One_002dDimensional-DFTs.html#Complex-One_002dDimensional-DFTs
 
     xt::xarray<std::complex<float>> fft(const xt::xarray<float> &input) {
-      xt::xarray<std::complex<float>> output(input.shape(), input.strides());
+      xt::xarray<std::complex<float>, layout_type::dynamic> output(input.shape(), input.strides());
       fftwf_plan plan = fftwf_plan_dft_r2c_1d(static_cast<int>(input.size()),
                                               const_cast<float *>(input.raw_data()), // this function will not modify input, see http://www.fftw.org/fftw3_doc/One_002dDimensional-DFTs-of-Real-Data.html#One_002dDimensional-DFTs-of-Real-Data
                                               reinterpret_cast<fftwf_complex*>(output.raw_data()), // reinterpret_cast suggested by http://www.fftw.org/fftw3_doc/Complex-numbers.html
@@ -45,7 +45,7 @@ namespace xt {
 
     xt::xarray<float> ifft(const xt::xarray<std::complex<float>> &input) {
       std::cout << "WARNING: the inverse c2r fftw transform by default destroys its input array, but in xt::fftw::ifft this has been disabled at the cost of some performance." << std::endl;
-      xt::xarray<float> output(input.shape(), input.strides());
+      xt::xarray<float, layout_type::dynamic> output(input.shape(), input.strides());
       fftwf_plan plan = fftwf_plan_dft_c2r_1d(static_cast<int>(input.size()),
                                               const_cast<fftwf_complex *>(reinterpret_cast<const fftwf_complex *>(input.raw_data())), // this function will not modify input, see http://www.fftw.org/fftw3_doc/One_002dDimensional-DFTs-of-Real-Data.html#One_002dDimensional-DFTs-of-Real-Data; reinterpret_cast suggested by http://www.fftw.org/fftw3_doc/Complex-numbers.html
                                               output.raw_data(),
