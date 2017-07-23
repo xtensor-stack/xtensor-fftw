@@ -51,7 +51,8 @@ namespace xt {
                                               output.raw_data(),
                                               FFTW_ESTIMATE | FFTW_PRESERVE_INPUT);
       fftwf_execute(plan);
-      return output;
+      // we use the convention that the inverse fft divides by N, like numpy does
+      return output / output.size();
     }
   }
 }
