@@ -6,8 +6,8 @@ project(xtensor-fftw)
 # includes
 # .. our own
 include_directories(${CMAKE_SOURCE_DIR}/include)
-# .. xtensor (TODO: make more general! Use e.g. subrepo in include or use cmake find_package.)
-include_directories(/Users/pbos/sw/miniconda3/include)
+find_package(xtensor REQUIRED)
+include_directories(${xtensor_INCLUDE_DIRS})
 # .. fftw
 include_directories(/Users/pbos/sw/include)
 link_directories(/Users/pbos/sw/lib)
