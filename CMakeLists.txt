@@ -7,22 +7,27 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/fi
 
 #--------------------------------------- user options
 set(FFTW_ROOT "" CACHE STRING "The FFTW prefix, i.e. the base directory under which FFTW is installed (see README.md).")
+option(COMPILE_WARNINGS "Activate an list of compiler warnings. Currently for gcc and clang only." OFF)
 
 #--------------------------------------- build parameters for all targets
 # includes
 # .. our own
 include_directories(${CMAKE_SOURCE_DIR}/include)
+# .. xtensor
 find_package(xtensor REQUIRED)
 include_directories(${xtensor_INCLUDE_DIRS})
 # .. fftw
 find_package(FFTW REQUIRED
         COMPONENTS FLOAT_LIB)
 include_directories(${FFTW_INCLUDE_DIRS})
-# warnings
-add_compile_options(-Wundef -Wshadow -Wwrite-strings -Wredundant-decls -Woverloaded-virtual -Wcast-qual -Wcast-align -Wpointer-arith -Wconversion -Wold-style-cast -Wall -Wextra)
+# warnings (gcc and clang)
+if (COMPILE_WARNINGS)
+    add_compile_options(-Wundef -Wshadow -Wwrite-strings -Wredundant-decls -Woverloaded-virtual -Wcast-qual -Wcast-align -Wpointer-arith -Wconversion -Wold-style-cast -Wall -Wextra)
+endif(COMPILE_WARNINGS)
 # miscellaneous build options
 set(CMAKE_CXX_STANDARD 14)
 
+#--------------------------------------- correctly set rpath for linking
 include(GNUInstallDirs)
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
@@ -30,7 +35,7 @@ set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib ${CMAKE_INSTALL_PREFIX}/${C
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
 if("${isSystemDir}" STREQUAL "-1")
-   set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 endif("${isSystemDir}" STREQUAL "-1")
 
 #--------------------------------------- tests
