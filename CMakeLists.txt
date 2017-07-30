@@ -23,6 +23,16 @@ add_compile_options(-Wundef -Wshadow -Wwrite-strings -Wredundant-decls -Woverloa
 # miscellaneous build options
 set(CMAKE_CXX_STANDARD 14)
 
+include(GNUInstallDirs)
+set(CMAKE_SKIP_BUILD_RPATH FALSE)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
+if("${isSystemDir}" STREQUAL "-1")
+   set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+endif("${isSystemDir}" STREQUAL "-1")
+
 #--------------------------------------- tests
 add_executable(test_c2c_sp_1D test/c2c_sp_1D.cpp)
 target_link_libraries(test_c2c_sp_1D ${FFTW_FLOAT_LIB})
