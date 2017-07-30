@@ -1,5 +1,19 @@
 # - Find the FFTW library
 #
+# Original version of this file:
+#   Copyright (c) 2015, Wenzel Jakob (under BSD 2-clause license, see LICENSE.txt file in this directory)
+#   https://github.com/wjakob/layerlab/blob/master/cmake/FindFFTW.cmake, commit 4d58bfdc28891b4f9373dfe46239dda5a0b561c6
+# Modifications:
+#   Copyright (c) 2017, Patrick Bos (see LICENSE file at the base directory of the xtensor-fftw source)
+#     - OpenMP library added
+#     - Modified find_package_handle_standard_args call to include all libraries separately
+#     - Added Components handling
+#       * including adding component libraries to FFTW_LIBRARIES
+#     - Change FFTW_INCLUDES to more conventional FFTW_INCLUDE_DIRS
+#     - Fix FFTW_USE_STATIC_LIBS option (if not specified, it will now look for both static and shared libraries)
+#     - Changed names of component libraries for consistency with required Components syntax.
+#     - Updated documentation for all of the above.
+#
 # Usage:
 #   find_package(FFTW [REQUIRED] [QUIET] [COMPONENTS component1 ... componentX] )
 #
@@ -26,20 +40,6 @@
 #   DOUBLE_OPENMP_LIB
 #   LONGDOUBLE_OPENMP_LIB
 #
-#
-# Original version of this file:
-#   Copyright (c) 2015, Wenzel Jakob (under BSD 2-clause license, see LICENSE.txt file in this directory)
-#   https://github.com/wjakob/layerlab/blob/master/cmake/FindFFTW.cmake, commit 4d58bfdc28891b4f9373dfe46239dda5a0b561c6
-# Modifications:
-#   Copyright (c) 2017, Patrick Bos (see LICENSE file at the base directory of the xtensor-fftw source)
-#     - OpenMP library added
-#     - Modified find_package_handle_standard_args call to include all libraries separately
-#     - Added Components handling
-#       * including adding component libraries to FFTW_LIBRARIES
-#     - Change FFTW_INCLUDES to more conventional FFTW_INCLUDE_DIRS
-#     - Fix FFTW_USE_STATIC_LIBS option (if not specified, it will now look for both static and shared libraries)
-#     - Changed names of component libraries for consistency with required Components syntax.
-#     - Updated documentation for all of the above.
 
 # TODO (maybe): extend with ExternalProject download + build option
 
