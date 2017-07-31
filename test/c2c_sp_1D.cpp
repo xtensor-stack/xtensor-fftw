@@ -24,7 +24,9 @@
 
 #include <xtensor-fftw/fft.hpp>
 
-int main() {
+#include "gtest/gtest.h"
+
+TEST(fftC2CFloat1D,TransformAndInvert) {
   xt::xarray<float> a = xt::arange<float>(8);
 
   auto a_fourier = xt::fftw::fft(a);
@@ -32,11 +34,7 @@ int main() {
   auto should_be_a = xt::fftw::ifft(a_fourier);
 
   std::cout << "real input:  " << a << std::endl;
-  std::cout << "real output: " << should_be_a << std::endl;
-  if (a == should_be_a) {
-    std::cout << "test successful!" << std::endl;
-  } else {
-    std::cout << "real input and output should be equal, test failed!" << std::endl;
-  }
   std::cout << "fourier transform of input: " << a_fourier << std::endl;
+  std::cout << "real output: " << should_be_a << std::endl;
+  ASSERT_EQ(a, should_be_a);
 }

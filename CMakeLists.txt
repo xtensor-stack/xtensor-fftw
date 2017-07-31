@@ -29,11 +29,15 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/fi
 #--------------------------------------- user options
 set(FFTW_ROOT "" CACHE STRING "The FFTW prefix, i.e. the base directory under which FFTW is installed (see README.md).")
 option(COMPILE_WARNINGS "Activate an list of compiler warnings. Currently for gcc and clang only." OFF)
+OPTION(BUILD_TESTS "Build xtensor-fftw test suite" OFF)
+#OPTION(BUILD_BENCHMARK "Build xtensor-fftw benchmarks" OFF)
+OPTION(DOWNLOAD_GTEST "Build gtest from downloaded sources" OFF)
 
 #--------------------------------------- build parameters for all targets
 # includes
 # .. our own
-include_directories(${CMAKE_SOURCE_DIR}/include)
+set(XTENSOR_FFTW_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${XTENSOR_FFTW_INCLUDE_DIR})
 # .. xtensor
 find_package(xtensor REQUIRED)
 include_directories(${xtensor_INCLUDE_DIRS})
@@ -59,6 +63,24 @@ if("${isSystemDir}" STREQUAL "-1")
     set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 endif("${isSystemDir}" STREQUAL "-1")
 
+#--------------------------------------- install
+
+set(XTENSOR_FFTW_HEADERS
+        ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/fft.hpp
+)
+
 #--------------------------------------- tests
-add_executable(test_c2c_sp_1D test/c2c_sp_1D.cpp)
-target_link_libraries(test_c2c_sp_1D ${FFTW_FLOAT_LIB})
+if(DOWNLOAD_GTEST OR GTEST_SRC_DIR)
+    set(BUILD_TESTS ON)
+endif()
+
+if(BUILD_TESTS)
+    add_subdirectory(test)
+endif()
+
+#if(BUILD_BENCHMARK)
+#    add_subdirectory(benchmark)
+#endif()
+
+#add_executable(test_c2c_sp_1D test/c2c_sp_1D.cpp)
+#target_link_libraries(test_c2c_sp_1D ${FFTW_FLOAT_LIB})
