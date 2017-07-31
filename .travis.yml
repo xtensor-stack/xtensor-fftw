@@ -1,60 +1,60 @@
 language: cpp
 matrix:
   include:
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-4.9
-      env: COMPILER=gcc GCC=4.9
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-5
-      env: COMPILER=gcc GCC=5
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-6
-      env: COMPILER=gcc GCC=6
-    - os: linux
-      dist: precise
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.6
-          packages:
-            - clang-3.6
-      env: COMPILER=clang CLANG=3.6
-    - os: linux
-      dist: precise
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.7
-          packages:
-            - clang-3.7
-      env: COMPILER=clang CLANG=3.7
-    - os: linux
-      dist: precise
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.8
-          packages:
-            - clang-3.8
-      env: COMPILER=clang CLANG=3.8
+#    - os: linux
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#          packages:
+#            - g++-4.9
+#      env: COMPILER=gcc GCC=4.9
+#    - os: linux
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#          packages:
+#            - g++-5
+#      env: COMPILER=gcc GCC=5
+#    - os: linux
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#          packages:
+#            - g++-6
+#      env: COMPILER=gcc GCC=6
+#    - os: linux
+#      dist: precise
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#            - llvm-toolchain-precise-3.6
+#          packages:
+#            - clang-3.6
+#      env: COMPILER=clang CLANG=3.6
+#    - os: linux
+#      dist: precise
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#            - llvm-toolchain-precise-3.7
+#          packages:
+#            - clang-3.7
+#      env: COMPILER=clang CLANG=3.7
+#    - os: linux
+#      dist: precise
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#            - llvm-toolchain-precise-3.8
+#          packages:
+#            - clang-3.8
+#      env: COMPILER=clang CLANG=3.8
     - os: linux
       addons:
         apt:
@@ -63,24 +63,23 @@ matrix:
             - llvm-toolchain-trusty-3.9
           packages:
             - clang-3.9
-            - libc++-dev
       env: COMPILER=clang CLANG=3.9
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty-4.0
-          packages:
-            - clang-4.0
-            - libc++-dev
-      env: COMPILER=clang CLANG=4.0
-    - os: osx
-      osx_image: xcode8
-      compiler: clang
-    - os: osx
-      osx_image: xcode8.3
-      compiler: clang
+#    - os: linux
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#            - llvm-toolchain-trusty-4.0
+#          packages:
+#            - clang-4.0
+#            - libc++-dev
+#      env: COMPILER=clang CLANG=4.0
+#    - os: osx
+#      osx_image: xcode8
+#      compiler: clang
+#    - os: osx
+#      osx_image: xcode8.3
+#      compiler: clang
 env:
   global:
     - MINCONDA_VERSION="latest"
