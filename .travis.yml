@@ -30,7 +30,7 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.6
+            - llvm-toolchain-trusty-3.6
           packages:
             - clang-3.6
       env: COMPILER=clang CLANG=3.6
@@ -39,7 +39,7 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.7
+            - llvm-toolchain-trusty-3.7
           packages:
             - clang-3.7
       env: COMPILER=clang CLANG=3.7
@@ -48,20 +48,20 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.8
+            - llvm-toolchain-trusty-3.8
           packages:
             - clang-3.8
-            - libc++-dev
+#            - libc++-dev
       env: COMPILER=clang CLANG=3.8
     - os: linux
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.9
+            - llvm-toolchain-trusty-3.9
           packages:
             - clang-3.9
-            - libc++-dev
+#            - libc++-dev
       env: COMPILER=clang CLANG=3.9
     - os: osx
       osx_image: xcode8
