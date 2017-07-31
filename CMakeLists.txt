@@ -33,6 +33,7 @@ OPTION(BUILD_TESTS "Build xtensor-fftw test suite" OFF)
 #OPTION(BUILD_BENCHMARK "Build xtensor-fftw benchmarks" OFF)
 OPTION(DOWNLOAD_GTEST "Build gtest from downloaded sources" OFF)
 OPTION(FIX_RPATH "Correctly set rpath for the linker" OFF)
+OPTION(DEFAULT_COLUMN_MAJOR "Set xtensor default layout to column major" OFF)
 
 #--------------------------------------- build parameters for all targets
 # includes
@@ -73,6 +74,10 @@ set(XTENSOR_FFTW_HEADERS
 )
 
 #--------------------------------------- tests
+if(DEFAULT_COLUMN_MAJOR)
+    add_definitions(-DDEFAULT_LAYOUT=layout_type::column_major)
+endif()
+
 if(DOWNLOAD_GTEST OR GTEST_SRC_DIR)
     set(BUILD_TESTS ON)
 endif()
