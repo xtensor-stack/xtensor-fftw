@@ -32,6 +32,7 @@ option(COMPILE_WARNINGS "Activate an list of compiler warnings. Currently for gc
 OPTION(BUILD_TESTS "Build xtensor-fftw test suite" OFF)
 #OPTION(BUILD_BENCHMARK "Build xtensor-fftw benchmarks" OFF)
 OPTION(DOWNLOAD_GTEST "Build gtest from downloaded sources" OFF)
+OPTION(FIX_RPATH "Correctly set rpath for the linker" OFF)
 
 #--------------------------------------- build parameters for all targets
 # includes
@@ -53,15 +54,17 @@ endif(COMPILE_WARNINGS)
 set(CMAKE_CXX_STANDARD 14)
 
 #--------------------------------------- correctly set rpath for linking
-include(GNUInstallDirs)
-set(CMAKE_SKIP_BUILD_RPATH FALSE)
-set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
-if("${isSystemDir}" STREQUAL "-1")
-    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-endif("${isSystemDir}" STREQUAL "-1")
+if (FIX_RPATH)
+    include(GNUInstallDirs)
+    set(CMAKE_SKIP_BUILD_RPATH FALSE)
+    set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+    list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
+    if("${isSystemDir}" STREQUAL "-1")
+        set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+    endif("${isSystemDir}" STREQUAL "-1")
+endif(FIX_RPATH)
 
 #--------------------------------------- install
 
@@ -81,6 +84,3 @@ endif()
 #if(BUILD_BENCHMARK)
 #    add_subdirectory(benchmark)
 #endif()
-
-#add_executable(test_c2c_sp_1D test/c2c_sp_1D.cpp)
-#target_link_libraries(test_c2c_sp_1D ${FFTW_FLOAT_LIB})
