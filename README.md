@@ -1,6 +1,9 @@
 # xtensor-fftw
 FFTW bindings for _xtensor_.
 
+[![Build Status](https://travis-ci.org/egpbos/xtensor-fftw.svg?branch=master)](https://travis-ci.org/egpbos/xtensor-fftw)
+[![Build status](https://ci.appveyor.com/api/projects/status/l4wgk98kwospu7n1/branch/master?svg=true)](https://ci.appveyor.com/project/egpbos/xtensor-fftw/branch/master)
+
 ## Usage
 
 _xtensor-fftw_ is a header-only library.
