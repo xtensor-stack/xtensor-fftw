@@ -118,9 +118,9 @@ install:
     - bash miniconda.sh -b -p $HOME/miniconda
     - export PATH="$HOME/miniconda/bin:$PATH"
     - hash -r
-    - cat $HOME/.condarc
+#    - cat $HOME/.condarc
     - conda update -yq conda
-    - cat $HOME/.condarc
+#    - cat $HOME/.condarc
 #    - conda config --set always_yes yes --set changeps1 no
     - conda install -y gtest cmake xtensor fftw -c conda-forge
     # Testing
