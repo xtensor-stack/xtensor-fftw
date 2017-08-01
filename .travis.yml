@@ -64,11 +64,12 @@ matrix:
 #            - clang-3.8
 #      env: COMPILER=clang CLANG=3.8
     - os: linux
+      dist: precise
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty-3.9
+            - llvm-toolchain-precise-3.9
           packages:
             - clang-3.9
       env: COMPILER=clang CLANG=3.9
