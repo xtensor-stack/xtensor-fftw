@@ -39,7 +39,7 @@ OPTION(DEFAULT_COLUMN_MAJOR "Set xtensor default layout to column major" OFF)
 # c++ standard build options
 # N.B.: these have to be set before defining targets!
 set(CMAKE_CXX_STANDARD 14)
-set(CXX_STANDARD_REQUIRED YES)
+set(CMAKE_CXX_STANDARD_REQUIRED YES)
 set(CMAKE_CXX_EXTENSIONS NO)
 # includes
 # .. our own
