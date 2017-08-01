@@ -1,5 +1,4 @@
 language: cpp
-dist: precise
 matrix:
   include:
 #    - os: linux
@@ -65,7 +64,6 @@ matrix:
 #            - clang-3.8
 #      env: COMPILER=clang CLANG=3.8
     - os: linux
-      dist: precise
       addons:
         apt:
           sources:
@@ -122,6 +120,7 @@ install:
     - conda config --set always_yes yes --set changeps1 no
     - conda config --add channels conda-forge
     - conda update -q conda
+    - conda info -a
     - conda config --show
     - conda install gtest cmake
     - conda install fftw
