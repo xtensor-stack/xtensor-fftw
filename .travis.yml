@@ -142,7 +142,7 @@ install:
           cd $TRAVIS_HOME
           git clone https://github.com/QuantStack/xtensor.git
           cd xtensor
-          cmake .
+          cmake . -DCMAKE_INSTALL_PREFIX=$HOME/miniconda
           make install
           cd $TRAVIS_BUILD_DIR
         fi
