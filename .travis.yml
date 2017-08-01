@@ -2,7 +2,6 @@ language: cpp
 addons:
   apt:
     packages:
-      - libfftw3-dev
 matrix:
   include:
     - os: linux
@@ -12,6 +11,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.9
+            - libfftw3-dev
       env: COMPILER=gcc GCC=4.9
     - os: linux
       addons:
@@ -20,6 +20,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-5
+            - libfftw3-dev
       env: COMPILER=gcc GCC=5
     - os: linux
       addons:
@@ -28,6 +29,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-6
+            - libfftw3-dev
       env: COMPILER=gcc GCC=6
     - os: linux
       addons:
@@ -36,6 +38,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-7
+            - libfftw3-dev
       env: COMPILER=gcc GCC=7
     - os: linux
       dist: precise
@@ -46,6 +49,7 @@ matrix:
             - llvm-toolchain-precise-3.6
           packages:
             - clang-3.6
+            - libfftw3-dev
       env: COMPILER=clang CLANG=3.6
     - os: linux
       dist: precise
@@ -56,6 +60,7 @@ matrix:
             - llvm-toolchain-precise-3.7
           packages:
             - clang-3.7
+            - libfftw3-dev
       env: COMPILER=clang CLANG=3.7
     - os: linux
       dist: precise
@@ -66,6 +71,7 @@ matrix:
             - llvm-toolchain-precise-3.8
           packages:
             - clang-3.8
+            - libfftw3-dev
       env: COMPILER=clang CLANG=3.8
     - os: linux
       addons:
@@ -76,6 +82,7 @@ matrix:
           packages:
             - clang-3.9
             - libc++-dev
+            - libfftw3-dev
       env: COMPILER=clang CLANG=3.9
     - os: linux
       addons:
@@ -86,6 +93,7 @@ matrix:
           packages:
             - clang-4.0
             - libc++-dev
+            - libfftw3-dev
       env: COMPILER=clang CLANG=4.0
     - os: osx
       osx_image: xcode8
@@ -124,6 +132,9 @@ install:
     - hash -r
     - conda update -yq conda
     - conda install -y gtest cmake xtensor -c conda-forge
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+        conda install -y fftw -c conda-forge;
+      fi
     # Testing
     - mkdir build
     - cd build
