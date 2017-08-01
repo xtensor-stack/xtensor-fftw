@@ -64,16 +64,16 @@ matrix:
           packages:
             - clang-3.9
       env: COMPILER=clang CLANG=3.9
-#    - os: linux
-#      addons:
-#        apt:
-#          sources:
-#            - ubuntu-toolchain-r-test
-#            - llvm-toolchain-trusty-4.0
-#          packages:
-#            - clang-4.0
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-4.0
+          packages:
+            - clang-4.0
 #            - libc++-dev
-#      env: COMPILER=clang CLANG=4.0
+      env: COMPILER=clang CLANG=4.0
 #    - os: osx
 #      osx_image: xcode8
 #      compiler: clang
