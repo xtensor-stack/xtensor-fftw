@@ -126,7 +126,7 @@ install:
 #    - conda install gtest cmake
 #    - conda install fftw
 #    - conda install xtensor
-    - conda install gtest cmake xtensor fftw
+    - conda install gtest cmake xtensor fftw -c conda-forge
     # Testing
     - mkdir build
     - cd build
