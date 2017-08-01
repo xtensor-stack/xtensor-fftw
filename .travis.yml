@@ -1,4 +1,5 @@
 language: cpp
+dist: precise
 matrix:
   include:
     - os: linux
@@ -118,11 +119,16 @@ install:
     - bash miniconda.sh -b -p $HOME/miniconda
     - export PATH="$HOME/miniconda/bin:$PATH"
     - hash -r
+    - conda config --set always_yes yes --set changeps1 no
+#    - conda config --add channels conda-forge
+    - conda update -q conda
+    - conda info -a
     - cat $HOME/.condarc
-    - conda update -yq conda
-    - cat $HOME/.condarc
-#    - conda config --set always_yes yes --set changeps1 no
-    - conda install -y gtest cmake xtensor fftw -c conda-forge
+#    - conda config --show
+#    - conda install gtest cmake
+#    - conda install fftw
+#    - conda install xtensor
+    - conda install gtest cmake xtensor fftw -c conda-forge
     # Testing
     - mkdir build
     - cd build
