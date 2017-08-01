@@ -4,84 +4,85 @@ addons:
     packages:
 matrix:
   include:
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-4.9
-            - libfftw3-dev
-      env: COMPILER=gcc GCC=4.9
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-5
-            - libfftw3-dev
-      env: COMPILER=gcc GCC=5
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-6
-            - libfftw3-dev
-      env: COMPILER=gcc GCC=6
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-7
-            - libfftw3-dev
-      env: COMPILER=gcc GCC=7
+#    - os: linux
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#          packages:
+#            - g++-4.9
+#            - libfftw3-dev
+#      env: COMPILER=gcc GCC=4.9
+#    - os: linux
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#          packages:
+#            - g++-5
+#            - libfftw3-dev
+#      env: COMPILER=gcc GCC=5
+#    - os: linux
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#          packages:
+#            - g++-6
+#            - libfftw3-dev
+#      env: COMPILER=gcc GCC=6
+#    - os: linux
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#          packages:
+#            - g++-7
+#            - libfftw3-dev
+#      env: COMPILER=gcc GCC=7
+#    - os: linux
+#      dist: precise
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#            - llvm-toolchain-precise-3.6
+#          packages:
+#            - clang-3.6
+#            - libfftw3-dev
+#      env: COMPILER=clang CLANG=3.6
+#    - os: linux
+#      dist: precise
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#            - llvm-toolchain-precise-3.7
+#          packages:
+#            - clang-3.7
+#            - libfftw3-dev
+#      env: COMPILER=clang CLANG=3.7
+#    - os: linux
+#      dist: precise
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#            - llvm-toolchain-precise-3.8
+#          packages:
+#            - clang-3.8
+#            - libfftw3-dev
+#      env: COMPILER=clang CLANG=3.8
     - os: linux
       dist: precise
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.6
-          packages:
-            - clang-3.6
-            - libfftw3-dev
-      env: COMPILER=clang CLANG=3.6
-    - os: linux
-      dist: precise
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.7
-          packages:
-            - clang-3.7
-            - libfftw3-dev
-      env: COMPILER=clang CLANG=3.7
-    - os: linux
-      dist: precise
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.8
-          packages:
-            - clang-3.8
-            - libfftw3-dev
-      env: COMPILER=clang CLANG=3.8
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty-3.9
+            - llvm-toolchain-precise-3.9
           packages:
             - clang-3.9
-            - libc++-dev
+#            - libc++-dev
             - libfftw3-dev
       env: COMPILER=clang CLANG=3.9
     - os: linux
@@ -92,7 +93,7 @@ matrix:
             - llvm-toolchain-trusty-4.0
           packages:
             - clang-4.0
-            - libc++-dev
+#            - libc++-dev
             - libfftw3-dev
       env: COMPILER=clang CLANG=4.0
     - os: osx
@@ -150,11 +151,6 @@ install:
     # Testing
     - mkdir $TRAVIS_BUILD_DIR/build
     - cd $TRAVIS_BUILD_DIR/build
-#    - if [[ "$BOUND_CHECKS" == 1 ]]; then
-#        cmake -DXTENSOR_ENABLE_ASSERT=ON -DDOWNLOAD_GTEST=ON ..;
-#      else
-#        cmake -DBUILD_TESTS=ON ..;
-#      fi
     - cmake -DBUILD_TESTS=ON ..
     - make -j2 test_xtensor-fftw
     - cd test
