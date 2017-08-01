@@ -1,4 +1,8 @@
 language: cpp
+addons:
+  apt:
+    packages:
+      - libfftw3-dev
 matrix:
   include:
     - os: linux
@@ -118,11 +122,8 @@ install:
     - bash miniconda.sh -b -p $HOME/miniconda
     - export PATH="$HOME/miniconda/bin:$PATH"
     - hash -r
-#    - cat $HOME/.condarc
     - conda update -yq conda
-#    - cat $HOME/.condarc
-#    - conda config --set always_yes yes --set changeps1 no
-    - conda install -y gtest cmake xtensor fftw -c conda-forge
+    - conda install -y gtest cmake xtensor -c conda-forge
     # Testing
     - mkdir build
     - cd build
