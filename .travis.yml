@@ -116,6 +116,7 @@ install:
         MINCONDA_OS=$MINCONDA_OSX;
       fi
     - wget "http://repo.continuum.io/miniconda/Miniconda3-$MINCONDA_VERSION-$MINCONDA_OS.sh" -O miniconda.sh;
+    - cat /home/traivs/.condarc
     - bash miniconda.sh -b -p $HOME/miniconda
     - export PATH="$HOME/miniconda/bin:$PATH"
     - hash -r
