@@ -131,13 +131,25 @@ install:
     - export PATH="$HOME/miniconda/bin:$PATH"
     - hash -r
     - conda update -yq conda
-    - conda install -y gtest cmake xtensor -c conda-forge
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-        conda install -y fftw -c conda-forge;
+    - conda install -y gtest cmake #xtensor -c conda-forge
+    - |
+      # install xtensor (and fftw on osx); if conda fails, use xtensor from source
+      if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+        conda install -y xtensor fftw -c conda-forge
+      elif [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+        if ! conda install -y xtensor -c conda-forge; then
+          echo "Installing xtensor from source"
+          cd $TRAVIS_HOME
+          git clone https://github.com/QuantStack/xtensor.git
+          cd xtensor
+          cmake
+          make install
+          cd $TRAVIS_BUILD_DIR
+        fi
       fi
     # Testing
-    - mkdir build
-    - cd build
+    - mkdir $TRAVIS_BUILD_DIR/build
+    - cd $TRAVIS_BUILD_DIR/build
 #    - if [[ "$BOUND_CHECKS" == 1 ]]; then
 #        cmake -DXTENSOR_ENABLE_ASSERT=ON -DDOWNLOAD_GTEST=ON ..;
 #      else
