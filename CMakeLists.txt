@@ -36,6 +36,11 @@ OPTION(FIX_RPATH "Correctly set rpath for the linker" OFF)
 OPTION(DEFAULT_COLUMN_MAJOR "Set xtensor default layout to column major" OFF)
 
 #--------------------------------------- build parameters for all targets
+# c++ standard build options
+# N.B.: these have to be set before defining targets!
+set(CMAKE_CXX_STANDARD 14)
+set(CXX_STANDARD_REQUIRED YES)
+set(CMAKE_CXX_EXTENSIONS NO)
 # includes
 # .. our own
 set(XTENSOR_FFTW_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -51,8 +56,6 @@ include_directories(${FFTW_INCLUDE_DIRS})
 if (COMPILE_WARNINGS)
     add_compile_options(-Wundef -Wshadow -Wwrite-strings -Wredundant-decls -Woverloaded-virtual -Wcast-qual -Wcast-align -Wpointer-arith -Wconversion -Wold-style-cast -Wall -Wextra)
 endif(COMPILE_WARNINGS)
-# miscellaneous build options
-set(CMAKE_CXX_STANDARD 14)
 
 #--------------------------------------- correctly set rpath for linking
 if (FIX_RPATH)
