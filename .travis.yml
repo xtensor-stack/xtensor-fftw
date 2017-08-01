@@ -121,7 +121,8 @@ install:
     - conda config --add channels conda-forge
     - conda update -q conda
     - conda config --show
-    - conda install gtest cmake fftw
+    - conda install gtest cmake
+    - conda install fftw
     - conda install xtensor
     # Testing
     - mkdir build
