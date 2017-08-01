@@ -73,18 +73,17 @@ matrix:
 #            - clang-3.8
 #            - libfftw3-dev
 #      env: COMPILER=clang CLANG=3.8
-    - os: linux
-      dist: precise
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.9
-          packages:
-            - clang-3.9
-#            - libc++-dev
-            - libfftw3-dev
-      env: COMPILER=clang CLANG=3.9
+#    - os: linux
+#      dist: precise
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#            - llvm-toolchain-precise-3.9
+#          packages:
+#            - clang-3.9
+#            - libfftw3-dev
+#      env: COMPILER=clang CLANG=3.9
     - os: linux
       addons:
         apt:
@@ -93,7 +92,8 @@ matrix:
             - llvm-toolchain-trusty-4.0
           packages:
             - clang-4.0
-#            - libc++-dev
+            - libc++-dev
+            - llvm-toolchain-4.0
             - libfftw3-dev
       env: COMPILER=clang CLANG=4.0
     - os: osx
