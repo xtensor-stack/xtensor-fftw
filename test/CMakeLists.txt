@@ -50,7 +50,7 @@ if(MSVC)
 endif()
 
 if (UNIX AND NOT APPLE AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    add_compile_options(-stdlib=libc++)
+    add_compile_options(-stdlib=libstdc++)
 endif()
 
 if(DOWNLOAD_GTEST OR GTEST_SRC_DIR)
