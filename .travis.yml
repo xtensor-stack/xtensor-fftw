@@ -152,7 +152,7 @@ install:
     - mkdir $TRAVIS_BUILD_DIR/build
     - cd $TRAVIS_BUILD_DIR/build
     - cmake -DBUILD_TESTS=ON ..
-    - make -j2 test_xtensor-fftw
+    - make -j2 test_xtensor-fftw VERBOSE=1
     - cd test
 script:
     - ./test_xtensor-fftw
