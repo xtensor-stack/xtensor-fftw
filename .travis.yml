@@ -4,97 +4,97 @@ addons:
     packages:
 matrix:
   include:
-#    - os: linux
-#      addons:
-#        apt:
-#          sources:
-#            - ubuntu-toolchain-r-test
-#          packages:
-#            - g++-4.9
-#            - libfftw3-dev
-#      env: COMPILER=gcc GCC=4.9
-#    - os: linux
-#      addons:
-#        apt:
-#          sources:
-#            - ubuntu-toolchain-r-test
-#          packages:
-#            - g++-5
-#            - libfftw3-dev
-#      env: COMPILER=gcc GCC=5
-#    - os: linux
-#      addons:
-#        apt:
-#          sources:
-#            - ubuntu-toolchain-r-test
-#          packages:
-#            - g++-6
-#            - libfftw3-dev
-#      env: COMPILER=gcc GCC=6
-#    - os: linux
-#      addons:
-#        apt:
-#          sources:
-#            - ubuntu-toolchain-r-test
-#          packages:
-#            - g++-7
-#            - libfftw3-dev
-#      env: COMPILER=gcc GCC=7
-#    - os: linux
-#      dist: precise
-#      addons:
-#        apt:
-#          sources:
-#            - ubuntu-toolchain-r-test
-#            - llvm-toolchain-precise-3.6
-#          packages:
-#            - clang-3.6
-#            - libfftw3-dev
-#      env: COMPILER=clang CLANG=3.6
-#    - os: linux
-#      dist: precise
-#      addons:
-#        apt:
-#          sources:
-#            - ubuntu-toolchain-r-test
-#            - llvm-toolchain-precise-3.7
-#          packages:
-#            - clang-3.7
-#            - libfftw3-dev
-#      env: COMPILER=clang CLANG=3.7
-#    - os: linux
-#      dist: precise
-#      addons:
-#        apt:
-#          sources:
-#            - ubuntu-toolchain-r-test
-#            - llvm-toolchain-precise-3.8
-#          packages:
-#            - clang-3.8
-#            - libfftw3-dev
-#      env: COMPILER=clang CLANG=3.8
-#    - os: linux
-#      dist: precise
-#      addons:
-#        apt:
-#          sources:
-#            - ubuntu-toolchain-r-test
-#            - llvm-toolchain-precise-3.9
-#          packages:
-#            - clang-3.9
-#            - libfftw3-dev
-#      env: COMPILER=clang CLANG=3.9
     - os: linux
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty-4.0
           packages:
-            - clang-4.0
-            - libc++-dev
+            - g++-4.9
             - libfftw3-dev
-      env: COMPILER=clang CLANG=4.0
+      env: COMPILER=gcc GCC=4.9
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+            - libfftw3-dev
+      env: COMPILER=gcc GCC=5
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+            - libfftw3-dev
+      env: COMPILER=gcc GCC=6
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+            - libfftw3-dev
+      env: COMPILER=gcc GCC=7
+    - os: linux
+      dist: precise
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.6
+          packages:
+            - clang-3.6
+            - libfftw3-dev
+      env: COMPILER=clang CLANG=3.6
+    - os: linux
+      dist: precise
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.7
+          packages:
+            - clang-3.7
+            - libfftw3-dev
+      env: COMPILER=clang CLANG=3.7
+    - os: linux
+      dist: precise
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.8
+          packages:
+            - clang-3.8
+            - libfftw3-dev
+      env: COMPILER=clang CLANG=3.8
+    - os: linux
+      dist: precise
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.9
+          packages:
+            - clang-3.9
+            - libfftw3-dev
+      env: COMPILER=clang CLANG=3.9
+#    - os: linux
+#      addons:
+#        apt:
+#          sources:
+#            - ubuntu-toolchain-r-test
+#            - llvm-toolchain-trusty-4.0
+#          packages:
+#            - clang-4.0
+#            - libc++-dev
+#            - libfftw3-dev
+#      env: COMPILER=clang CLANG=4.0
     - os: osx
       osx_image: xcode8
       compiler: clang
