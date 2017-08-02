@@ -38,3 +38,4 @@ TEST(fftC2CFloat1D,TransformAndInvert) {
   std::cout << "real output: " << should_be_a << std::endl;
   ASSERT_EQ(a, should_be_a);
 }
+
