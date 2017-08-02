@@ -93,7 +93,6 @@ matrix:
           packages:
             - clang-4.0
             - libc++-dev
-            - llvm-toolchain-4.0
             - libfftw3-dev
       env: COMPILER=clang CLANG=4.0
     - os: osx
