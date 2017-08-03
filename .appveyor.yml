@@ -7,7 +7,8 @@ platform:
   - x86
 
 environment:
-  MINICONDA: C:\xtensor-conda
+#  MINICONDA: C:\xtensor-conda
+  MINICONDA: C:\Miniconda
   matrix:
     - COLUMN_MAJOR_LAYOUT: OFF
     - COLUMN_MAJOR_LAYOUT: ON
@@ -18,18 +19,20 @@ matrix:
     - COLUMN_MAJOR_LAYOUT: ON
 
 init:
-  - "ECHO %MINICONDA%"
+#  - "ECHO %MINICONDA%"
   - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat %PLATFORM%
-  - ps: if($env:Platform -eq "x64"){Start-FileDownload 'http://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe' C:\Miniconda.exe; echo "Done"}
-  - ps: if($env:Platform -eq "x86"){Start-FileDownload 'http://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86.exe' C:\Miniconda.exe; echo "Done"}
-  - cmd: C:\Miniconda.exe /S /D=C:\xtensor-conda
+#  - ps: if($env:Platform -eq "x64"){Start-FileDownload 'http://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe' C:\Miniconda.exe; echo "Done"}
+#  - ps: if($env:Platform -eq "x86"){Start-FileDownload 'http://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86.exe' C:\Miniconda.exe; echo "Done"}
+#  - cmd: C:\Miniconda.exe /S /D=C:\xtensor-conda
   - "set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%MINICONDA%\\Library\\bin;%PATH%"
 
 install:
+#  - "set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%"
   - conda config --set always_yes yes --set changeps1 no
+  - conda config --add channels conda-forge
   - conda update -q conda
   - conda info -a
-  - conda install gtest cmake xtensor -c conda-forge
+  - conda install gtest cmake xtensor
   - mkdir C:\fftw_download
   - ps: if($env:Platform -eq "x86"){$source = "ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll32.zip"; $destination = "C:\fftw-3.3.5.zip"; Invoke-WebRequest $source -OutFile $destination; echo "x86 fftw download complete"}
   - ps: if($env:Platform -eq "x64"){$source = "ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll64.zip"; $destination = "C:\fftw-3.3.5.zip"; Invoke-WebRequest $source -OutFile $destination; echo "x64 fftw download complete"}
