@@ -17,9 +17,9 @@ matrix:
 #  allow_failures:
 #    - COLUMN_MAJOR_LAYOUT: ON
 #
-#init:
+init:
 #  - "ECHO %MINICONDA%"
-#  - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat %PLATFORM%
+  - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat %PLATFORM%
 #  - ps: if($env:Platform -eq "x64"){Start-FileDownload 'http://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe' C:\Miniconda.exe; echo "Done"}
 #  - ps: if($env:Platform -eq "x86"){Start-FileDownload 'http://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86.exe' C:\Miniconda.exe; echo "Done"}
 #  - cmd: C:\Miniconda.exe /S /D=C:\xtensor-conda
@@ -35,7 +35,6 @@ install:
   - ps: if($env:Platform -eq "x64"){$source = "ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll64.zip"; $destination = "C:\fftw-3.3.5.zip"; Invoke-WebRequest $source -OutFile $destination; echo "x64 fftw download complete"}
   - 7z e C:\fftw-3.3.5.zip -oC:\fftw_download
   - cd C:\fftw_download
-  - "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat"
   - if "%Platform%" == "x86" ( lib.exe /def:libfftw3-3.def; lib.exe /def:libfftw3f-3.def; lib.exe /def:libfftw3l-3.def )
   - if "%Platform%" == "x64" ( lib.exe /machine:x64 /def:libfftw3-3.def; lib.exe /machine:x64 /def:libfftw3f-3.def; lib.exe /machine:x64 /def:libfftw3l-3.def )
 #  - cd %APPVEYOR_BUILD_FOLDER%
