@@ -41,7 +41,7 @@ install:
   - cd %APPVEYOR_BUILD_FOLDER%
   - mkdir build
   - cd build
-  - cmake -G "NMake Makefiles" -DFFTW_ROOT=C:\fftw_download -D CMAKE_INSTALL_PREFIX=%MINICONDA%\\LIBRARY -DBUILD_TESTS=ON -DDEFAULT_COLUMN_MAJOR=%COLUMN_MAJOR_LAYOUT% ..
+  - cmake -G "NMake Makefiles" -DFFTW_ROOT="C:\fftw_download" -DCMAKE_INSTALL_PREFIX=%MINICONDA%\\LIBRARY -DBUILD_TESTS=ON -DDEFAULT_COLUMN_MAJOR=%COLUMN_MAJOR_LAYOUT% ..
   - nmake test_xtensor-fftw
   - cd test
 
