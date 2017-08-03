@@ -92,7 +92,7 @@ include_directories(${XTENSOR_FFTW_INCLUDE_DIR})
 include_directories(${GTEST_INCLUDE_DIRS})
 
 set(XTENSOR_FFTW_TESTS
-    c2c_sp_1D.cpp
+        c2c_1D.cpp
 )
 
 set(XTENSOR_FFTW_TARGET test_xtensor-fftw)
@@ -101,6 +101,6 @@ add_executable(${XTENSOR_FFTW_TARGET} ${XTENSOR_FFTW_TESTS} ${XTENSOR_HEADERS} $
 if(DOWNLOAD_GTEST OR GTEST_SRC_DIR)
     add_dependencies(${XTENSOR_FFTW_TARGET} gtest_main)
 endif()
-target_link_libraries(${XTENSOR_FFTW_TARGET} ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}  ${FFTW_FLOAT_LIB})
+target_link_libraries(${XTENSOR_FFTW_TARGET} ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}  ${FFTW_FLOAT_LIB} ${FFTW_DOUBLE_LIB} ${FFTW_LONGDOUBLE_LIB})
 
 add_custom_target(xtest COMMAND test_xtensor-fftw DEPENDS ${XTENSOR_FFTW_TARGET})

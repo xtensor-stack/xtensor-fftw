@@ -42,6 +42,7 @@
 #
 
 # TODO (maybe): extend with ExternalProject download + build option
+# TODO: turn into independent project on github (perhaps also on conda so it can be used as dependency for xtensor-fftw)
 
 #If environment variable FFTWDIR is specified, it has same effect as FFTW_ROOT
 if( NOT FFTW_ROOT AND ENV{FFTWDIR} )
