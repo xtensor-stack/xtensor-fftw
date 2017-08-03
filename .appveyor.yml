@@ -43,4 +43,4 @@ install:
   - cd test
 
 build_script:
-  - .\test_xtensor-fftw
+  - test_xtensor-fftw.exe
