@@ -30,8 +30,8 @@ install:
   - conda info -a
   - conda install gtest cmake xtensor -c conda-forge
   - mkdir C:\fftw_download
-  - if "%Platform%" == "x86" ( curl -fsS -o C:\fftw-3.3.5.zip ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll32.zip )
-  - if "%Platform%" == "x64" ( curl -fsS -o C:\fftw-3.3.5.zip ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll64.zip )
+  - ps: if($env:Platform -eq "x86"){curl -fsS -o C:\fftw-3.3.5.zip ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll32.zip; echo "x86 fftw download complete"}
+  - ps: if($env:Platform -eq "x64"){curl -fsS -o C:\fftw-3.3.5.zip ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll64.zip; echo "x64 fftw download complete"}
   - 7z e C:\fftw-3.3.5.zip -oC:\fftw_download
   - cd C:\fftw_download
   - if "%Platform%" == "x86" ( lib /def:libfftw3-3.def; lib /def:libfftw3f-3.def; lib /def:libfftw3l-3.def )
