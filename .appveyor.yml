@@ -28,10 +28,19 @@ install:
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
   - conda info -a
-  - conda install gtest cmake xtensor fftw -c conda-forge
+  - conda install gtest cmake xtensor -c conda-forge
+  - mkdir C:\fftw_download
+  - ps: if($env:Platform -eq "x64"){Start-FileDownload 'ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll64.zip' C:\fftw-3.3.5.zip; echo "Done"}
+  - ps: if($env:Platform -eq "x86"){Start-FileDownload 'ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll32.zip' C:\fftw-3.3.5.zip; echo "Done"}
+  - 7z e C:\fftw-3.3.5.zip -oC:\fftw_download
+  - cd C:\fftw_download
+  - lib /def:libfftw3-3.def
+  - lib /def:libfftw3f-3.def
+  - lib /def:libfftw3l-3.def
+  - cd %APPVEYOR_BUILD_FOLDER%
   - mkdir build
   - cd build
-  - cmake -G "NMake Makefiles" -D CMAKE_INSTALL_PREFIX=%MINICONDA%\\LIBRARY -DBUILD_TESTS=ON -DDEFAULT_COLUMN_MAJOR=%COLUMN_MAJOR_LAYOUT% ..
+  - cmake -G "NMake Makefiles" -DFFTW_ROOT=C:\fftw_download -D CMAKE_INSTALL_PREFIX=%MINICONDA%\\LIBRARY -DBUILD_TESTS=ON -DDEFAULT_COLUMN_MAJOR=%COLUMN_MAJOR_LAYOUT% ..
   - nmake test_xtensor-fftw
   - cd test
 
