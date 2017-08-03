@@ -39,10 +39,12 @@ namespace xt {
     // temporary variable -- input in this case -- though in the case of a reference the data is not actually copied.
     // The delete makes sure that calls to non-implemented specializations don't compile. If this is left out, the
     // compilation will succeed, but the linker will fail, and this gives less informative error messages.
-    template<typename real_t> xt::xarray< std::complex<real_t> > fft(const xt::xarray<real_t> &input) = delete;
-    template<typename real_t> xt::xarray<real_t> ifft(const xt::xarray< std::complex<real_t> > &input) = delete;
+    // The inline keyword must be added to avoid multiple definition errors due to multiple compilations (e.g. when
+    // including this header multiple times in a project, or when it is explicitly compiled itself and included too).
+    template<typename real_t> inline xt::xarray< std::complex<real_t> > fft(const xt::xarray<real_t> &input) = delete;
+    template<typename real_t> inline xt::xarray<real_t> ifft(const xt::xarray< std::complex<real_t> > &input) = delete;
 
-    template<> xt::xarray<std::complex<float>> fft<float>(const xt::xarray<float> &input) {
+    template<> inline xt::xarray<std::complex<float>> fft<float>(const xt::xarray<float> &input) {
       xt::xarray<std::complex<float>, layout_type::dynamic> output(input.shape(), input.strides());
 
       // this function will not modify input, see:
@@ -57,7 +59,7 @@ namespace xt {
       return output;
     }
 
-    template<> xt::xarray<float> ifft<float>(const xt::xarray< std::complex<float> > &input) {
+    template<> inline xt::xarray<float> ifft<float>(const xt::xarray< std::complex<float> > &input) {
       std::cout << "WARNING: the inverse c2r fftw transform by default destroys its input array, but in xt::fftw::ifft this has been disabled at the cost of some performance." << std::endl;
       xt::xarray<float, layout_type::dynamic> output(input.shape(), input.strides());
 
@@ -74,7 +76,7 @@ namespace xt {
       return output / output.size();
     }
 
-    template<> xt::xarray<std::complex<double>> fft<double>(const xt::xarray<double> &input) {
+    template<> inline xt::xarray<std::complex<double>> fft<double>(const xt::xarray<double> &input) {
       xt::xarray<std::complex<double>, layout_type::dynamic> output(input.shape(), input.strides());
 
       // this function will not modify input, see:
@@ -89,7 +91,7 @@ namespace xt {
       return output;
     }
 
-    template<> xt::xarray<double> ifft<double>(const xt::xarray< std::complex<double> > &input) {
+    template<> inline xt::xarray<double> ifft<double>(const xt::xarray< std::complex<double> > &input) {
       std::cout << "WARNING: the inverse c2r fftw transform by default destroys its input array, but in xt::fftw::ifft this has been disabled at the cost of some performance." << std::endl;
       xt::xarray<double, layout_type::dynamic> output(input.shape(), input.strides());
 
@@ -106,7 +108,7 @@ namespace xt {
       return output / output.size();
     }
 
-    template<> xt::xarray<std::complex<long double>> fft<long double>(const xt::xarray<long double> &input) {
+    template<> inline xt::xarray<std::complex<long double>> fft<long double>(const xt::xarray<long double> &input) {
       xt::xarray<std::complex<long double>, layout_type::dynamic> output(input.shape(), input.strides());
 
       // this function will not modify input, see:
@@ -121,7 +123,7 @@ namespace xt {
       return output;
     }
 
-    template<> xt::xarray<long double> ifft<long double>(const xt::xarray< std::complex<long double> > &input) {
+    template<> inline xt::xarray<long double> ifft<long double>(const xt::xarray< std::complex<long double> > &input) {
       std::cout << "WARNING: the inverse c2r fftw transform by default destroys its input array, but in xt::fftw::ifft this has been disabled at the cost of some performance." << std::endl;
       xt::xarray<long double, layout_type::dynamic> output(input.shape(), input.strides());
 
