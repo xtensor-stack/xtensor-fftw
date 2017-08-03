@@ -50,7 +50,7 @@ find_package(xtensor REQUIRED)
 include_directories(${xtensor_INCLUDE_DIRS})
 # .. fftw
 find_package(FFTW REQUIRED
-        COMPONENTS FLOAT_LIB)
+        COMPONENTS FLOAT_LIB DOUBLE_LIB LONGDOUBLE_LIB)
 include_directories(${FFTW_INCLUDE_DIRS})
 # warnings (gcc and clang)
 if (COMPILE_WARNINGS)

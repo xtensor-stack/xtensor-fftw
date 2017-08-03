@@ -73,7 +73,7 @@ if( FFTW_ROOT )
 
   find_library(
     FFTW_DOUBLE_LIB
-    NAMES "fftw3"
+    NAMES "fftw3" libfftw3-3
     PATHS ${FFTW_ROOT}
     PATH_SUFFIXES "lib" "lib64"
     NO_DEFAULT_PATH
@@ -97,7 +97,7 @@ if( FFTW_ROOT )
 
   find_library(
     FFTW_FLOAT_LIB
-    NAMES "fftw3f"
+    NAMES "fftw3f" libfftw3f-3
     PATHS ${FFTW_ROOT}
     PATH_SUFFIXES "lib" "lib64"
     NO_DEFAULT_PATH
@@ -121,7 +121,7 @@ if( FFTW_ROOT )
 
   find_library(
     FFTW_LONGDOUBLE_LIB
-    NAMES "fftw3l"
+    NAMES "fftw3l" libfftw3l-3
     PATHS ${FFTW_ROOT}
     PATH_SUFFIXES "lib" "lib64"
     NO_DEFAULT_PATH
