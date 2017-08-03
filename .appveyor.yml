@@ -4,44 +4,44 @@ os: Visual Studio 2015
 
 platform:
   - x64
-  - x86
-
-environment:
-  MINICONDA: C:\xtensor-conda
-  matrix:
-    - COLUMN_MAJOR_LAYOUT: OFF
-    - COLUMN_MAJOR_LAYOUT: ON
-
-matrix:
-  allow_failures:
-    - COLUMN_MAJOR_LAYOUT: ON
-
-init:
-  - "ECHO %MINICONDA%"
-  - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat %PLATFORM%
-  - ps: if($env:Platform -eq "x64"){Start-FileDownload 'http://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe' C:\Miniconda.exe; echo "Done"}
-  - ps: if($env:Platform -eq "x86"){Start-FileDownload 'http://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86.exe' C:\Miniconda.exe; echo "Done"}
-  - cmd: C:\Miniconda.exe /S /D=C:\xtensor-conda
-  - "set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%MINICONDA%\\Library\\bin;%PATH%"
+#  - x86
+#
+#environment:
+#  MINICONDA: C:\xtensor-conda
+#  matrix:
+#    - COLUMN_MAJOR_LAYOUT: OFF
+#    - COLUMN_MAJOR_LAYOUT: ON
+#
+#matrix:
+#  allow_failures:
+#    - COLUMN_MAJOR_LAYOUT: ON
+#
+#init:
+#  - "ECHO %MINICONDA%"
+#  - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat %PLATFORM%
+#  - ps: if($env:Platform -eq "x64"){Start-FileDownload 'http://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe' C:\Miniconda.exe; echo "Done"}
+#  - ps: if($env:Platform -eq "x86"){Start-FileDownload 'http://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86.exe' C:\Miniconda.exe; echo "Done"}
+#  - cmd: C:\Miniconda.exe /S /D=C:\xtensor-conda
+#  - "set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%MINICONDA%\\Library\\bin;%PATH%"
 
 install:
-  - conda config --set always_yes yes --set changeps1 no
-  - conda update -q conda
-  - conda info -a
-  - conda install gtest cmake xtensor -c conda-forge
+#  - conda config --set always_yes yes --set changeps1 no
+#  - conda update -q conda
+#  - conda info -a
+#  - conda install gtest cmake xtensor -c conda-forge
   - mkdir C:\fftw_download
-  - ps: if($env:Platform -eq "x86"){curl -fsS -o C:\fftw-3.3.5.zip ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll32.zip; echo "x86 fftw download complete"}
-  - ps: if($env:Platform -eq "x64"){curl -fsS -o C:\fftw-3.3.5.zip ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll64.zip; echo "x64 fftw download complete"}
+  - ps: if($env:Platform -eq "x86"){curl /fsS /o C:\fftw-3.3.5.zip ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll32.zip; echo "x86 fftw download complete"}
+  - ps: if($env:Platform -eq "x64"){curl /fsS /o C:\fftw-3.3.5.zip ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll64.zip; echo "x64 fftw download complete"}
   - 7z e C:\fftw-3.3.5.zip -oC:\fftw_download
   - cd C:\fftw_download
   - if "%Platform%" == "x86" ( lib /def:libfftw3-3.def; lib /def:libfftw3f-3.def; lib /def:libfftw3l-3.def )
   - if "%Platform%" == "x64" ( lib /machine:x64 /def:libfftw3-3.def; lib /machine:x64 /def:libfftw3f-3.def; lib /machine:x64 /def:libfftw3l-3.def )
-  - cd %APPVEYOR_BUILD_FOLDER%
-  - mkdir build
-  - cd build
-  - cmake -G "NMake Makefiles" -DFFTW_ROOT=C:\fftw_download -D CMAKE_INSTALL_PREFIX=%MINICONDA%\\LIBRARY -DBUILD_TESTS=ON -DDEFAULT_COLUMN_MAJOR=%COLUMN_MAJOR_LAYOUT% ..
-  - nmake test_xtensor-fftw
-  - cd test
-
-build_script:
-  - .\test_xtensor-fftw
+#  - cd %APPVEYOR_BUILD_FOLDER%
+#  - mkdir build
+#  - cd build
+#  - cmake -G "NMake Makefiles" -DFFTW_ROOT=C:\fftw_download -D CMAKE_INSTALL_PREFIX=%MINICONDA%\\LIBRARY -DBUILD_TESTS=ON -DDEFAULT_COLUMN_MAJOR=%COLUMN_MAJOR_LAYOUT% ..
+#  - nmake test_xtensor-fftw
+#  - cd test
+#
+#build_script:
+#  - .\test_xtensor-fftw
