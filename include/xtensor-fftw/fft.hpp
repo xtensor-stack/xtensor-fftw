@@ -39,10 +39,11 @@ namespace xt {
     // temporary variable -- input in this case -- though in the case of a reference the data is not actually copied.
     // The delete makes sure that calls to non-implemented specializations don't compile. If this is left out, the
     // compilation will succeed, but the linker will fail, and this gives less informative error messages.
-    // The inline keyword must be added to avoid multiple definition errors due to multiple compilations (e.g. when
+    template<typename real_t> xt::xarray< std::complex<real_t> > fft(const xt::xarray<real_t> &input) = delete;
+    template<typename real_t> xt::xarray<real_t> ifft(const xt::xarray< std::complex<real_t> > &input) = delete;
+
+    // The implementations must be inline to avoid multiple definition errors due to multiple compilations (e.g. when
     // including this header multiple times in a project, or when it is explicitly compiled itself and included too).
-    template<typename real_t> inline xt::xarray< std::complex<real_t> > fft(const xt::xarray<real_t> &input) = delete;
-    template<typename real_t> inline xt::xarray<real_t> ifft(const xt::xarray< std::complex<real_t> > &input) = delete;
 
     template<> inline xt::xarray<std::complex<float>> fft<float>(const xt::xarray<float> &input) {
       xt::xarray<std::complex<float>, layout_type::dynamic> output(input.shape(), input.strides());
