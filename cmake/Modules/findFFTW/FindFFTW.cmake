@@ -69,8 +69,6 @@ endif()
 if( FFTW_ROOT )
   # find libs
 
-  message(${FFTW_ROOT})
-
   find_library(
     FFTW_DOUBLE_LIB
     NAMES "fftw3" libfftw3-3
@@ -283,9 +281,6 @@ endif()
 set( CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES_SAV} )
 
 include(FindPackageHandleStandardArgs)
-
-message(${FFTW_DOUBLE_LIB})
-message(${FFTW_INCLUDE_DIRS})
 
 find_package_handle_standard_args(FFTW
         REQUIRED_VARS FFTW_INCLUDE_DIRS

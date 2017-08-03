@@ -13,7 +13,7 @@ environment:
     - COLUMN_MAJOR_LAYOUT: ON
 
 matrix:
-  fast_finish: true
+#  fast_finish: true
   allow_failures:
     - COLUMN_MAJOR_LAYOUT: ON
 
