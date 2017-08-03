@@ -39,13 +39,21 @@ namespace xt {
     // temporary variable -- input in this case -- though in the case of a reference the data is not actually copied.
     // The delete makes sure that calls to non-implemented specializations don't compile. If this is left out, the
     // compilation will succeed, but the linker will fail, and this gives less informative error messages.
-    template<typename real_t> xt::xarray< std::complex<real_t> > fft(const xt::xarray<real_t> &input) = delete;
-    template<typename real_t> xt::xarray<real_t> ifft(const xt::xarray< std::complex<real_t> > &input) = delete;
+//    template<typename real_t> xt::xarray< std::complex<real_t> > fft(const xt::xarray<real_t> &input) = delete;
+//    template<typename real_t> xt::xarray<real_t> ifft(const xt::xarray< std::complex<real_t> > &input) = delete;
+    // Unfortunately, clang has a bug that prevents us from using the nice delete syntax. The following is a workaround.
+    // TODO: Replace workaround with = delete syntax once https://bugs.llvm.org/show_bug.cgi?id=17537 is fixed!
+    template<typename real_t> xt::xarray< std::complex<real_t> > fft(const xt::xarray<real_t> &input) {
+      static_assert(sizeof(real_t) == 0, "Only specializations of fft can be used");
+    };
+    template<typename real_t> xt::xarray<real_t> ifft(const xt::xarray< std::complex<real_t> > &input) {
+      static_assert(sizeof(real_t) == 0, "Only specializations of ifft can be used");
+    };
 
     // The implementations must be inline to avoid multiple definition errors due to multiple compilations (e.g. when
     // including this header multiple times in a project, or when it is explicitly compiled itself and included too).
 
-    template<> inline xt::xarray<std::complex<float>> fft<float>(const xt::xarray<float> &input) {
+    template<> inline xt::xarray< std::complex<float> > fft<float>(const xt::xarray<float> &input) {
       xt::xarray<std::complex<float>, layout_type::dynamic> output(input.shape(), input.strides());
 
       // this function will not modify input, see:
@@ -77,7 +85,7 @@ namespace xt {
       return output / output.size();
     }
 
-    template<> inline xt::xarray<std::complex<double>> fft<double>(const xt::xarray<double> &input) {
+    template<> inline xt::xarray< std::complex<double> > fft<double>(const xt::xarray<double> &input) {
       xt::xarray<std::complex<double>, layout_type::dynamic> output(input.shape(), input.strides());
 
       // this function will not modify input, see:
@@ -109,7 +117,7 @@ namespace xt {
       return output / output.size();
     }
 
-    template<> inline xt::xarray<std::complex<long double>> fft<long double>(const xt::xarray<long double> &input) {
+    template<> inline xt::xarray< std::complex<long double> > fft<long double>(const xt::xarray<long double> &input) {
       xt::xarray<std::complex<long double>, layout_type::dynamic> output(input.shape(), input.strides());
 
       // this function will not modify input, see:
