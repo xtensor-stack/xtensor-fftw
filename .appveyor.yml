@@ -1,9 +1,8 @@
-build:
-  verbosity: detailed
+build: false
 
 image: Visual Studio 2015
 
-configuration: Debug
+configuration: Release
 
 platform:
   - x64
@@ -47,8 +46,7 @@ install:
   - cd C:\fftw_download
   - ps: if($env:Platform -eq "x86"){lib.exe /def:libfftw3-3.def; lib.exe /def:libfftw3f-3.def; lib.exe /def:libfftw3l-3.def}
   - ps: if($env:Platform -eq "x64"){lib.exe /machine:x64 /def:libfftw3-3.def; lib.exe /machine:x64 /def:libfftw3f-3.def; lib.exe /machine:x64 /def:libfftw3l-3.def}
-  - dir
-  - set PATH="C:\fftw_download";%PATH%
+#  - set PATH="C:\fftw_download";%PATH%
   - cd %APPVEYOR_BUILD_FOLDER%
   - mkdir build
   - cd build
