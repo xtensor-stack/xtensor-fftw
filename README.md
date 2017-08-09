@@ -1,9 +1,9 @@
 # xtensor-fftw
 FFTW bindings for _xtensor_.
 
-[![Build Status](https://travis-ci.org/egpbos/xtensor-fftw.svg?branch=master)](https://travis-ci.org/egpbos/xtensor-fftw)
-[![Build status](https://ci.appveyor.com/api/projects/status/l4wgk98kwospu7n1/branch/master?svg=true)](https://ci.appveyor.com/project/egpbos/xtensor-fftw/branch/master)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/18861a283cf84b2e95886ba79c66e028)](https://www.codacy.com/app/egpbos/xtensor-fftw?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=egpbos/xtensor-fftw&amp;utm_campaign=Badge_Grade)
+| Travis (Unix) | Appveyor (Win)  | Codacy        | Coveralls   |
+| ------------- | -------------   | ------------- | ------------- |
+| [![Build Status](https://travis-ci.org/egpbos/xtensor-fftw.svg?branch=master)](https://travis-ci.org/egpbos/xtensor-fftw) | [![Build status](https://ci.appveyor.com/api/projects/status/l4wgk98kwospu7n1/branch/master?svg=true)](https://ci.appveyor.com/project/egpbos/xtensor-fftw/branch/master)      | [![Codacy Badge](https://api.codacy.com/project/badge/Grade/18861a283cf84b2e95886ba79c66e028)](https://www.codacy.com/app/egpbos/xtensor-fftw?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=egpbos/xtensor-fftw&amp;utm_campaign=Badge_Grade) | [![Coverage Status](https://coveralls.io/repos/github/egpbos/xtensor-fftw/badge.svg)](https://coveralls.io/github/egpbos/xtensor-fftw) |
 
 ## Usage
 
