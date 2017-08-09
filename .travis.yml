@@ -163,7 +163,7 @@ script:
 after_success:
 - |
   if [[ "${COVERAGE}" == "ON" ]]; then
-    cd ${TRAVIS_BUILD_DIR}
+    cd ${TRAVIS_BUILD_DIR}/build
     ls
     ls test
     lcov --directory . --capture --output-file coverage.info # capture coverage info
