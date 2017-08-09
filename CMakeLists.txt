@@ -36,8 +36,10 @@ OPTION(FIX_RPATH "Correctly set rpath for the linker" OFF)
 OPTION(DEFAULT_COLUMN_MAJOR "Set xtensor default layout to column major" OFF)
 OPTION(COVERAGE "Enable coverage compile flags (gcc only!)" OFF)
 
-if (COVERAGE AND NOT CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    message(FATAL_ERROR "Coverage can only be used with GNU compiler!")
+if (COVERAGE)
+    if(NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+        message(FATAL_ERROR "Coverage can only be used with GNU and Clang compilers!")
+    endif()
 endif()
 
 #--------------------------------------- build parameters for all targets

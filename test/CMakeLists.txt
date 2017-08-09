@@ -36,7 +36,7 @@ string(TOUPPER "${CMAKE_BUILD_TYPE}" U_CMAKE_BUILD_TYPE)
 set(CMAKE_CXX_STANDARD 14)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Intel")
-    add_compile_options(-march=native -Wunused-parameter -Wextra -Wreorder -Wconversion)
+    add_compile_options(-march=native) #-Wunused-parameter -Wextra -Wreorder -Wconversion)
 endif()
 
 if(MSVC)
@@ -106,5 +106,9 @@ target_link_libraries(${XTENSOR_FFTW_TARGET} ${GTEST_BOTH_LIBRARIES} ${CMAKE_THR
 add_custom_target(xtest COMMAND test_xtensor-fftw DEPENDS ${XTENSOR_FFTW_TARGET})
 
 if(COVERAGE)
-    set_target_properties(${XTENSOR_FFTW_TARGET} PROPERTIES COMPILE_FLAGS -g -O0 --coverage)
+    message("Adding coverage compile flags to ${XTENSOR_FFTW_TARGET}")
+#    set_target_properties(${XTENSOR_FFTW_TARGET} PROPERTIES COMPILE_FLAGS -g -O0 --coverage)
+#    add_compile_options(-g -O0 --coverage)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0") # debug, no optimisation
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage") # enabling coverage
 endif()
