@@ -4,6 +4,18 @@ addons:
     packages:
 matrix:
   include:
+    # code coverage:
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+            - libfftw3-dev
+            - lcov
+      env: COMPILER=gcc GCC=7 COVERAGE=ON
+    # normal tests:
     - os: linux
       addons:
         apt:
@@ -84,34 +96,12 @@ matrix:
             - clang-3.9
             - libfftw3-dev
       env: COMPILER=clang CLANG=3.9
-#    - os: linux
-#      addons:
-#        apt:
-#          sources:
-#            - ubuntu-toolchain-r-test
-#            - llvm-toolchain-trusty-4.0
-#          packages:
-#            - clang-4.0
-#            - libc++-dev
-#            - libfftw3-dev
-#      env: COMPILER=clang CLANG=4.0
     - os: osx
       osx_image: xcode8
       compiler: clang
     - os: osx
       osx_image: xcode8.3
       compiler: clang
-    # code coverage:
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-7
-            - libfftw3-dev
-            - lcov
-      env: COMPILER=gcc GCC=7 COVERAGE=ON
 
 env:
   global:
@@ -174,6 +164,8 @@ after_success:
 - |
   if [[ "${COVERAGE}" == "ON" ]]; then
     cd ${TRAVIS_BUILD_DIR}
+    ls
+    ls test
     lcov --directory . --capture --output-file coverage.info # capture coverage info
     lcov --remove coverage.info 'tests/*' '/usr/*' --output-file coverage.info # filter out system and test code
     lcov --list coverage.info # debug before upload
