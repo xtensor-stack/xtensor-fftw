@@ -58,4 +58,5 @@ before_build:
   - cd test
 
 build_script:
-  - test_xtensor-fftw.exe
+  # The long double FFTW library only works when sizeof(long double) == 12. In recent VC versions, long double is an alias of double, and so long double will not work with fftw3l.
+  - test_xtensor-fftw.exe --gtest_filter=-*LongDouble*
