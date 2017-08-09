@@ -56,6 +56,7 @@ install:
   - nmake test_xtensor-fftw
 
 before_build:
+  - copy C:\fftw_download\*.* test
   - cd test
 
 build_script:
