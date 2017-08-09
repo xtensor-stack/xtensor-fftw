@@ -18,10 +18,10 @@ matrix:
     - COLUMN_MAJOR_LAYOUT: ON
   - platform: x64
     environment:
-      MINICONDA: C:\Miniconda36-x64
+      - MINICONDA: C:\Miniconda36-x64
   - platform: x86
     environment:
-      MINICONDA: C:\Miniconda36
+      - MINICONDA: C:\Miniconda36
 
 init:
   - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat %PLATFORM%
