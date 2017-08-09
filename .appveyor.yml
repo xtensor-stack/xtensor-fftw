@@ -1,21 +1,33 @@
 build: false
 
-os: Visual Studio 2015
+image: Visual Studio 2015
+
+configuration: Release
 
 platform:
   - x64
   - x86
 
 environment:
-  MINICONDA: C:\Miniconda
   matrix:
     - COLUMN_MAJOR_LAYOUT: OFF
+      MINICONDA: C:\Miniconda36-x64
+    - COLUMN_MAJOR_LAYOUT: OFF
+      MINICONDA: C:\Miniconda36
     - COLUMN_MAJOR_LAYOUT: ON
+      MINICONDA: C:\Miniconda36-x64
+    - COLUMN_MAJOR_LAYOUT: ON
+      MINICONDA: C:\Miniconda36
 
 matrix:
-#  fast_finish: true
+  exclude:
+    - platform: x86
+      MINICONDA: C:\Miniconda36-x64
+    - platform: x64
+      MINICONDA: C:\Miniconda36
   allow_failures:
     - COLUMN_MAJOR_LAYOUT: ON
+#  fast_finish: true
 
 init:
   - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat %PLATFORM%
@@ -26,7 +38,7 @@ install:
   - conda config --add channels conda-forge
   - conda update -q conda
   - conda info -a
-  - conda install cmake xtensor
+  - conda install xtensor
   - mkdir C:\fftw_download
   - ps: if($env:Platform -eq "x86"){$source = "ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll32.zip"; $destination = "C:\fftw-3.3.5.zip"; Invoke-WebRequest $source -OutFile $destination; echo "x86 fftw download complete"}
   - ps: if($env:Platform -eq "x64"){$source = "ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll64.zip"; $destination = "C:\fftw-3.3.5.zip"; Invoke-WebRequest $source -OutFile $destination; echo "x64 fftw download complete"}
@@ -34,13 +46,17 @@ install:
   - cd C:\fftw_download
   - ps: if($env:Platform -eq "x86"){lib.exe /def:libfftw3-3.def; lib.exe /def:libfftw3f-3.def; lib.exe /def:libfftw3l-3.def}
   - ps: if($env:Platform -eq "x64"){lib.exe /machine:x64 /def:libfftw3-3.def; lib.exe /machine:x64 /def:libfftw3f-3.def; lib.exe /machine:x64 /def:libfftw3l-3.def}
-  - dir
+#  - set PATH="C:\fftw_download";%PATH%
   - cd %APPVEYOR_BUILD_FOLDER%
   - mkdir build
   - cd build
-  - cmake -G "NMake Makefiles" -DFFTW_ROOT="C:\fftw_download" -DCMAKE_INSTALL_PREFIX=%MINICONDA%\\LIBRARY -DBUILD_TESTS=ON -DDEFAULT_COLUMN_MAJOR=%COLUMN_MAJOR_LAYOUT% -DDOWNLOAD_GTEST=ON ..
+  - cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DFFTW_ROOT="C:\fftw_download" -DCMAKE_INSTALL_PREFIX=%MINICONDA%\\Library -DBUILD_TESTS=ON -DDEFAULT_COLUMN_MAJOR=%COLUMN_MAJOR_LAYOUT% -DDOWNLOAD_GTEST=ON ..
   - nmake test_xtensor-fftw
+
+before_build:
+  - copy C:\fftw_download\*.* test
   - cd test
 
 build_script:
-  - test_xtensor-fftw.exe
+  # The long double FFTW library only works when sizeof(long double) == 12. In recent VC versions, long double is an alias of double, and so long double will not work with fftw3l.
+  - test_xtensor-fftw.exe --gtest_filter=-*LongDouble*

@@ -11,6 +11,10 @@ _xtensor-fftw_ is a header-only library.
 To use, include one of the header files in the `include` directory, e.g. `xtensor-fftw/fft.hpp`, in your c++ code.
 To compile, one should also include the paths to the FFTW header and libraries and link to the appropriate FFTW library.
 
+Note that _xtensor-fftw_ on Windows does not support `long double` precision.
+The `long double` precision version of the FFTW library requires that `sizeof(long double) == 12`.
+In recent versions of Visual Studio, `long double` is an alias of `double` and has size 8.
+
 What follows are instructions for compiling the _xtensor-fftw_ tests.
 These also serve as an example of how to do build your own code using _xtensor-fftw_ (excluding the GoogleTest specific parts).
 
