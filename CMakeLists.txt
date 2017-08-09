@@ -34,6 +34,11 @@ OPTION(BUILD_TESTS "Build xtensor-fftw test suite" OFF)
 OPTION(DOWNLOAD_GTEST "Build gtest from downloaded sources" OFF)
 OPTION(FIX_RPATH "Correctly set rpath for the linker" OFF)
 OPTION(DEFAULT_COLUMN_MAJOR "Set xtensor default layout to column major" OFF)
+OPTION(COVERAGE "Enable coverage compile flags (gcc only!)" OFF)
+
+if (COVERAGE AND NOT CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    message(FATAL_ERROR "Coverage can only be used with GNU compiler!")
+endif()
 
 #--------------------------------------- build parameters for all targets
 # c++ standard build options

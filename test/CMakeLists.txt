@@ -104,3 +104,7 @@ endif()
 target_link_libraries(${XTENSOR_FFTW_TARGET} ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}  ${FFTW_FLOAT_LIB} ${FFTW_DOUBLE_LIB} ${FFTW_LONGDOUBLE_LIB})
 
 add_custom_target(xtest COMMAND test_xtensor-fftw DEPENDS ${XTENSOR_FFTW_TARGET})
+
+if(COVERAGE)
+    set_target_properties(${XTENSOR_FFTW_TARGET} PROPERTIES COMPILE_FLAGS -g -O0 --coverage)
+endif()
