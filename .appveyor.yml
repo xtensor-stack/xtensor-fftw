@@ -2,14 +2,6 @@ build: false
 
 os: Visual Studio 2015
 
-matrix:
-  - platform: x64
-    environment:
-      MINICONDA: C:\Miniconda36-x64
-  - platform: x86
-    environment:
-      MINICONDA: C:\Miniconda36
-
 #platform:
 #  - x64
 #  - x86
@@ -24,6 +16,12 @@ matrix:
 #  fast_finish: true
   allow_failures:
     - COLUMN_MAJOR_LAYOUT: ON
+  - platform: x64
+    environment:
+      MINICONDA: C:\Miniconda36-x64
+  - platform: x86
+    environment:
+      MINICONDA: C:\Miniconda36
 
 init:
   - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat %PLATFORM%
