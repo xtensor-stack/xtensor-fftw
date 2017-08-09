@@ -7,7 +7,7 @@ platform:
   - x86
 
 environment:
-  MINICONDA: C:\Miniconda
+  MINICONDA: C:\Miniconda36
   matrix:
     - COLUMN_MAJOR_LAYOUT: OFF
     - COLUMN_MAJOR_LAYOUT: ON
