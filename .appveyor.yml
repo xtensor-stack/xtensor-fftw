@@ -39,7 +39,7 @@ install:
   - conda config --add channels conda-forge
   - conda update -q conda
   - conda info -a
-  - conda install cmake xtensor
+  - conda install xtensor
   - mkdir C:\fftw_download
   - ps: if($env:Platform -eq "x86"){$source = "ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll32.zip"; $destination = "C:\fftw-3.3.5.zip"; Invoke-WebRequest $source -OutFile $destination; echo "x86 fftw download complete"}
   - ps: if($env:Platform -eq "x64"){$source = "ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll64.zip"; $destination = "C:\fftw-3.3.5.zip"; Invoke-WebRequest $source -OutFile $destination; echo "x64 fftw download complete"}
