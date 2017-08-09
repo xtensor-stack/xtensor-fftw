@@ -165,7 +165,7 @@ install:
     - cd $TRAVIS_BUILD_DIR/build
     - cmake -DBUILD_TESTS=ON -DCOVERAGE=$COVERAGE ..
     - make -j2 test_xtensor-fftw VERBOSE=1
-    - if [[ "$COVERAGE" == "ON" ]]; then gem install coveralls-lcov; done
+    - if [[ "$COVERAGE" == "ON" ]]; then gem install coveralls-lcov; fi
 script:
     - cd test
     - ./test_xtensor-fftw
@@ -178,4 +178,4 @@ after_success:
     lcov --remove coverage.info 'tests/*' '/usr/*' --output-file coverage.info # filter out system and test code
     lcov --list coverage.info # debug before upload
     coveralls-lcov --repo-token ${COVERALLS_TOKEN} coverage.info # uploads to coveralls
-  done
+  fi
