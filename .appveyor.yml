@@ -53,7 +53,9 @@ install:
   - cd build
   - cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DFFTW_ROOT="C:\fftw_download" -DCMAKE_INSTALL_PREFIX=%MINICONDA%\\Library -DBUILD_TESTS=ON -DDEFAULT_COLUMN_MAJOR=%COLUMN_MAJOR_LAYOUT% -DDOWNLOAD_GTEST=ON ..
   - nmake test_xtensor-fftw
+  - dir
   - cd test
+  - dir
 
 build_script:
   - test_xtensor-fftw.exe
