@@ -12,8 +12,7 @@
 # commit e25330a7fe7a303c65b97ac3792a0ff934712551
 #
 # Modifications:
-# Copyright (c) 2017, Patrick Bos (see LICENSE file at the base directory
-# of the xtensor-fftw source)
+# Copyright (c) 2017, Patrick Bos
 #
 ############################################################################
 
