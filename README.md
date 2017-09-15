@@ -1,9 +1,12 @@
-# xtensor-fftw
-FFTW bindings for _xtensor_.
+# ![xtensor-fftw](http://quantstack.net/assets/images/xtensor-fftw.svg)
 
-| Travis (Unix) | Appveyor (Win)  | Codacy        | Coveralls   |
-| ------------- | -------------   | ------------- | ------------- |
-| [![Build Status](https://travis-ci.org/egpbos/xtensor-fftw.svg?branch=master)](https://travis-ci.org/egpbos/xtensor-fftw) | [![Build status](https://ci.appveyor.com/api/projects/status/l4wgk98kwospu7n1/branch/master?svg=true)](https://ci.appveyor.com/project/egpbos/xtensor-fftw/branch/master)      | [![Codacy Badge](https://api.codacy.com/project/badge/Grade/18861a283cf84b2e95886ba79c66e028)](https://www.codacy.com/app/egpbos/xtensor-fftw?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=egpbos/xtensor-fftw&amp;utm_campaign=Badge_Grade) | [![Coverage Status](https://coveralls.io/repos/github/egpbos/xtensor-fftw/badge.svg)](https://coveralls.io/github/egpbos/xtensor-fftw) |
+[![Travis](https://travis-ci.org/egpbos/xtensor-fftw.svg?branch=master)](https://travis-ci.org/egpbos/xtensor-fftw)
+[![Appveyor](https://ci.appveyor.com/api/projects/status/l4wgk98kwospu7n1?svg=true)](https://ci.appveyor.com/project/egpbos/xtensor-fftw)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/18861a283cf84b2e95886ba79c66e028)](https://www.codacy.com/app/egpbos/xtensor-fftw?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=egpbos/xtensor-fftw&amp;utm_campaign=Badge_Grade)
+[![Coverage Status](https://coveralls.io/repos/github/egpbos/xtensor-fftw/badge.svg)](https://coveralls.io/github/egpbos/xtensor-fftw)
+[![Join the Gitter Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/QuantStack/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+[fftw](http://www.fftw.org/) bindings for the [xtensor](https://github.com/QuantStack/xtensor) C++ multi-dimensional array library.
 
 ## Usage
 
@@ -62,4 +65,9 @@ After successful CMake configuration, run inside the build directory:
 make
 ```
 
-<!-- ### Install -->
+## License
+
+We use a shared copyright model that enables all contributors to maintain the
+copyright on their contributions.
+
+This software is licensed under the BSD-3-Clause license. See the [LICENSE](LICENSE) file for details.
