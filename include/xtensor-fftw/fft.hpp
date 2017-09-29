@@ -55,6 +55,7 @@ namespace xt {
                                               FFTW_ESTIMATE);
 
       fftwf_execute(plan);
+      fftwf_destroy_plan(plan);
       return output;
     }
 
@@ -71,6 +72,7 @@ namespace xt {
                                               FFTW_ESTIMATE | FFTW_PRESERVE_INPUT);
 
       fftwf_execute(plan);
+      fftwf_destroy_plan(plan);
       // we use the convention that the inverse fft divides by N, like numpy does
       return output / output.size();
     }
@@ -87,6 +89,7 @@ namespace xt {
                                             FFTW_ESTIMATE);
 
       fftw_execute(plan);
+      fftw_destroy_plan(plan);
       return output;
     }
 
@@ -103,6 +106,7 @@ namespace xt {
                                             FFTW_ESTIMATE | FFTW_PRESERVE_INPUT);
 
       fftw_execute(plan);
+      fftw_destroy_plan(plan);
       // we use the convention that the inverse fft divides by N, like numpy does
       return output / output.size();
     }
@@ -119,6 +123,7 @@ namespace xt {
                                               FFTW_ESTIMATE);
 
       fftwl_execute(plan);
+      fftwl_destroy_plan(plan);
       return output;
     }
 
@@ -135,6 +140,7 @@ namespace xt {
                                               FFTW_ESTIMATE | FFTW_PRESERVE_INPUT);
 
       fftwl_execute(plan);
+      fftwl_destroy_plan(plan);
       // we use the convention that the inverse fft divides by N, like numpy does
       return output / output.size();
     }
