@@ -17,8 +17,6 @@
 
 #include "gtest/gtest.h"
 
-// TODO: find a sensible upper-limit to the allowed FFT error instead of the default xt::allclose tolerances!
-
 TEST(fftC2CFloat1D, TransformAndInvert) {
 //  xt::xarray<float> a = xt::arange<float>(8);
   xt::xarray<float> a = xt::random::rand<float>({8}, 0, std::numeric_limits<float>::max()/8);
