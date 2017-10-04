@@ -18,12 +18,12 @@
 #include "gtest/gtest.h"
 
 template <typename T>
-class fftC2C1D : public ::testing::Test {};
+class TransformAndInvert : public ::testing::Test {};
 
 typedef ::testing::Types<float, double, long double> MyTypes;
-TYPED_TEST_CASE(fftC2C1D, MyTypes);
+TYPED_TEST_CASE(TransformAndInvert, MyTypes);
 
-TYPED_TEST(fftC2C1D, TransformAndInvert) {
+TYPED_TEST(TransformAndInvert, R2C_1D) {
   xt::xarray<TypeParam> a = xt::random::rand<TypeParam>({8}, 0, std::numeric_limits<TypeParam>::max()/8);
 
   auto a_fourier = xt::fftw::fft(a);

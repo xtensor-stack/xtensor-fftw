@@ -58,5 +58,5 @@ before_build:
   - cd test
 
 build_script:
-  # The long double FFTW library only works when sizeof(long double) == 12. In recent VC versions, long double is an alias of double, and so long double will not work with fftw3l. The long double tests are usually third in the list, so index 2 starting from 0, e.g. "fftC2C1D/2".
-  - test_xtensor-fftw.exe --gtest_filter=-fftC2C1D/2*
+  # The long double FFTW library only works when sizeof(long double) == 12. In recent VC versions, long double is an alias of double, and so long double will not work with fftw3l. The long double tests are usually third in the list, so index 2 starting from 0, e.g. "TransformAndInvert/2".
+  - test_xtensor-fftw.exe --gtest_filter=-*/2*
