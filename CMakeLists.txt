@@ -71,7 +71,7 @@ endif(FIX_RPATH)
 #--------------------------------------- install
 
 set(XTENSOR_FFTW_HEADERS
-        ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/fft.hpp
+        ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/basic.hpp
 )
 
 #--------------------------------------- tests
