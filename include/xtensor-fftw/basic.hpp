@@ -74,12 +74,12 @@ namespace xt {
     ////
 
     template<typename input_t, typename output_t, typename...>
-    xt::xarray<output_t> _fft_ (const xt::xarray<input_t> &input) {
+    inline xt::xarray<output_t> _fft_ (const xt::xarray<input_t> &input) {
       static_assert(sizeof(prec_t<input_t>) == 0, "Only specializations of _fft_ can be used");
     }
 
     template<typename input_t, typename output_t, typename...>
-    xt::xarray<output_t> _ifft_ (const xt::xarray<input_t> &input) {
+    inline xt::xarray<output_t> _ifft_ (const xt::xarray<input_t> &input) {
       static_assert(sizeof(prec_t<input_t>) == 0, "Only specializations of _ifft_ can be used");
     }
 
@@ -92,7 +92,7 @@ namespace xt {
             && std::is_floating_point< prec_t<input_t> >::value
         >
     >
-    xt::xarray<output_t> _fft_(const xt::xarray<input_t> &input) {
+    inline xt::xarray<output_t> _fft_(const xt::xarray<input_t> &input) {
       xt::xarray<output_t, layout_type::dynamic> output(input.shape(), input.strides());
 
       using fftw_input_t = fftw_number_t<input_t>;
@@ -117,7 +117,7 @@ namespace xt {
             && std::is_floating_point< prec_t<input_t> >::value
         >
     >
-    xt::xarray<output_t> _ifft_(const xt::xarray<input_t> &input) {
+    inline xt::xarray<output_t> _ifft_(const xt::xarray<input_t> &input) {
       xt::xarray<output_t, layout_type::dynamic> output(input.shape(), input.strides());
 
       using fftw_input_t = fftw_number_t<input_t>;
