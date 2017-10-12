@@ -34,10 +34,7 @@ namespace xt {
 
     // We use the convention that the inverse fft divides by N, like numpy does.
 
-    ////
-    // aliases for the fftw precision-dependent types
-    ////
-
+    // aliases for the fftw precision-dependent types:
     template <typename T> struct fftw_t {
       static_assert(sizeof(T) == 0, "Only specializations of fftw_t can be used");
     };
@@ -53,6 +50,20 @@ namespace xt {
       using plan = fftwl_plan;
       using complex = fftwl_complex;
     };
+    // and subclass alias for when calling with a complex type:
+    template <typename T> struct fftw_t< std::complex<T> > : public fftw_t<T> {};
+
+    // convert std::complex to fftwX_complex with right precision X; non-complex floats stay themselves:
+    template <typename regular_or_complex_t>
+    using fftw_number_t = std::conditional_t<
+        xtl::is_complex<regular_or_complex_t>::value,
+        typename fftw_t< xtl::complex_value_type_t<regular_or_complex_t> >::complex,
+        xtl::complex_value_type_t<regular_or_complex_t>
+    >;
+
+    // short-hand for precision for template arguments
+    template <typename in_or_output_t>
+    using prec_t = xtl::complex_value_type_t<in_or_output_t>;
 
     ///////////////////////////////////////////////////////////////////////////////
     // Regular FFT (complex to complex)
@@ -62,90 +73,89 @@ namespace xt {
     // Regular FFT: xarray templates
     ////
 
-    template<typename precision_t, typename input_t, typename output_t, typename...>
+    template<typename input_t, typename output_t, typename...>
     xt::xarray<output_t> _fft_ (const xt::xarray<input_t> &input) {
-      static_assert(sizeof(precision_t) == 0, "Only specializations of _fft_ can be used");
+      static_assert(sizeof(prec_t<input_t>) == 0, "Only specializations of _fft_ can be used");
     }
 
-    template<typename precision_t, typename input_t, typename output_t, typename...>
+    template<typename input_t, typename output_t, typename...>
     xt::xarray<output_t> _ifft_ (const xt::xarray<input_t> &input) {
-      static_assert(sizeof(precision_t) == 0, "Only specializations of _ifft_ can be used");
+      static_assert(sizeof(prec_t<input_t>) == 0, "Only specializations of _ifft_ can be used");
     }
 
-    template<typename precision_t, typename input_t, typename output_t,
-        typename fftw_t<precision_t>::plan (&fftw_plan_dft)(
-            int,
-            std::conditional_t<xtl::is_complex<input_t>::value, typename fftw_t<precision_t>::complex*, precision_t*>,
-            std::conditional_t<xtl::is_complex<output_t>::value, typename fftw_t<precision_t>::complex*, precision_t*>,
-            unsigned int),
-        void (&fftw_execute)(typename fftw_t<precision_t>::plan), void (&fftw_destroy_plan)(typename fftw_t<precision_t>::plan)>
+    template <
+        typename input_t, typename output_t,
+        typename fftw_t<input_t>::plan (&fftw_plan_dft)(int, fftw_number_t<input_t> *, fftw_number_t<output_t> *, unsigned int),
+        void (&fftw_execute)(typename fftw_t<input_t>::plan), void (&fftw_destroy_plan)(typename fftw_t<input_t>::plan),
+        typename = std::enable_if_t<
+            std::is_same< prec_t<input_t>, prec_t<output_t> >::value
+            && std::is_floating_point< prec_t<input_t> >::value
+        >
+    >
     xt::xarray<output_t> _fft_(const xt::xarray<input_t> &input) {
       xt::xarray<output_t, layout_type::dynamic> output(input.shape(), input.strides());
 
-      using fftw_input_t = std::conditional_t<xtl::is_complex<input_t>::value, typename fftw_t<precision_t>::complex, precision_t>;
-      using fftw_output_t = std::conditional_t<xtl::is_complex<output_t>::value, typename fftw_t<precision_t>::complex, precision_t>;
+      using fftw_input_t = fftw_number_t<input_t>;
+      using fftw_output_t = fftw_number_t<output_t>;
 
-      typename fftw_t<precision_t>::plan plan = fftw_plan_dft(static_cast<int>(input.size()),
-                                                     const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.raw_data())),
-                                                     reinterpret_cast<fftw_output_t *>(output.raw_data()),
-                                                     FFTW_ESTIMATE);
+      typename fftw_t<input_t>::plan plan = fftw_plan_dft(static_cast<int>(input.size()),
+                                                          const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.raw_data())),
+                                                          reinterpret_cast<fftw_output_t *>(output.raw_data()),
+                                                          FFTW_ESTIMATE);
 
       fftw_execute(plan);
       fftw_destroy_plan(plan);
       return output;
     };
 
-    template<typename precision_t, typename input_t, typename output_t,
-        typename fftw_t<precision_t>::plan (&fftw_plan_dft)(
-            int,
-            std::conditional_t<xtl::is_complex<input_t>::value, typename fftw_t<precision_t>::complex*, precision_t*>,
-            std::conditional_t<xtl::is_complex<output_t>::value, typename fftw_t<precision_t>::complex*, precision_t*>,
-            unsigned int),
-        void (&fftw_execute)(typename fftw_t<precision_t>::plan), void (&fftw_destroy_plan)(typename fftw_t<precision_t>::plan)>
+    template <
+        typename input_t, typename output_t,
+        typename fftw_t<input_t>::plan (&fftw_plan_dft)(int, fftw_number_t<input_t> *, fftw_number_t<output_t> *, unsigned int),
+        void (&fftw_execute)(typename fftw_t<input_t>::plan), void (&fftw_destroy_plan)(typename fftw_t<input_t>::plan),
+        typename = std::enable_if_t<
+            std::is_same< prec_t<input_t>, prec_t<output_t> >::value
+            && std::is_floating_point< prec_t<input_t> >::value
+        >
+    >
     xt::xarray<output_t> _ifft_(const xt::xarray<input_t> &input) {
       xt::xarray<output_t, layout_type::dynamic> output(input.shape(), input.strides());
 
-      using fftw_input_t = std::conditional_t<xtl::is_complex<input_t>::value, typename fftw_t<precision_t>::complex, precision_t>;
-      using fftw_output_t = std::conditional_t<xtl::is_complex<output_t>::value, typename fftw_t<precision_t>::complex, precision_t>;
+      using fftw_input_t = fftw_number_t<input_t>;
+      using fftw_output_t = fftw_number_t<output_t>;
 
-      typename fftw_t<precision_t>::plan plan = fftw_plan_dft(static_cast<int>(input.size()),
-                                                     const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.raw_data())),
-                                                     reinterpret_cast<fftw_output_t *>(output.raw_data()),
-                                                     FFTW_ESTIMATE | FFTW_PRESERVE_INPUT);
+      typename fftw_t<input_t>::plan plan = fftw_plan_dft(static_cast<int>(input.size()),
+                                                          const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.raw_data())),
+                                                          reinterpret_cast<fftw_output_t *>(output.raw_data()),
+                                                          FFTW_ESTIMATE | FFTW_PRESERVE_INPUT);
 
       fftw_execute(plan);
       fftw_destroy_plan(plan);
       return output / output.size();
     };
 
-//    xt::xarray<std::complex<float>> _fft_<float, float, std::complex<float>, fftwf_plan (&fftw_plan_dft_r2c_1d)(int, float*, fftwf_complex*, unsigned int), void (&fftwf_execute)(fftwf_plan), void (&fftwf_destroy_plan)(fftwf_plan) > (const xt::xarray<float> &input);
-//    template<>
-//    xt::xarray<std::complex<float> > _fft_<float, float, std::complex<float>, fftwf_plan_dft_r2c_1d, fftwf_execute, fftwf_destroy_plan> (const xt::xarray<float> &input);
-//    template<>
-//    xt::xarray<float> _ifft_<float, std::complex<float>, float, fftwf_plan_dft_c2r_1d, fftwf_execute, fftwf_destroy_plan> (const xt::xarray<std::complex<float> > &input);
 
     inline xt::xarray<std::complex<float> > RFFT (const xt::xarray<float> &input) {
-      return _fft_<float, float, std::complex<float>, fftwf_plan_dft_r2c_1d, fftwf_execute, fftwf_destroy_plan> (input);
+      return _fft_<float, std::complex<float>, fftwf_plan_dft_r2c_1d, fftwf_execute, fftwf_destroy_plan> (input);
     }
 
     inline xt::xarray<float> IRFFT (const xt::xarray<std::complex<float> > &input) {
-      return _ifft_<float, std::complex<float>, float, fftwf_plan_dft_c2r_1d, fftwf_execute, fftwf_destroy_plan> (input);
+      return _ifft_<std::complex<float>, float, fftwf_plan_dft_c2r_1d, fftwf_execute, fftwf_destroy_plan> (input);
     }
 
     inline xt::xarray<std::complex<double> > RFFT (const xt::xarray<double> &input) {
-      return _fft_<double, double, std::complex<double>, fftw_plan_dft_r2c_1d, fftw_execute, fftw_destroy_plan> (input);
+      return _fft_<double, std::complex<double>, fftw_plan_dft_r2c_1d, fftw_execute, fftw_destroy_plan> (input);
     }
 
     inline xt::xarray<double> IRFFT (const xt::xarray<std::complex<double> > &input) {
-      return _ifft_<double, std::complex<double>, double, fftw_plan_dft_c2r_1d, fftw_execute, fftw_destroy_plan> (input);
+      return _ifft_<std::complex<double>, double, fftw_plan_dft_c2r_1d, fftw_execute, fftw_destroy_plan> (input);
     }
 
     inline xt::xarray<std::complex<long double> > RFFT (const xt::xarray<long double> &input) {
-      return _fft_<long double, long double, std::complex<long double>, fftwl_plan_dft_r2c_1d, fftwl_execute, fftwl_destroy_plan> (input);
+      return _fft_<long double, std::complex<long double>, fftwl_plan_dft_r2c_1d, fftwl_execute, fftwl_destroy_plan> (input);
     }
 
     inline xt::xarray<long double> IRFFT (const xt::xarray<std::complex<long double> > &input) {
-      return _ifft_<long double, std::complex<long double>, long double, fftwl_plan_dft_c2r_1d, fftwl_execute, fftwl_destroy_plan> (input);
+      return _ifft_<std::complex<long double>, long double, fftwl_plan_dft_c2r_1d, fftwl_execute, fftwl_destroy_plan> (input);
     }
 
     ////
