@@ -182,7 +182,6 @@ namespace xt {
 //    xt::xtensor<real_t, dim> _ifft_(const xt::xtensor< std::complex<real_t>, dim > &input) {
 //      static_assert(sizeof(real_t) == 0, "Only specializations of ifft can be used");
 //
-//      std::cout << "WARNING: the inverse c2r fftw transform by default destroys its input array, but in xt::fftw::ifft this has been disabled at the cost of some performance." << std::endl;
 //      xt::xtensor<real_t, dim> output(input.shape(), input.strides());
 //
 //      fftw_plan_t plan = fftwXXXXX_plan_dft_c2r_1d(static_cast<int>(input.size()),
@@ -247,7 +246,6 @@ namespace xt {
 
     template<>
     inline xt::xarray<float> irfft<float>(const xt::xarray< std::complex<float> > &input) {
-      std::cout << "WARNING: the inverse c2r fftw transform by default destroys its input array, but in xt::fftw::ifft this has been disabled at the cost of some performance." << std::endl;
       xt::xarray<float, layout_type::dynamic> output(input.shape(), input.strides());
 
       fftwf_plan plan = fftwf_plan_dft_c2r_1d(static_cast<int>(input.size()),
@@ -274,7 +272,6 @@ namespace xt {
     }
 
     template<> inline xt::xarray<double> irfft<double>(const xt::xarray< std::complex<double> > &input) {
-      std::cout << "WARNING: the inverse c2r fftw transform by default destroys its input array, but in xt::fftw::ifft this has been disabled at the cost of some performance." << std::endl;
       xt::xarray<double, layout_type::dynamic> output(input.shape(), input.strides());
 
       fftw_plan plan = fftw_plan_dft_c2r_1d(static_cast<int>(input.size()),
@@ -301,7 +298,6 @@ namespace xt {
     }
 
     template<> inline xt::xarray<long double> irfft<long double>(const xt::xarray< std::complex<long double> > &input) {
-      std::cout << "WARNING: the inverse c2r fftw transform by default destroys its input array, but in xt::fftw::ifft this has been disabled at the cost of some performance." << std::endl;
       xt::xarray<long double, layout_type::dynamic> output(input.shape(), input.strides());
 
       fftwl_plan plan = fftwl_plan_dft_c2r_1d(static_cast<int>(input.size()),
