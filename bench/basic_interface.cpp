@@ -47,20 +47,11 @@ public:
 
 using rfft1Dxarray_float = rfft1Dxarray<float>;
 
-BENCHMARK_F(rfft1Dxarray_float, TransformAndInvert_OLD)(::benchmark::State& st) {
+BENCHMARK_F(rfft1Dxarray_float, TransformAndInvert)(::benchmark::State& st) {
   while (st.KeepRunning()) {
     auto a_fourier = xt::fftw::rfft(a);
     ::benchmark::DoNotOptimize(a_fourier);
     auto should_be_a = xt::fftw::irfft(a_fourier);
-    ::benchmark::DoNotOptimize(should_be_a);
-  }
-}
-
-BENCHMARK_F(rfft1Dxarray_float, TransformAndInvert_NEW)(::benchmark::State& st) {
-  while (st.KeepRunning()) {
-    auto a_fourier = xt::fftw::RFFT(a);
-    ::benchmark::DoNotOptimize(a_fourier);
-    auto should_be_a = xt::fftw::IRFFT(a_fourier);
     ::benchmark::DoNotOptimize(should_be_a);
   }
 }

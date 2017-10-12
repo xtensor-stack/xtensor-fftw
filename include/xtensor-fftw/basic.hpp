@@ -34,6 +34,13 @@ namespace xt {
 
     // We use the convention that the inverse fft divides by N, like numpy does.
 
+
+    ///////////////////////////////////////////////////////////////////////////////
+    // General: templates defining the basic interaction logic with fftw. These
+    //          will be specialized for all fft families, precisions and
+    //          dimensionalities.
+    ///////////////////////////////////////////////////////////////////////////////
+
     // aliases for the fftw precision-dependent types:
     template <typename T> struct fftw_t {
       static_assert(sizeof(T) == 0, "Only specializations of fftw_t can be used");
@@ -65,12 +72,9 @@ namespace xt {
     template <typename in_or_output_t>
     using prec_t = xtl::complex_value_type_t<in_or_output_t>;
 
-    ///////////////////////////////////////////////////////////////////////////////
-    // Regular FFT (complex to complex)
-    ///////////////////////////////////////////////////////////////////////////////
 
     ////
-    // Regular FFT: xarray templates
+    // General: xarray templates
     ////
 
     template<typename input_t, typename output_t, typename...>
@@ -134,32 +138,8 @@ namespace xt {
     };
 
 
-    inline xt::xarray<std::complex<float> > RFFT (const xt::xarray<float> &input) {
-      return _fft_<float, std::complex<float>, fftwf_plan_dft_r2c_1d, fftwf_execute, fftwf_destroy_plan> (input);
-    }
-
-    inline xt::xarray<float> IRFFT (const xt::xarray<std::complex<float> > &input) {
-      return _ifft_<std::complex<float>, float, fftwf_plan_dft_c2r_1d, fftwf_execute, fftwf_destroy_plan> (input);
-    }
-
-    inline xt::xarray<std::complex<double> > RFFT (const xt::xarray<double> &input) {
-      return _fft_<double, std::complex<double>, fftw_plan_dft_r2c_1d, fftw_execute, fftw_destroy_plan> (input);
-    }
-
-    inline xt::xarray<double> IRFFT (const xt::xarray<std::complex<double> > &input) {
-      return _ifft_<std::complex<double>, double, fftw_plan_dft_c2r_1d, fftw_execute, fftw_destroy_plan> (input);
-    }
-
-    inline xt::xarray<std::complex<long double> > RFFT (const xt::xarray<long double> &input) {
-      return _fft_<long double, std::complex<long double>, fftwl_plan_dft_r2c_1d, fftwl_execute, fftwl_destroy_plan> (input);
-    }
-
-    inline xt::xarray<long double> IRFFT (const xt::xarray<std::complex<long double> > &input) {
-      return _ifft_<std::complex<long double>, long double, fftwl_plan_dft_c2r_1d, fftwl_execute, fftwl_destroy_plan> (input);
-    }
-
     ////
-    // Regular FFT: xtensor templates
+    // General: xtensor templates
     ////
 
 //    template<typename real_t, std::size_t dim, typename fftw_plan_t>
@@ -193,6 +173,12 @@ namespace xt {
 //      fftwXXXXX_destroy_plan(plan);
 //      return output / output.size();
 //    };
+
+
+    ///////////////////////////////////////////////////////////////////////////////
+    // Regular FFT (complex to complex)
+    ///////////////////////////////////////////////////////////////////////////////
+
     ////
     // Regular FFT: 1D
     ////
@@ -221,99 +207,58 @@ namespace xt {
     // Real FFT: 1D
     ////
 
-    template<typename real_t>
-    xt::xarray< std::complex<real_t> > rfft(const xt::xarray<real_t> &input) {
-      static_assert(sizeof(real_t) == 0, "Only specializations of fft can be used");
-    };
-    template<typename real_t>
-    xt::xarray<real_t> irfft(const xt::xarray< std::complex<real_t> > &input) {
-      static_assert(sizeof(real_t) == 0, "Only specializations of ifft can be used");
-    };
-
-    template<>
-    inline xt::xarray< std::complex<float> > rfft<float>(const xt::xarray<float> &input) {
-      xt::xarray<std::complex<float>, layout_type::dynamic> output(input.shape(), input.strides());
-
-      fftwf_plan plan = fftwf_plan_dft_r2c_1d(static_cast<int>(input.size()),
-                                              const_cast<float *>(input.raw_data()),
-                                              reinterpret_cast<fftwf_complex*>(output.raw_data()),
-                                              FFTW_ESTIMATE);
-
-      fftwf_execute(plan);
-      fftwf_destroy_plan(plan);
-      return output;
+    inline xt::xarray<std::complex<float> > rfft (const xt::xarray<float> &input) {
+      return _fft_<float, std::complex<float>, fftwf_plan_dft_r2c_1d, fftwf_execute, fftwf_destroy_plan> (input);
     }
 
-    template<>
-    inline xt::xarray<float> irfft<float>(const xt::xarray< std::complex<float> > &input) {
-      xt::xarray<float, layout_type::dynamic> output(input.shape(), input.strides());
-
-      fftwf_plan plan = fftwf_plan_dft_c2r_1d(static_cast<int>(input.size()),
-                                              const_cast<fftwf_complex *>(reinterpret_cast<const fftwf_complex *>(input.raw_data())),
-                                              output.raw_data(),
-                                              FFTW_ESTIMATE | FFTW_PRESERVE_INPUT);
-
-      fftwf_execute(plan);
-      fftwf_destroy_plan(plan);
-      return output / output.size();
+    inline xt::xarray<float> irfft (const xt::xarray<std::complex<float> > &input) {
+      return _ifft_<std::complex<float>, float, fftwf_plan_dft_c2r_1d, fftwf_execute, fftwf_destroy_plan> (input);
     }
 
-    template<> inline xt::xarray< std::complex<double> > rfft<double>(const xt::xarray<double> &input) {
-      xt::xarray<std::complex<double>, layout_type::dynamic> output(input.shape(), input.strides());
-
-      fftw_plan plan = fftw_plan_dft_r2c_1d(static_cast<int>(input.size()),
-                                            const_cast<double *>(input.raw_data()),
-                                            reinterpret_cast<fftw_complex*>(output.raw_data()),
-                                            FFTW_ESTIMATE);
-
-      fftw_execute(plan);
-      fftw_destroy_plan(plan);
-      return output;
+    inline xt::xarray<std::complex<double> > rfft (const xt::xarray<double> &input) {
+      return _fft_<double, std::complex<double>, fftw_plan_dft_r2c_1d, fftw_execute, fftw_destroy_plan> (input);
     }
 
-    template<> inline xt::xarray<double> irfft<double>(const xt::xarray< std::complex<double> > &input) {
-      xt::xarray<double, layout_type::dynamic> output(input.shape(), input.strides());
-
-      fftw_plan plan = fftw_plan_dft_c2r_1d(static_cast<int>(input.size()),
-                                            const_cast<fftw_complex *>(reinterpret_cast<const fftw_complex *>(input.raw_data())),
-                                            output.raw_data(),
-                                            FFTW_ESTIMATE | FFTW_PRESERVE_INPUT);
-
-      fftw_execute(plan);
-      fftw_destroy_plan(plan);
-      return output / output.size();
+    inline xt::xarray<double> irfft (const xt::xarray<std::complex<double> > &input) {
+      return _ifft_<std::complex<double>, double, fftw_plan_dft_c2r_1d, fftw_execute, fftw_destroy_plan> (input);
     }
 
-    template<> inline xt::xarray< std::complex<long double> > rfft<long double>(const xt::xarray<long double> &input) {
-      xt::xarray<std::complex<long double>, layout_type::dynamic> output(input.shape(), input.strides());
-
-      fftwl_plan plan = fftwl_plan_dft_r2c_1d(static_cast<int>(input.size()),
-                                              const_cast<long double *>(input.raw_data()),
-                                              reinterpret_cast<fftwl_complex*>(output.raw_data()),
-                                              FFTW_ESTIMATE);
-
-      fftwl_execute(plan);
-      fftwl_destroy_plan(plan);
-      return output;
+    inline xt::xarray<std::complex<long double> > rfft (const xt::xarray<long double> &input) {
+      return _fft_<long double, std::complex<long double>, fftwl_plan_dft_r2c_1d, fftwl_execute, fftwl_destroy_plan> (input);
     }
 
-    template<> inline xt::xarray<long double> irfft<long double>(const xt::xarray< std::complex<long double> > &input) {
-      xt::xarray<long double, layout_type::dynamic> output(input.shape(), input.strides());
-
-      fftwl_plan plan = fftwl_plan_dft_c2r_1d(static_cast<int>(input.size()),
-                                              const_cast<fftwl_complex *>(reinterpret_cast<const fftwl_complex *>(input.raw_data())),
-                                              output.raw_data(),
-                                              FFTW_ESTIMATE | FFTW_PRESERVE_INPUT);
-
-      fftwl_execute(plan);
-      fftwl_destroy_plan(plan);
-      return output / output.size();
+    inline xt::xarray<long double> irfft (const xt::xarray<std::complex<long double> > &input) {
+      return _ifft_<std::complex<long double>, long double, fftwl_plan_dft_c2r_1d, fftwl_execute, fftwl_destroy_plan> (input);
     }
 
 
     ////
     // Real FFT: 2D
     ////
+
+    inline xt::xarray<std::complex<float> > rfft2 (const xt::xarray<float> &input) {
+      return _fft_<float, std::complex<float>, fftwf_plan_dft_r2c_2d, fftwf_execute, fftwf_destroy_plan> (input);
+    }
+
+    inline xt::xarray<float> irfft2 (const xt::xarray<std::complex<float> > &input) {
+      return _ifft_<std::complex<float>, float, fftwf_plan_dft_c2r_2d, fftwf_execute, fftwf_destroy_plan> (input);
+    }
+
+    inline xt::xarray<std::complex<double> > rfft2 (const xt::xarray<double> &input) {
+      return _fft_<double, std::complex<double>, fftw_plan_dft_r2c_2d, fftw_execute, fftw_destroy_plan> (input);
+    }
+
+    inline xt::xarray<double> irfft2 (const xt::xarray<std::complex<double> > &input) {
+      return _ifft_<std::complex<double>, double, fftw_plan_dft_c2r_2d, fftw_execute, fftw_destroy_plan> (input);
+    }
+
+    inline xt::xarray<std::complex<long double> > rfft2 (const xt::xarray<long double> &input) {
+      return _fft_<long double, std::complex<long double>, fftwl_plan_dft_r2c_2d, fftwl_execute, fftwl_destroy_plan> (input);
+    }
+
+    inline xt::xarray<long double> irfft2 (const xt::xarray<std::complex<long double> > &input) {
+      return _ifft_<std::complex<long double>, long double, fftwl_plan_dft_c2r_2d, fftwl_execute, fftwl_destroy_plan> (input);
+    }
 
 
     ////

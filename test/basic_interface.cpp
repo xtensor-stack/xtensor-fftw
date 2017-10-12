@@ -145,15 +145,6 @@ TYPED_TEST(TransformAndInvert, realFFT_1D_xarray) {
   assert_results(a, a_fourier, should_be_a);
 }
 
-TYPED_TEST(TransformAndInvert, realFFT_1D_xarray_fancy_templates) {
-  xt::xarray<TypeParam> a = generate_data<TypeParam, 1>(data_size);
-  auto a_fourier = xt::fftw::RFFT(a);
-  auto should_be_a = xt::fftw::IRFFT(a_fourier);
-  assert_results(a, a_fourier, should_be_a);
-}
-
-
-/*
 TYPED_TEST(TransformAndInvert, realFFT_2D_xarray) {
   xt::xarray<TypeParam> a = generate_data<TypeParam, 2>(data_size);
   auto a_fourier = xt::fftw::rfft2(a);
@@ -161,6 +152,7 @@ TYPED_TEST(TransformAndInvert, realFFT_2D_xarray) {
   assert_results(a, a_fourier, should_be_a);
 }
 
+/*
 TYPED_TEST(TransformAndInvert, realFFT_3D_xarray) {
   xt::xarray<TypeParam> a = generate_data<TypeParam, 3>(data_size);
   auto a_fourier = xt::fftw::rfft3(a);
