@@ -35,8 +35,8 @@ public:
     a = generate_data<precision_t, 1>(data_size);
 
     // let fftw accumulate wisdom
-//    auto b = xt::fftw::rfft(a);
-//    auto c = xt::fftw::irfft(b);
+    auto b = xt::fftw::rfft(a);
+    auto c = xt::fftw::irfft(b);
   }
 
   void TearDown(const ::benchmark::State& /*state*/) {}
