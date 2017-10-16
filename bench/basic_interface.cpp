@@ -27,16 +27,20 @@ auto generate_data(std::size_t n) {
   return xt::random::rand<T>(shape, 0, std::numeric_limits<T>::max() / std::pow(n, dim));
 }
 
+////
+// Real FFT: 1D
+////
+
 template<typename precision_t>
 class rfft1Dxarray : public ::benchmark::Fixture {
 public:
   void SetUp(const ::benchmark::State& state) {
-    data_size = 4;
+      data_size = 1024;
     a = generate_data<precision_t, 1>(data_size);
 
     // let fftw accumulate wisdom
-    auto b = xt::fftw::rfft(a);
-    auto c = xt::fftw::irfft(b);
+//    auto b = xt::fftw::rfft(a);  // DOES NOT HAVE ANY NOTICEABLE EFFECT...
+//    auto c = xt::fftw::irfft(b);
   }
 
   void TearDown(const ::benchmark::State& /*state*/) {}
@@ -55,5 +59,65 @@ BENCHMARK_F(rfft1Dxarray_float, TransformAndInvert)(::benchmark::State& st) {
     ::benchmark::DoNotOptimize(should_be_a);
   }
 }
+
+////
+// Real FFT: nD with n = 1
+////
+
+BENCHMARK_F(rfft1Dxarray_float, TransformAndInvert_nD)(::benchmark::State& st) {
+  while (st.KeepRunning()) {
+    auto a_fourier = xt::fftw::rfftn<1>(a);
+    ::benchmark::DoNotOptimize(a_fourier);
+    auto should_be_a = xt::fftw::irfftn<1>(a_fourier);
+    ::benchmark::DoNotOptimize(should_be_a);
+  }
+}
+
+////
+// Real FFT: 2D
+////
+
+template<typename precision_t>
+class rfft2Dxarray : public ::benchmark::Fixture {
+public:
+  void SetUp(const ::benchmark::State& state) {
+    data_size = 64;
+    a = generate_data<precision_t, 2>(data_size);
+
+    // let fftw accumulate wisdom
+//    auto b = xt::fftw::rfft(a);  // DOES NOT HAVE ANY NOTICEABLE EFFECT...
+//    auto c = xt::fftw::irfft(b);
+  }
+
+  void TearDown(const ::benchmark::State& /*state*/) {}
+
+  std::size_t data_size;
+  xt::xarray<precision_t> a;
+};
+
+using rfft2Dxarray_float = rfft2Dxarray<float>;
+
+BENCHMARK_F(rfft2Dxarray_float, TransformAndInvert)(::benchmark::State& st) {
+  while (st.KeepRunning()) {
+    auto a_fourier = xt::fftw::rfft2(a);
+    ::benchmark::DoNotOptimize(a_fourier);
+    auto should_be_a = xt::fftw::irfft2(a_fourier);
+    ::benchmark::DoNotOptimize(should_be_a);
+  }
+}
+
+////
+// Real FFT: nD with n = 2
+////
+
+BENCHMARK_F(rfft2Dxarray_float, TransformAndInvert_nD)(::benchmark::State& st) {
+  while (st.KeepRunning()) {
+    auto a_fourier = xt::fftw::rfftn<2>(a);
+    ::benchmark::DoNotOptimize(a_fourier);
+    auto should_be_a = xt::fftw::irfftn<2>(a_fourier);
+    ::benchmark::DoNotOptimize(should_be_a);
+  }
+}
+
 
 BENCHMARK_MAIN()
