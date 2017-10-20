@@ -120,4 +120,23 @@ BENCHMARK_F(rfft2Dxarray_float, TransformAndInvert_nD)(::benchmark::State& st) {
 }
 
 
+//BENCHMARK_TEMPLATE_F(rfft1Dxarray, TransformAndInvert, double)(::benchmark::State& st) {
+//  for (auto _ : st) {
+//    auto a_fourier = xt::fftw::rfft(a);
+//    ::benchmark::DoNotOptimize(a_fourier);
+//    auto should_be_a = xt::fftw::irfft(a_fourier);
+//    ::benchmark::DoNotOptimize(should_be_a);
+//  }
+//}
+//
+//BENCHMARK_TEMPLATE_F(rfft1Dxarray, TransformAndInvert, long double)(::benchmark::State& st) {
+//  for (auto _ : st) {
+//    auto a_fourier = xt::fftw::rfft(a);
+//    ::benchmark::DoNotOptimize(a_fourier);
+//    auto should_be_a = xt::fftw::irfft(a_fourier);
+//    ::benchmark::DoNotOptimize(should_be_a);
+//  }
+//}
+
+
 BENCHMARK_MAIN()
