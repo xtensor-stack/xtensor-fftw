@@ -60,16 +60,17 @@ std::size_t data_size = 4;
 ////
 // Regular FFT: xarray
 ////
-/*
-TYPED_TEST(TransformAndInvert, FFT_1D_xarray) {
-  typedef std::complex<TypeParam> number_t;
-  xt::xarray<number_t> a = generate_data<number_t, 1>(data_size);
-  auto a_fourier = xt::fftw::fft(a);
-  std::cout << "fourier transform of input before ifft (which is destructive!): " << a_fourier << std::endl;
-  auto should_be_a = xt::fftw::ifft(a_fourier);
-  assert_results(a, a_fourier, should_be_a);
-}
 
+//TYPED_TEST(TransformAndInvert, FFT_1D_xarray) {
+//  typedef std::complex<TypeParam> number_t;
+//  xt::xarray<number_t> a = generate_data<number_t, 1>(data_size);
+//  auto a_fourier = xt::fftw::fft(a);
+//  std::cout << "fourier transform of input before ifft (which is destructive!): " << a_fourier << std::endl;
+//  auto should_be_a = xt::fftw::ifft(a_fourier);
+//  assert_results(a, a_fourier, should_be_a);
+//}
+
+/*
 TYPED_TEST(TransformAndInvert, FFT_2D_xarray) {
   typedef std::complex<TypeParam> number_t;
   xt::xarray<number_t> a = generate_data<number_t, 2>(data_size);
