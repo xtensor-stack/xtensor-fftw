@@ -245,7 +245,7 @@ TYPED_TEST(TransformAndInvert, realFFT_4D_xtensor) {
   auto should_be_a = xt::fftw::irfftn(a_fourier);
   assert_results(a, a_fourier, should_be_a);
 }
-
+*/
 
 ///////////////////////////////////////////////////////////////////////////////
 // Hermitian FFT (real spectrum)
@@ -299,6 +299,7 @@ TYPED_TEST(TransformAndInvert, hermFFT_nD_n_equals_1_xarray) {
 // Hermitian FFT: xtensor
 ////
 
+/*
 TYPED_TEST(TransformAndInvert, hermFFT_1D_xtensor) {
   xt::xtensor<std::complex<TypeParam>, 1> a = generate_complex_data<TypeParam, 1>(data_size);
   auto a_fourier = xt::fftw::hfft(a);

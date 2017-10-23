@@ -674,21 +674,121 @@ namespace xt {
     // Hermitian FFT: 1D
     ////
 
+    inline xt::xarray<float> hfft (const xt::xarray<std::complex<float> > &input) {
+      return _fft_<std::complex<float>, float, 1, 0, true, false, true, fftwf_plan_dft_c2r_1d, fftwf_execute, fftwf_destroy_plan> (input);
+    }
+
+    inline xt::xarray<std::complex<float> > ihfft (const xt::xarray<float> &input) {
+      return _ifft_<float, std::complex<float>, 1, 0, true, true, false, fftwf_plan_dft_r2c_1d, fftwf_execute, fftwf_destroy_plan> (input);
+    }
+
+    inline xt::xarray<double> hfft (const xt::xarray<std::complex<double> > &input) {
+      return _fft_<std::complex<double>, double, 1, 0, true, false, true, fftw_plan_dft_c2r_1d, fftw_execute, fftw_destroy_plan> (input);
+    }
+
+    inline xt::xarray<std::complex<double> > ihfft (const xt::xarray<double> &input) {
+      return _ifft_<double, std::complex<double>, 1, 0, true, true, false, fftw_plan_dft_r2c_1d, fftw_execute, fftw_destroy_plan> (input);
+    }
+
+    inline xt::xarray<long double> hfft (const xt::xarray<std::complex<long double> > &input) {
+      return _fft_<std::complex<long double>, long double, 1, 0, true, false, true, fftwl_plan_dft_c2r_1d, fftwl_execute, fftwl_destroy_plan> (input);
+    }
+
+    inline xt::xarray<std::complex<long double> > ihfft (const xt::xarray<long double> &input) {
+      return _ifft_<long double, std::complex<long double>, 1, 0, true, true, false, fftwl_plan_dft_r2c_1d, fftwl_execute, fftwl_destroy_plan> (input);
+    }
 
     ////
     // Hermitian FFT: 2D
     ////
+
+    inline xt::xarray<float> hfft2 (const xt::xarray<std::complex<float> > &input) {
+      return _fft_<std::complex<float>, float, 2, 0, true, false, true, fftwf_plan_dft_c2r_2d, fftwf_execute, fftwf_destroy_plan> (input);
+    }
+
+    inline xt::xarray<std::complex<float> > ihfft2 (const xt::xarray<float> &input) {
+      return _ifft_<float, std::complex<float>, 2, 0, true, true, false, fftwf_plan_dft_r2c_2d, fftwf_execute, fftwf_destroy_plan> (input);
+    }
+
+    inline xt::xarray<double> hfft2 (const xt::xarray<std::complex<double> > &input) {
+      return _fft_<std::complex<double>, double, 2, 0, true, false, true, fftw_plan_dft_c2r_2d, fftw_execute, fftw_destroy_plan> (input);
+    }
+
+    inline xt::xarray<std::complex<double> > ihfft2 (const xt::xarray<double> &input) {
+      return _ifft_<double, std::complex<double>, 2, 0, true, true, false, fftw_plan_dft_r2c_2d, fftw_execute, fftw_destroy_plan> (input);
+    }
+
+    inline xt::xarray<long double> hfft2 (const xt::xarray<std::complex<long double> > &input) {
+      return _fft_<std::complex<long double>, long double, 2, 0, true, false, true, fftwl_plan_dft_c2r_2d, fftwl_execute, fftwl_destroy_plan> (input);
+    }
+
+    inline xt::xarray<std::complex<long double> > ihfft2 (const xt::xarray<long double> &input) {
+      return _ifft_<long double, std::complex<long double>, 2, 0, true, true, false, fftwl_plan_dft_r2c_2d, fftwl_execute, fftwl_destroy_plan> (input);
+    }
 
 
     ////
     // Hermitian FFT: 3D
     ////
 
+    inline xt::xarray<float> hfft3 (const xt::xarray<std::complex<float> > &input) {
+      return _fft_<std::complex<float>, float, 3, 0, true, false, true, fftwf_plan_dft_c2r_3d, fftwf_execute, fftwf_destroy_plan> (input);
+    }
+
+    inline xt::xarray<std::complex<float> > ihfft3 (const xt::xarray<float> &input) {
+      return _ifft_<float, std::complex<float>, 3, 0, true, true, false, fftwf_plan_dft_r2c_3d, fftwf_execute, fftwf_destroy_plan> (input);
+    }
+
+    inline xt::xarray<double> hfft3 (const xt::xarray<std::complex<double> > &input) {
+      return _fft_<std::complex<double>, double, 3, 0, true, false, true, fftw_plan_dft_c2r_3d, fftw_execute, fftw_destroy_plan> (input);
+    }
+
+    inline xt::xarray<std::complex<double> > ihfft3 (const xt::xarray<double> &input) {
+      return _ifft_<double, std::complex<double>, 3, 0, true, true, false, fftw_plan_dft_r2c_3d, fftw_execute, fftw_destroy_plan> (input);
+    }
+
+    inline xt::xarray<long double> hfft3 (const xt::xarray<std::complex<long double> > &input) {
+      return _fft_<std::complex<long double>, long double, 3, 0, true, false, true, fftwl_plan_dft_c2r_3d, fftwl_execute, fftwl_destroy_plan> (input);
+    }
+
+    inline xt::xarray<std::complex<long double> > ihfft3 (const xt::xarray<long double> &input) {
+      return _ifft_<long double, std::complex<long double>, 3, 0, true, true, false, fftwl_plan_dft_r2c_3d, fftwl_execute, fftwl_destroy_plan> (input);
+    }
+
 
     ////
     // Hermitian FFT: nD
     ////
 
+    template <std::size_t dim>
+    inline xt::xarray<float> hfftn (const xt::xarray<std::complex<float> > &input) {
+      return _fft_<std::complex<float>, float, dim, 0, false, false, true, fftwf_plan_dft_c2r, fftwf_execute, fftwf_destroy_plan> (input);
+    }
+
+    template <std::size_t dim>
+    inline xt::xarray<std::complex<float> > ihfftn (const xt::xarray<float> &input) {
+      return _ifft_<float, std::complex<float>, dim, 0, false, true, false, fftwf_plan_dft_r2c, fftwf_execute, fftwf_destroy_plan> (input);
+    }
+
+    template <std::size_t dim>
+    inline xt::xarray<double> hfftn (const xt::xarray<std::complex<double> > &input) {
+      return _fft_<std::complex<double>, double, dim, 0, false, false, true, fftw_plan_dft_c2r, fftw_execute, fftw_destroy_plan> (input);
+    }
+
+    template <std::size_t dim>
+    inline xt::xarray<std::complex<double> > ihfftn (const xt::xarray<double> &input) {
+      return _ifft_<double, std::complex<double>, dim, 0, false, true, false, fftw_plan_dft_r2c, fftw_execute, fftw_destroy_plan> (input);
+    }
+
+    template <std::size_t dim>
+    inline xt::xarray<long double> hfftn (const xt::xarray<std::complex<long double> > &input) {
+      return _fft_<std::complex<long double>, long double, dim, 0, false, false, true, fftwl_plan_dft_c2r, fftwl_execute, fftwl_destroy_plan> (input);
+    }
+
+    template <std::size_t dim>
+    inline xt::xarray<std::complex<long double> > ihfftn (const xt::xarray<long double> &input) {
+      return _ifft_<long double, std::complex<long double>, dim, 0, false, true, false, fftwl_plan_dft_r2c, fftwl_execute, fftwl_destroy_plan> (input);
+    }
 
   }
 }
