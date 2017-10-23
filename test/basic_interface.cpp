@@ -49,6 +49,18 @@ auto generate_complex_data(std::size_t n) {
   return std::move(c) / static_cast<T>(2);  // divide by 2 (sqrt(2) would be fine too) to make sure FFT doesn't go infinite
 }
 
+template <
+    typename T, std::size_t dim,
+    typename xt::xarray<T> (&hfft) (const xt::xarray<std::complex<T> > &),
+    typename xt::xarray<std::complex<T> > (&ihfft) (const xt::xarray<T> &)
+>
+auto generate_hermitian_data(std::size_t n) {
+  xt::xarray<std::complex<T>, xt::layout_type::row_major> c = generate_complex_data<T, dim>(n);
+  auto c_fourier = hfft(c);
+  auto c_hermitian = ihfft(c_fourier);
+  return std::move(c_hermitian) / static_cast<T>(10);  // divide away the FFT infinities (hopefully)
+}
+
 
 // Some testing output + the actual GoogleTest assert statement
 template <typename input_t, typename fourier_t, typename output_t>
@@ -256,42 +268,47 @@ TYPED_TEST(TransformAndInvert, realFFT_4D_xtensor) {
 ////
 
 TYPED_TEST(TransformAndInvert, hermFFT_1D_xarray) {
-  xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a = generate_complex_data<TypeParam, 1>(data_size);
-  auto a_fourier = xt::fftw::hfft(a);
+  xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a = generate_hermitian_data<TypeParam, 1,  xt::fftw::hfft, xt::fftw::ihfft>(data_size);
+  xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a_conj = xt::conj(a);
+  auto a_fourier = xt::fftw::hfft(a_conj);
   std::cout << "fourier transform of input before ifft (which is destructive!): " << a_fourier << std::endl;
-  auto should_be_a = xt::fftw::ihfft(a_fourier);
+  auto should_be_a = xt::conj(xt::fftw::ihfft(a_fourier));
   assert_results_complex(a, a_fourier, should_be_a);
 }
 
 TYPED_TEST(TransformAndInvert, hermFFT_2D_xarray) {
-  xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a = generate_complex_data<TypeParam, 2>(data_size);
-  auto a_fourier = xt::fftw::hfft2(a);
+  xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a = generate_hermitian_data<TypeParam, 2, xt::fftw::hfft2, xt::fftw::ihfft2>(data_size);
+  xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a_conj = xt::conj(a);
+  auto a_fourier = xt::fftw::hfft2(a_conj);
   std::cout << "fourier transform of input before ifft (which is destructive!): " << a_fourier << std::endl;
-  auto should_be_a = xt::fftw::ihfft2(a_fourier);
+  auto should_be_a = xt::conj(xt::fftw::ihfft2(a_fourier));
   assert_results_complex(a, a_fourier, should_be_a);
 }
 
 TYPED_TEST(TransformAndInvert, hermFFT_3D_xarray) {
-  xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a = generate_complex_data<TypeParam, 3>(data_size);
-  auto a_fourier = xt::fftw::hfft3(a);
+  xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a = generate_hermitian_data<TypeParam, 3, xt::fftw::hfft3, xt::fftw::ihfft3>(data_size);
+  xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a_conj = xt::conj(a);
+  auto a_fourier = xt::fftw::hfft3(a_conj);
   std::cout << "fourier transform of input before ifft (which is destructive!): " << a_fourier << std::endl;
-  auto should_be_a = xt::fftw::ihfft3(a_fourier);
+  auto should_be_a = xt::conj(xt::fftw::ihfft3(a_fourier));
   assert_results_complex(a, a_fourier, should_be_a);
 }
 
 TYPED_TEST(TransformAndInvert, hermFFT_nD_n_equals_4_xarray) {
-  xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a = generate_complex_data<TypeParam, 4>(data_size);
-  auto a_fourier = xt::fftw::hfftn<4>(a);
+  xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a = generate_hermitian_data<TypeParam, 4,  xt::fftw::hfftn<4>, xt::fftw::ihfftn<4>>(data_size);
+  xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a_conj = xt::conj(a);
+  auto a_fourier = xt::fftw::hfftn<4>(a_conj);
   std::cout << "fourier transform of input before ifft (which is destructive!): " << a_fourier << std::endl;
-  auto should_be_a = xt::fftw::ihfftn<4>(a_fourier);
+  auto should_be_a = xt::conj(xt::fftw::ihfftn<4>(a_fourier));
   assert_results_complex(a, a_fourier, should_be_a);
 }
 
 TYPED_TEST(TransformAndInvert, hermFFT_nD_n_equals_1_xarray) {
-  xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a = generate_complex_data<TypeParam, 1>(data_size);
-  auto a_fourier = xt::fftw::hfftn<1>(a);
+  xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a = generate_hermitian_data<TypeParam, 1, xt::fftw::hfft, xt::fftw::ihfft>(data_size);
+  xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a_conj = xt::conj(a);
+  auto a_fourier = xt::fftw::hfftn<1>(a_conj);
   std::cout << "fourier transform of input before ifft (which is destructive!): " << a_fourier << std::endl;
-  auto should_be_a = xt::fftw::ihfftn<1>(a_fourier);
+  auto should_be_a = xt::conj(xt::fftw::ihfftn<1>(a_fourier));
   assert_results_complex(a, a_fourier, should_be_a);
 }
 
@@ -301,7 +318,7 @@ TYPED_TEST(TransformAndInvert, hermFFT_nD_n_equals_1_xarray) {
 
 /*
 TYPED_TEST(TransformAndInvert, hermFFT_1D_xtensor) {
-  xt::xtensor<std::complex<TypeParam>, 1> a = generate_complex_data<TypeParam, 1>(data_size);
+  xt::xtensor<std::complex<TypeParam>, 1> a = generate_hermitian_data<TypeParam, 1>(data_size);
   auto a_fourier = xt::fftw::hfft(a);
   std::cout << "fourier transform of input before ifft (which is destructive!): " << a_fourier << std::endl;
   auto should_be_a = xt::fftw::ihfft(a_fourier);
@@ -309,7 +326,7 @@ TYPED_TEST(TransformAndInvert, hermFFT_1D_xtensor) {
 }
 
 TYPED_TEST(TransformAndInvert, hermFFT_2D_xtensor) {
-  xt::xtensor<std::complex<TypeParam>, 2> a = generate_complex_data<TypeParam, 2>(data_size);
+  xt::xtensor<std::complex<TypeParam>, 2> a = generate_hermitian_data<TypeParam, 2>(data_size);
   auto a_fourier = xt::fftw::hfft2(a);
   std::cout << "fourier transform of input before ifft (which is destructive!): " << a_fourier << std::endl;
   auto should_be_a = xt::fftw::ihfft2(a_fourier);
@@ -317,7 +334,7 @@ TYPED_TEST(TransformAndInvert, hermFFT_2D_xtensor) {
 }
 
 TYPED_TEST(TransformAndInvert, hermFFT_3D_xtensor) {
-  xt::xtensor<std::complex<TypeParam>, 3> a = generate_complex_data<TypeParam, 3>(data_size);
+  xt::xtensor<std::complex<TypeParam>, 3> a = generate_hermitian_data<TypeParam, 3>(data_size);
   auto a_fourier = xt::fftw::hfft3(a);
   std::cout << "fourier transform of input before ifft (which is destructive!): " << a_fourier << std::endl;
   auto should_be_a = xt::fftw::ihfft3(a_fourier);
@@ -325,7 +342,7 @@ TYPED_TEST(TransformAndInvert, hermFFT_3D_xtensor) {
 }
 
 TYPED_TEST(TransformAndInvert, hermFFT_4D_xtensor) {
-  xt::xtensor<std::complex<TypeParam>, 4> a = generate_complex_data<TypeParam, 4>(data_size);
+  xt::xtensor<std::complex<TypeParam>, 4> a = generate_hermitian_data<TypeParam, 4>(data_size);
   auto a_fourier = xt::fftw::hfftn(a);
   std::cout << "fourier transform of input before ifft (which is destructive!): " << a_fourier << std::endl;
   auto should_be_a = xt::fftw::ihfftn(a_fourier);

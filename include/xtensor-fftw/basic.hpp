@@ -22,6 +22,11 @@
 #include <tuple>
 #include <type_traits>
 #include <exception>
+
+// for product accumulate:
+#include <numeric>
+#include <functional>
+
 #include <fftw3.h>
 
 namespace xt {
@@ -368,7 +373,9 @@ namespace xt {
 
       fftw_execute(plan);
       fftw_destroy_plan(plan);
-      return output / static_cast<prec_t<output_t> >(output.size());
+      auto dft_dimensions = dft_dimensions_from_output(output, half_plus_one_out);
+      auto N_dft = static_cast<prec_t<output_t> >(std::accumulate(dft_dimensions.begin(), dft_dimensions.end(), 1, std::multiplies<std::size_t>()));
+      return output / N_dft;
     };
 
 
