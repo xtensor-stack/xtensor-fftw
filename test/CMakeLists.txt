@@ -37,6 +37,10 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU"
     add_compile_options(-march=native) #-Wunused-parameter -Wextra -Wreorder -Wconversion)
 endif()
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_compile_options(-ftemplate-backtrace-limit=0)
+endif()
+
 if(MSVC)
     add_compile_options(/EHsc /MP /bigobj)
     set(CMAKE_EXE_LINKER_FLAGS /MANIFEST:NO)
