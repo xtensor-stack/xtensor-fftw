@@ -44,17 +44,9 @@ auto generate_data(std::size_t n) {
 
 template <typename T, std::size_t dim>
 auto generate_complex_data(std::size_t n) {
-//  using namespace std::complex_literals;
-//  xt::xarray<T, xt::layout_type::row_major> a = generate_data<T, dim>(n);
-//  xt::xarray<T, xt::layout_type::row_major> b = generate_data<T, dim>(n);
   std::complex<T> i {0,1};
-//  xt::xarray<std::complex<T>, xt::layout_type::row_major> c = a + b * i;
-  // TODO: remove the workaround (multiplication by 0.5) when https://github.com/QuantStack/xtensor/pull/479 is fixed
-  xt::xarray<std::complex<T>, xt::layout_type::row_major> c = (static_cast<T>(0.5)*generate_data<T, dim>(n)) + (static_cast<T>(0.5)*generate_data<T, dim>(n)) * i;
-//  std::cout << "generated data:                 " << c << std::endl;
-//  std::cout << "generated data divided by two:  " << c / static_cast<T>(2) << std::endl;
-
-  return c; // * static_cast<T>(0.5); // / static_cast<T>(2);  // divide by 2 (sqrt(2) would be fine too) to make sure FFT doesn't go infinite
+  xt::xarray<std::complex<T>, xt::layout_type::row_major> c = generate_data<T, dim>(n) + generate_data<T, dim>(n) * i;
+  return std::move(c) / static_cast<T>(2);  // divide by 2 (sqrt(2) would be fine too) to make sure FFT doesn't go infinite
 }
 
 
@@ -70,21 +62,10 @@ void assert_results(const input_t &a, const fourier_t &a_fourier, const output_t
 template <typename input_t, typename fourier_t, typename output_t>
 void assert_results_complex(const input_t &a, const fourier_t &a_fourier, const output_t &should_be_a) {
   std::cout << "complex input:  " << a << std::endl;
-//  std::cout << "real part:      " << xt::real(a) << std::endl;
-//  std::cout << "imag part:      " << xt::imag(a) << std::endl;
-
   std::cout << "fourier transform of input after ifft (usually different from before): " << a_fourier << std::endl;
   std::cout << "complex output: " << should_be_a << std::endl;
-//  xt::xarray<xt::fftw::prec_t<input_t>, xt::layout_type::row_major> a_real = xt::real(a);
-//  xt::xarray<xt::fftw::prec_t<input_t>, xt::layout_type::row_major> a_imag = xt::imag(a);
-//  xt::xarray<xt::fftw::prec_t<output_t>, xt::layout_type::row_major> should_be_a_real = xt::real(should_be_a);
-//  xt::xarray<xt::fftw::prec_t<output_t>, xt::layout_type::row_major> should_be_a_imag = xt::imag(should_be_a);
-//  ASSERT_TRUE(xt::allclose(a_real, should_be_a_real, 1e-03)
-//              && xt::allclose(a_imag, should_be_a_imag, 1e-03));
   ASSERT_TRUE(xt::allclose(xt::real(a), xt::real(should_be_a), 1e-03)
               && xt::allclose(xt::imag(a), xt::imag(should_be_a), 1e-03));
-
-//  ASSERT_TRUE(true);
 }
 
 // size of the randomly generated arrays along each dimension
