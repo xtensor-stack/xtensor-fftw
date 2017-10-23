@@ -88,7 +88,6 @@ TYPED_TEST(TransformAndInvert, FFT_1D_xarray) {
   assert_results_complex(a, a_fourier, should_be_a);
 }
 
-/*
 TYPED_TEST(TransformAndInvert, FFT_2D_xarray) {
   xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a = generate_complex_data<TypeParam, 2>(data_size);
   auto a_fourier = xt::fftw::fft2(a);
@@ -97,6 +96,7 @@ TYPED_TEST(TransformAndInvert, FFT_2D_xarray) {
   assert_results(a, a_fourier, should_be_a);
 }
 
+/*
 TYPED_TEST(TransformAndInvert, FFT_3D_xarray) {
   xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a = generate_complex_data<TypeParam, 3>(data_size);
   auto a_fourier = xt::fftw::fft3(a);
@@ -105,13 +105,22 @@ TYPED_TEST(TransformAndInvert, FFT_3D_xarray) {
   assert_results(a, a_fourier, should_be_a);
 }
 
-TYPED_TEST(TransformAndInvert, FFT_4D_xarray) {
+TYPED_TEST(TransformAndInvert, FFT_nD_n_equals_4_xarray) {
   xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a = generate_complex_data<TypeParam, 4>(data_size);
-  auto a_fourier = xt::fftw::fftn(a);
+  auto a_fourier = xt::fftw::fftn<4>(a);
   std::cout << "fourier transform of input before ifft (which is destructive!): " << a_fourier << std::endl;
-  auto should_be_a = xt::fftw::ifftn(a_fourier);
+  auto should_be_a = xt::fftw::ifftn<4>(a_fourier);
   assert_results(a, a_fourier, should_be_a);
 }
+
+TYPED_TEST(TransformAndInvert, FFT_nD_n_equals_1_xarray) {
+  xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a = generate_complex_data<TypeParam, 1>(data_size);
+  auto a_fourier = xt::fftw::fftn<1>(a);
+  std::cout << "fourier transform of input before ifft (which is destructive!): " << a_fourier << std::endl;
+  auto should_be_a = xt::fftw::ifftn<1>(a_fourier);
+  assert_results(a, a_fourier, should_be_a);
+}
+
 
 ////
 // Regular FFT: xtensor
@@ -270,11 +279,19 @@ TYPED_TEST(TransformAndInvert, hermFFT_3D_xarray) {
   assert_results(a, a_fourier, should_be_a);
 }
 
-TYPED_TEST(TransformAndInvert, hermFFT_4D_xarray) {
+TYPED_TEST(TransformAndInvert, hermFFT_nD_n_equals_4_xarray) {
   xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a = generate_complex_data<TypeParam, 4>(data_size);
-  auto a_fourier = xt::fftw::hfftn(a);
+  auto a_fourier = xt::fftw::hfftn<4>(a);
   std::cout << "fourier transform of input before ifft (which is destructive!): " << a_fourier << std::endl;
-  auto should_be_a = xt::fftw::ihfftn(a_fourier);
+  auto should_be_a = xt::fftw::ihfftn<4>(a_fourier);
+  assert_results(a, a_fourier, should_be_a);
+}
+
+TYPED_TEST(TransformAndInvert, hermFFT_nD_n_equals_1_xarray) {
+  xt::xarray<std::complex<TypeParam>, xt::layout_type::row_major> a = generate_complex_data<TypeParam, 1>(data_size);
+  auto a_fourier = xt::fftw::hfftn<1>(a);
+  std::cout << "fourier transform of input before ifft (which is destructive!): " << a_fourier << std::endl;
+  auto should_be_a = xt::fftw::ihfftn<1>(a_fourier);
   assert_results(a, a_fourier, should_be_a);
 }
 
