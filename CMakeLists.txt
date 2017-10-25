@@ -48,6 +48,10 @@ include_directories(${XTENSOR_FFTW_INCLUDE_DIR})
 # .. xtensor
 find_package(xtensor REQUIRED)
 include_directories(${xtensor_INCLUDE_DIRS})
+# .. xtl
+find_package(xtl REQUIRED)
+message(STATUS "Found xtl: ${xtl_INCLUDE_DIRS}/xtl")
+include_directories(${xtl_INCLUDE_DIRS})
 # .. fftw
 find_package(FFTW REQUIRED
         COMPONENTS FLOAT_LIB DOUBLE_LIB LONGDOUBLE_LIB)

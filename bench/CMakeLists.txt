@@ -86,6 +86,7 @@ endif()
 find_package(Threads)
 
 include_directories(${XTENSOR_INCLUDE_DIR})
+include_directories(${xtl_INCLUDE_DIRS})
 include_directories(${XTENSOR_FFTW_INCLUDE_DIR})
 include_directories(${benchmark_INCLUDE_DIRS})
 
