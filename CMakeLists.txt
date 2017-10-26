@@ -14,6 +14,23 @@ cmake_minimum_required(VERSION 3.1.3)  # 3.1.3 for set(CMAKE_CXX_STANDARD 14)
 
 project(xtensor-fftw)
 
+set(XTENSOR_FFTW_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+#--------------------------------------- versioning
+
+file(STRINGS "${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/xtensor-fftw_config.hpp" xtensor-fftw_version_defines
+        REGEX "#define XTENSOR_FFTW_VERSION_(MAJOR|MINOR|PATCH)")
+foreach(ver ${xtensor-fftw_version_defines})
+    if(ver MATCHES "#define XTENSOR_FFTW_VERSION_(MAJOR|MINOR|PATCH) +([^ ]+)$")
+        set(XTENSOR_FFTW_VERSION_${CMAKE_MATCH_1} "${CMAKE_MATCH_2}" CACHE INTERNAL "")
+    endif()
+endforeach()
+set(${PROJECT_NAME}_VERSION
+        ${XTENSOR_FFTW_VERSION_MAJOR}.${XTENSOR_FFTW_VERSION_MINOR}.${XTENSOR_FFTW_VERSION_PATCH})
+message(STATUS "Building xtensor-fftw v${${PROJECT_NAME}_VERSION}")
+
+#--------------------------------------- cmake modules
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/findFFTW/")
 
@@ -26,7 +43,7 @@ OPTION(BUILD_BENCHMARK "Build xtensor-fftw benchmarks" OFF)
 OPTION(DOWNLOAD_GBENCH "Build Google Benchmark from downloaded sources" OFF)
 OPTION(BENCHMARK_ENABLE_TESTING "Build tests for Google Benchmark" OFF)
 OPTION(FIX_RPATH "Correctly set rpath for the linker" OFF)
-OPTION(DEFAULT_COLUMN_MAJOR "Set xtensor default layout to column major" OFF)
+OPTION(DEFAULT_COLUMN_MAJOR "Set xtensor default layout to column major. This is currently not supported, since FFTW demands row major layout." OFF)
 OPTION(COVERAGE "Enable coverage compile flags (gcc only!)" OFF)
 
 if (COVERAGE)
@@ -43,10 +60,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED YES)
 set(CMAKE_CXX_EXTENSIONS NO)
 # includes
 # .. our own
-set(XTENSOR_FFTW_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${XTENSOR_FFTW_INCLUDE_DIR})
 # .. xtensor
 find_package(xtensor REQUIRED)
+message(STATUS "Found xtensor: ${xtensor_INCLUDE_DIRS}/xtensor")
 include_directories(${xtensor_INCLUDE_DIRS})
 # .. xtl
 find_package(xtl REQUIRED)
@@ -74,10 +91,11 @@ if (FIX_RPATH)
     endif("${isSystemDir}" STREQUAL "-1")
 endif(FIX_RPATH)
 
-#--------------------------------------- install
+#--------------------------------------- library contents
 
 set(XTENSOR_FFTW_HEADERS
         ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/basic.hpp
+        ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/xtensor-fftw_config.hpp
 )
 
 #--------------------------------------- tests
@@ -96,3 +114,38 @@ endif()
 if(BUILD_BENCHMARK)
     add_subdirectory(bench)
 endif()
+
+
+#--------------------------------------- installation
+
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+
+install(FILES ${XTENSOR_FFTW_HEADERS}
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/xtensor-fftw)
+
+set(XTENSOR_FFTW_CMAKECONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}" CACHE
+        STRING "install path for xtensor-fftwConfig.cmake")
+
+configure_package_config_file(${PROJECT_NAME}Config.cmake.in
+        "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+        INSTALL_DESTINATION ${XTENSOR_FFTW_CMAKECONFIG_INSTALL_DIR})
+
+# xtensor-fftw is header-only and does not depend on the architecture.
+# Remove CMAKE_SIZEOF_VOID_P from xtensor-fftwConfigVersion.cmake so that an xtensor-fftwConfig.cmake
+# generated for a 64 bit target can be used for 32 bit targets and vice versa.
+set(_XTENSOR_FFTW_CMAKE_SIZEOF_VOID_P ${CMAKE_SIZEOF_VOID_P})
+unset(CMAKE_SIZEOF_VOID_P)
+write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+        VERSION ${${PROJECT_NAME}_VERSION}
+        COMPATIBILITY AnyNewerVersion)
+set(CMAKE_SIZEOF_VOID_P ${_XTENSOR_FFTW_CMAKE_SIZEOF_VOID_P})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+        DESTINATION ${XTENSOR_FFTW_CMAKECONFIG_INSTALL_DIR})
+
+configure_file(${PROJECT_NAME}.pc.in
+        "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"
+        @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig/")
