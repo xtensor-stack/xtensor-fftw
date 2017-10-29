@@ -10,23 +10,6 @@ platform:
 
 environment:
   matrix:
-      # fftw from the "official" fftw website build
-    - COLUMN_MAJOR_LAYOUT: OFF
-      MINICONDA: C:\Miniconda36-x64
-      FFTW_INSTALL_MODE: official
-      FFTW_ROOT: C:\fftw_download
-    - COLUMN_MAJOR_LAYOUT: OFF
-      MINICONDA: C:\Miniconda36
-      FFTW_INSTALL_MODE: official
-      FFTW_ROOT: C:\fftw_download
-    - COLUMN_MAJOR_LAYOUT: ON
-      MINICONDA: C:\Miniconda36-x64
-      FFTW_INSTALL_MODE: official
-      FFTW_ROOT: C:\fftw_download
-    - COLUMN_MAJOR_LAYOUT: ON
-      MINICONDA: C:\Miniconda36
-      FFTW_INSTALL_MODE: official
-      FFTW_ROOT: C:\fftw_download
       # fftw from conda-forge
     - COLUMN_MAJOR_LAYOUT: OFF
       MINICONDA: C:\Miniconda36-x64
@@ -44,6 +27,23 @@ environment:
       MINICONDA: C:\Miniconda36
       FFTW_INSTALL_MODE: conda-forge
       FFTW_ROOT:
+      # fftw from the "official" fftw website build
+    - COLUMN_MAJOR_LAYOUT: OFF
+      MINICONDA: C:\Miniconda36-x64
+      FFTW_INSTALL_MODE: official
+      FFTW_ROOT: C:\fftw_download
+    - COLUMN_MAJOR_LAYOUT: OFF
+      MINICONDA: C:\Miniconda36
+      FFTW_INSTALL_MODE: official
+      FFTW_ROOT: C:\fftw_download
+    - COLUMN_MAJOR_LAYOUT: ON
+      MINICONDA: C:\Miniconda36-x64
+      FFTW_INSTALL_MODE: official
+      FFTW_ROOT: C:\fftw_download
+    - COLUMN_MAJOR_LAYOUT: ON
+      MINICONDA: C:\Miniconda36
+      FFTW_INSTALL_MODE: official
+      FFTW_ROOT: C:\fftw_download
 
       # TODO: conda-forge build doen, CMakeLists aanpassen zodat FFTW_LONGDOUBLE niet required is bij CMAKE_CXX_COMPILER_ID == MSVC
       # sowieso is libs requiren beetje raar als je alleen installeert;
@@ -58,7 +58,7 @@ matrix:
       MINICONDA: C:\Miniconda36
   allow_failures:
     - COLUMN_MAJOR_LAYOUT: ON
-#  fast_finish: true
+  fast_finish: true
 
 init:
   - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat %PLATFORM%
