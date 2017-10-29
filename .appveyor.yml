@@ -88,7 +88,7 @@ install:
             echo "x64 fftw download complete"
           }
 
-          7z e C:\fftw-3.3.5.zip -o$($env:FFTW_ROOT)
+          7z e C:\fftw-3.3.5.zip -o"${env:FFTW_ROOT}"
           cd $env:FFTW_ROOT
 
           if ($env:Platform -eq "x86") {
