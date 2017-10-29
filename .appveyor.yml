@@ -10,14 +10,45 @@ platform:
 
 environment:
   matrix:
+      # fftw from the "official" fftw website build
     - COLUMN_MAJOR_LAYOUT: OFF
       MINICONDA: C:\Miniconda36-x64
+      FFTW_INSTALL_MODE: official
+      FFTW_ROOT: C:\fftw_download
     - COLUMN_MAJOR_LAYOUT: OFF
       MINICONDA: C:\Miniconda36
+      FFTW_INSTALL_MODE: official
+      FFTW_ROOT: C:\fftw_download
     - COLUMN_MAJOR_LAYOUT: ON
       MINICONDA: C:\Miniconda36-x64
+      FFTW_INSTALL_MODE: official
+      FFTW_ROOT: C:\fftw_download
     - COLUMN_MAJOR_LAYOUT: ON
       MINICONDA: C:\Miniconda36
+      FFTW_INSTALL_MODE: official
+      FFTW_ROOT: C:\fftw_download
+      # fftw from conda-forge
+    - COLUMN_MAJOR_LAYOUT: OFF
+      MINICONDA: C:\Miniconda36-x64
+      FFTW_INSTALL_MODE: conda-forge
+      FFTW_ROOT:
+    - COLUMN_MAJOR_LAYOUT: OFF
+      MINICONDA: C:\Miniconda36
+      FFTW_INSTALL_MODE: conda-forge
+      FFTW_ROOT:
+    - COLUMN_MAJOR_LAYOUT: ON
+      MINICONDA: C:\Miniconda36-x64
+      FFTW_INSTALL_MODE: conda-forge
+      FFTW_ROOT:
+    - COLUMN_MAJOR_LAYOUT: ON
+      MINICONDA: C:\Miniconda36
+      FFTW_INSTALL_MODE: conda-forge
+      FFTW_ROOT:
+
+      # TODO: conda-forge build doen, CMakeLists aanpassen zodat FFTW_LONGDOUBLE niet required is bij CMAKE_CXX_COMPILER_ID == MSVC
+      # sowieso is libs requiren beetje raar als je alleen installeert;
+      # mss beter om als ze niet gevonden zijn de test/bench builds uit te zetten
+      # TODO: goed idee (?): een MSVC_FFTW_LONGDOUBLE_LINKING_WORKAROUND option toevoegen die manually een long double lib downloadt zodat de tests iig linken, maar met een melding dat die dus niet goed draaien
 
 matrix:
   exclude:
@@ -39,22 +70,54 @@ install:
   - conda update -q conda
   - conda info -a
   - conda install xtensor
-  - mkdir C:\fftw_download
-  - ps: if($env:Platform -eq "x86"){$source = "ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll32.zip"; $destination = "C:\fftw-3.3.5.zip"; Invoke-WebRequest $source -OutFile $destination; echo "x86 fftw download complete"}
-  - ps: if($env:Platform -eq "x64"){$source = "ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll64.zip"; $destination = "C:\fftw-3.3.5.zip"; Invoke-WebRequest $source -OutFile $destination; echo "x64 fftw download complete"}
-  - 7z e C:\fftw-3.3.5.zip -oC:\fftw_download
-  - cd C:\fftw_download
-  - ps: if($env:Platform -eq "x86"){lib.exe /def:libfftw3-3.def; lib.exe /def:libfftw3f-3.def; lib.exe /def:libfftw3l-3.def}
-  - ps: if($env:Platform -eq "x64"){lib.exe /machine:x64 /def:libfftw3-3.def; lib.exe /machine:x64 /def:libfftw3f-3.def; lib.exe /machine:x64 /def:libfftw3l-3.def}
-#  - set PATH="C:\fftw_download";%PATH%
+  - ps: >-
+      switch ($env:FFTW_INSTALL_MODE) {
+
+        "official" {
+          mkdir $env:FFTW_ROOT
+          if ($env:Platform -eq "x86") {
+            $source = "ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll32.zip"
+            $destination = "C:\fftw-3.3.5.zip"
+            Invoke-WebRequest $source -OutFile $destination
+            echo "x86 fftw download complete"
+          }
+          if ($env:Platform -eq "x64") {
+            $source = "ftp://ftp.fftw.org/pub/fftw/fftw-3.3.5-dll64.zip"
+            $destination = "C:\fftw-3.3.5.zip"
+            Invoke-WebRequest $source -OutFile $destination
+            echo "x64 fftw download complete"
+          }
+
+          7z e C:\fftw-3.3.5.zip -o$env:FFTW_ROOT
+          cd $env:FFTW_ROOT
+
+          if ($env:Platform -eq "x86") {
+            lib.exe /def:libfftw3-3.def
+            lib.exe /def:libfftw3f-3.def
+            lib.exe /def:libfftw3l-3.def
+          }
+          if ($env:Platform -eq "x64") {
+            lib.exe /machine:x64 /def:libfftw3-3.def
+            lib.exe /machine:x64 /def:libfftw3f-3.def
+            lib.exe /machine:x64 /def:libfftw3l-3.def
+          }
+
+          $env:PATH="${env:FFTW_ROOT};${env:PATH}"
+        }
+
+        "conda-forge" {
+          conda install fftw
+        }
+
+      }
   - cd %APPVEYOR_BUILD_FOLDER%
   - mkdir build
   - cd build
-  - cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DFFTW_ROOT="C:\fftw_download" -DCMAKE_INSTALL_PREFIX=%MINICONDA%\\Library -DBUILD_TESTS=ON -DDEFAULT_COLUMN_MAJOR=%COLUMN_MAJOR_LAYOUT% -DDOWNLOAD_GTEST=ON ..
+  - cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DFFTW_ROOT="${env:FFTW_ROOT}" -DCMAKE_INSTALL_PREFIX=%MINICONDA%\\Library -DBUILD_TESTS=ON -DDEFAULT_COLUMN_MAJOR=%COLUMN_MAJOR_LAYOUT% -DDOWNLOAD_GTEST=ON ..
   - nmake test_xtensor-fftw
 
 before_build:
-  - copy C:\fftw_download\*.* test
+#  - copy C:\fftw_download\*.* test
   - cd test
 
 build_script:
