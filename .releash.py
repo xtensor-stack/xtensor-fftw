@@ -19,6 +19,7 @@ gittag_xfftw = ReleaseTargetGitTagVersion(version_source=version_xfftw, prefix='
 xfftw.version_source = version_xfftw
 
 xfftw.version_targets.append(version_xfftw)
+xfftw.version_targets.append(gittag_xfftw)
 xfftw.release_targets.append(gittag_xfftw)
 xfftw.release_targets.append(gitpush)
 
