@@ -45,9 +45,6 @@ environment:
       FFTW_INSTALL_MODE: official
       FFTW_ROOT: C:\fftw_download
 
-      # TODO: conda-forge build doen, CMakeLists aanpassen zodat FFTW_LONGDOUBLE niet required is bij CMAKE_CXX_COMPILER_ID == MSVC
-      # sowieso is libs requiren beetje raar als je alleen installeert;
-      # mss beter om als ze niet gevonden zijn de test/bench builds uit te zetten
       # TODO: goed idee (?): een MSVC_FFTW_LONGDOUBLE_LINKING_WORKAROUND option toevoegen die manually een long double lib downloadt zodat de tests iig linken, maar met een melding dat die dus niet goed draaien
 
 matrix:
@@ -117,9 +114,7 @@ install:
   - nmake test_xtensor-fftw
 
 before_build:
-#  - copy C:\fftw_download\*.* test
   - cd test
 
 build_script:
-  # The long double FFTW library only works when sizeof(long double) == 12. In recent VC versions, long double is an alias of double, and so long double will not work with fftw3l. The long double tests are usually third in the list, so index 2 starting from 0, e.g. "TransformAndInvert/2".
-  - test_xtensor-fftw.exe --gtest_filter=-*/2*
+  - test_xtensor-fftw.exe

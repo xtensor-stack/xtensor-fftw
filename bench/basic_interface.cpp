@@ -129,6 +129,7 @@ BENCHMARK_F(rfft2Dxarray_float, TransformAndInvert_nD)(::benchmark::State& st) {
 //  }
 //}
 //
+//#ifndef FFTW_NO_LONGDOUBLE
 //BENCHMARK_TEMPLATE_F(rfft1Dxarray, TransformAndInvert, long double)(::benchmark::State& st) {
 //  for (auto _ : st) {
 //    auto a_fourier = xt::fftw::rfft(a);
@@ -137,6 +138,7 @@ BENCHMARK_F(rfft2Dxarray_float, TransformAndInvert_nD)(::benchmark::State& st) {
 //    ::benchmark::DoNotOptimize(should_be_a);
 //  }
 //}
+//#endif  // FFTW_NO_LONGDOUBLE
 
 
 BENCHMARK_MAIN()

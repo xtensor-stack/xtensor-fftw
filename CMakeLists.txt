@@ -58,21 +58,35 @@ endif()
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 set(CMAKE_CXX_EXTENSIONS NO)
+
 # includes
+
 # .. our own
 include_directories(${XTENSOR_FFTW_INCLUDE_DIR})
+
 # .. xtensor
 find_package(xtensor REQUIRED)
 message(STATUS "Found xtensor: ${xtensor_INCLUDE_DIRS}/xtensor")
 include_directories(${xtensor_INCLUDE_DIRS})
+
 # .. xtl
 find_package(xtl REQUIRED)
 message(STATUS "Found xtl: ${xtl_INCLUDE_DIRS}/xtl")
 include_directories(${xtl_INCLUDE_DIRS})
+
 # .. fftw
-find_package(FFTW REQUIRED
-        COMPONENTS FLOAT_LIB DOUBLE_LIB LONGDOUBLE_LIB)
+if(MSVC)
+    # no long double component, since in the Windows conda-forge build it is not available
+    # and the "official" prebuilt long double library can only be used from MinGW
+    find_package(FFTW REQUIRED
+            COMPONENTS FLOAT_LIB DOUBLE_LIB)
+    add_definitions(-DFFTW_NO_LONGDOUBLE)
+else()
+    find_package(FFTW REQUIRED
+            COMPONENTS FLOAT_LIB DOUBLE_LIB LONGDOUBLE_LIB)
+endif(MSVC)
 include_directories(${FFTW_INCLUDE_DIRS})
+
 # warnings (gcc and clang)
 if (COMPILE_WARNINGS)
     add_compile_options(-Wundef -Wshadow -Wwrite-strings -Wredundant-decls -Woverloaded-virtual -Wcast-qual -Wcast-align -Wpointer-arith -Wconversion -Wold-style-cast -Wall -Wextra)

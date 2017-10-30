@@ -30,7 +30,11 @@ template <typename T>
 class TransformAndInvert : public ::testing::Test {};
 
 // the GoogleTest list of typed test cases
+#ifdef FFTW_NO_LONGDOUBLE
+typedef ::testing::Types<float, double> MyTypes;
+#else
 typedef ::testing::Types<float, double, long double> MyTypes;
+#endif  // FFTW_NO_LONGDOUBLE
 TYPED_TEST_CASE(TransformAndInvert, MyTypes);
 
 // Generates a dim-dimensional array of size n in each dimension, filled with random numbers between 0 and the numeric
