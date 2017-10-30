@@ -45,8 +45,6 @@ environment:
       FFTW_INSTALL_MODE: official
       FFTW_ROOT: C:\fftw_download
 
-      # TODO: goed idee (?): een MSVC_FFTW_LONGDOUBLE_LINKING_WORKAROUND option toevoegen die manually een long double lib downloadt zodat de tests iig linken, maar met een melding dat die dus niet goed draaien
-
 matrix:
   exclude:
     - platform: x86
@@ -55,7 +53,7 @@ matrix:
       MINICONDA: C:\Miniconda36
   allow_failures:
     - COLUMN_MAJOR_LAYOUT: ON
-  fast_finish: true
+#  fast_finish: true
 
 init:
   - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat %PLATFORM%
