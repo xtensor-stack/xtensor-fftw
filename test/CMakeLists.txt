@@ -97,6 +97,7 @@ include_directories(${GTEST_INCLUDE_DIRS})
 set(XTENSOR_FFTW_TESTS
         basic_interface.cpp
         helper.cpp
+        examples.cpp
 )
 
 set(XTENSOR_FFTW_TARGET test_xtensor-fftw)
