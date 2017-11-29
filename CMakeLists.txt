@@ -109,6 +109,7 @@ endif(FIX_RPATH)
 
 set(XTENSOR_FFTW_HEADERS
         ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/basic.hpp
+        ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/helper.hpp
         ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/xtensor-fftw_config.hpp
 )
 
