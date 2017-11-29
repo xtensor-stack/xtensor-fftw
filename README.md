@@ -43,20 +43,51 @@ std::cout << "cos:            " << xt::cos(x) << std::endl;
 std::cout << "sin_derivative: " << sin_derivative << std::endl;
 ```
 
+## Installation
+
+Using `conda`:
+
+```bash
+conda install xtensor-fftw -c conda-forge
+```
+
+This automatically installs dependencies as well (see [list of dependencies](#dependencies) below).
+
+Installing from source into `$PREFIX` (for instance `$CONDA_PREFIX` when in a conda environment, or `$HOME/.local`) after manually installing the [dependencies](#dependencies):
+
+```bash
+git clone https://github.com/egpbos/xtensor-fftw
+cd xtensor-fftw
+mkdir build
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=$PREFIX
+make install
+```
+
+## Dependencies
+
+* [xtensor](https://github.com/QuantStack/xtensor)
+* [xtl](https://github.com/QuantStack/xtl)
+* [FFTW](http://www.fftw.org/) version 3
+* A compiler supporting C++14
+
 ## Usage
 
 _xtensor-fftw_ is a header-only library.
-To use, include one of the header files in the `include` directory, e.g. `xtensor-fftw/fft.hpp`, in your c++ code.
+To use, include one of the header files in the `include` directory, e.g. `xtensor-fftw/basic.hpp`, in your c++ code.
 To compile, one should also include the paths to the FFTW header and libraries and link to the appropriate FFTW library.
 
 Note that _xtensor-fftw_ on Windows does not support `long double` precision.
 The `long double` precision version of the FFTW library requires that `sizeof(long double) == 12`.
 In recent versions of Visual Studio, `long double` is an alias of `double` and has size 8.
 
-What follows are instructions for compiling the _xtensor-fftw_ tests.
+
+## Building and running tests
+
+What follows are instructions for compiling and running the _xtensor-fftw_ tests.
 These also serve as an example of how to do build your own code using _xtensor-fftw_ (excluding the GoogleTest specific parts).
 
-### Dependencies
+### Dependencies for building tests
 The main dependency is a version of FFTW 3.
 For the tests, we need the floating point version which is enabled in the FFTW configuration step using:
 ```bash
@@ -65,12 +96,13 @@ For the tests, we need the floating point version which is enabled in the FFTW c
 
 CMake and _xtensor_ must also be installed in order to compile the _xtensor-fftw_ tests.
 Both can either be installed through Conda or built/installed manually.
-When using a non-Conda _xtensor_-install, make sure that the CMake `find_package` command can find _xtensor_, e.g. by passing something like `-DCMAKE_MODULE_PATH="path_to_xtensorConfig.cmake"` to CMake (not tested).
+When using a non-Conda _xtensor_-install, make sure that the CMake `find_package` command can find _xtensor_, e.g. by passing something like `-DCMAKE_MODULE_PATH="path_to_xtensorConfig.cmake"` to CMake.
+If _xtensor_ was installed in a default location, CMake should be able to find it without any command line options.
 
 Optionally, a GoogleTest installation can be used.
 However, it is recommended to use the built-in option to download GoogleTest automatically (see below).
 
-### Configure
+### Configure tests
 
 Inside the _xtensor-fftw_ source directory, create a build directory and `cd` into it:
 ```bash
@@ -93,11 +125,20 @@ or pass the path to CMake directly as such:
 cmake .. -DFFTW_ROOT=/home/username/.local  -DBUILD_TESTS=ON -DDOWNLOAD_GTEST=ON [other options]
 ```
 
-### Compile
+### Compile tests
 
 After successful CMake configuration, run inside the build directory:
 ```bash
 make
+```
+
+### Run tests
+
+From the build directory, change to the test directory and run the tests:
+
+```bash
+cd test
+./test_xtensor-fftw
 ```
 
 ## License
