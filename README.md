@@ -48,7 +48,17 @@ _xtensor-fftw_ is a header-only library.
 To use, include one of the header files in the `include` directory, e.g. `xtensor-fftw/basic.hpp`, in your c++ code.
 To compile, one should also include the paths to the FFTW header and libraries and link to the appropriate FFTW library.
 
-Note that _xtensor-fftw_ on Windows does not support `long double` precision.
+The functions in `xtensor-fftw/basic.hpp` mimic the behavior of `numpy.fft` as much as possible.
+In most cases transforms on identical input data should produce identical results within reasonable machine precision error bounds.
+However, there are a few differences that one should keep in mind:
+
+- Since FFTW expects row-major ordered arrays, _xtensor-fftw_ functions currently only accept `xarray`s with row-major layout.
+By default, _xtensor_ containers use row-major layout, but take care when manually overriding this default.
+
+- The inverse real FFT functions in FFTW destroy the input arrays during the calculation, i.e. the `irfft` family of functions in _xtensor-fftw_.
+(In fact, this does not always happen, depending on which algorithm FFTW decides is most efficient in your particular situation. Don't count on it, though.)
+
+- _xtensor-fftw_ on Windows does not support `long double` precision.
 The `long double` precision version of the FFTW library requires that `sizeof(long double) == 12`.
 In recent versions of Visual Studio, `long double` is an alias of `double` and has size 8.
 
