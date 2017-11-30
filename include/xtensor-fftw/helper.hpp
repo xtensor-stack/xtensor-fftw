@@ -9,6 +9,9 @@
 #ifndef XTENSOR_FFTW_HELPER_HPP
 #define XTENSOR_FFTW_HELPER_HPP
 
+#define _USE_MATH_DEFINES  // for MSVC ("Math Constants are not defined in Standard C/C++")
+#include <cmath>           // M_PI
+
 #include <xtensor/xarray.hpp>
 
 namespace xt {

@@ -8,10 +8,13 @@
 
 // real life examples
 
+#define _USE_MATH_DEFINES  // for MSVC ("Math Constants are not defined in Standard C/C++")
+#include <cmath>           // M_PI
+#include <complex>
+
 #include <xtensor-fftw/basic.hpp>
 #include <xtensor-fftw/helper.hpp>
 #include <xtensor/xarray.hpp>
-#include <complex>
 #include <xtensor/xbuilder.hpp>  // xt::arange
 #include <xtensor/xmath.hpp>  // xt::sin, cos
 #include <xtensor/xio.hpp>
