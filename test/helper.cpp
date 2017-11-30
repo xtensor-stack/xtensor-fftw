@@ -6,9 +6,11 @@
  * The full license is in the file LICENSE, distributed with this software.
  */
 
+#define _USE_MATH_DEFINES  // for MSVC ("Math Constants are not defined in Standard C/C++")
+#include <cmath>           // M_PI
+
 #include <xtensor/xarray.hpp>
 #include <xtensor-fftw/helper.hpp>
-#include <cmath>  // M_PI
 
 #include "gtest/gtest.h"
 
