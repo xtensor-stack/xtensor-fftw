@@ -6,42 +6,13 @@
 [![Coverage Status](https://coveralls.io/repos/github/egpbos/xtensor-fftw/badge.svg)](https://coveralls.io/github/egpbos/xtensor-fftw)
 [![Join the Gitter Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/QuantStack/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[fftw](http://www.fftw.org/) bindings for the [xtensor](https://github.com/QuantStack/xtensor) C++ multi-dimensional array library.
+[FFTW](http://www.fftw.org/) bindings for the [xtensor](https://github.com/QuantStack/xtensor) C++ multi-dimensional array library.
 
-## Example
+## Introduction
 
-Calculate the derivative of a field `a` in Fourier space, e.g. a sine shaped field:
+_xtensor-fftw_ enables easy access to Fast Fourier Transforms (FFTs) from the [FFTW library](http://www.fftw.org/) for use on `xarray` numerical arrays from the [_xtensor_](https://github.com/QuantStack/xtensor) library.
 
-```c++
-#include <xtensor-fftw/basic.hpp>   // rfft, irfft
-#include <xtensor-fftw/helper.hpp>  // rfftscale 
-#include <xtensor/xarray.hpp>
-#include <xtensor/xbuilder.hpp>     // xt::arange
-#include <xtensor/xmath.hpp>        // xt::sin, cos
-#include <complex>
-#include <xtensor/xio.hpp>
-
-// generate a sinusoid field
-double dx = M_PI/100;
-xt::xarray<double> x = xt::arange(0., 2*M_PI, dx);
-xt::xarray<double> sin = xt::sin(x);
-
-// transform to Fourier space
-auto sin_fs = xt::fftw::rfft(sin);
-
-// multiply by i*k
-std::complex<double> i {0, 1};
-auto k = xt::fftw::rfftscale<double>(sin.shape()[0], dx);
-xt::xarray< std::complex<double> > sin_derivative_fs = xt::eval(i * k * sin_fs);
-
-// transform back to normal space
-auto sin_derivative = xt::fftw::irfft(sin_derivative_fs);
-
-std::cout << "x:              " << x << std::endl;
-std::cout << "sin:            " << sin << std::endl;
-std::cout << "cos:            " << xt::cos(x) << std::endl;
-std::cout << "sin_derivative: " << sin_derivative << std::endl;
-```
+Syntax and functionality are inspired by `numpy.fft`, the FFT module in the Python array programming library [NumPy](http://www.numpy.org/).
 
 ## Installation
 
@@ -80,6 +51,41 @@ To compile, one should also include the paths to the FFTW header and libraries a
 Note that _xtensor-fftw_ on Windows does not support `long double` precision.
 The `long double` precision version of the FFTW library requires that `sizeof(long double) == 12`.
 In recent versions of Visual Studio, `long double` is an alias of `double` and has size 8.
+
+### Example
+
+Calculate the derivative of a (discretized) field in Fourier space, e.g. a sine shaped field `sin`:
+
+```c++
+#include <xtensor-fftw/basic.hpp>   // rfft, irfft
+#include <xtensor-fftw/helper.hpp>  // rfftscale 
+#include <xtensor/xarray.hpp>
+#include <xtensor/xbuilder.hpp>     // xt::arange
+#include <xtensor/xmath.hpp>        // xt::sin, cos
+#include <complex>
+#include <xtensor/xio.hpp>
+
+// generate a sinusoid field
+double dx = M_PI/100;
+xt::xarray<double> x = xt::arange(0., 2*M_PI, dx);
+xt::xarray<double> sin = xt::sin(x);
+
+// transform to Fourier space
+auto sin_fs = xt::fftw::rfft(sin);
+
+// multiply by i*k
+std::complex<double> i {0, 1};
+auto k = xt::fftw::rfftscale<double>(sin.shape()[0], dx);
+xt::xarray< std::complex<double> > sin_derivative_fs = xt::eval(i * k * sin_fs);
+
+// transform back to normal space
+auto sin_derivative = xt::fftw::irfft(sin_derivative_fs);
+
+std::cout << "x:              " << x << std::endl;
+std::cout << "sin:            " << sin << std::endl;
+std::cout << "cos:            " << xt::cos(x) << std::endl;
+std::cout << "sin_derivative: " << sin_derivative << std::endl;
+```
 
 
 ## Building and running tests
