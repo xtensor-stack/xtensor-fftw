@@ -8,6 +8,7 @@
 
 #include <xtensor/xarray.hpp>
 #include <xtensor-fftw/helper.hpp>
+#include <cmath>  // M_PI
 
 #include "gtest/gtest.h"
 
