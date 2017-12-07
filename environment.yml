@@ -14,3 +14,4 @@ dependencies:
   - notebook
   - xtensor-fftw >= 0.2.1
   - fftw
+  - nbstripout
