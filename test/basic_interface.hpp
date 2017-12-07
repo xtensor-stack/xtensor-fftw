@@ -60,18 +60,22 @@ auto generate_hermitian_data(std::size_t n) {
 
 // Some testing output + the actual GoogleTest assert statement
 template <typename input_t, typename fourier_t, typename output_t>
-void assert_results(const input_t &a, const fourier_t &a_fourier, const output_t &should_be_a) {
-  // std::cout << "real input:  " << a << std::endl;
-  // std::cout << "fourier transform of input after ifft (usually different from before): " << a_fourier << std::endl;
-  // std::cout << "real output: " << should_be_a << std::endl;
+void assert_results(const input_t &a, const fourier_t &a_fourier, const output_t &should_be_a, bool verbose = false) {
+  if (verbose) {
+    std::cout << "real input:  " << a << std::endl;
+    std::cout << "fourier transform of input after ifft (usually different from before): " << a_fourier << std::endl;
+    std::cout << "real output: " << should_be_a << std::endl;
+  }
   ASSERT_TRUE(xt::allclose(a, should_be_a, 1e-03));
 }
 
 template <typename input_t, typename fourier_t, typename output_t>
-void assert_results_complex(const input_t &a, const fourier_t &a_fourier, const output_t &should_be_a) {
-  // std::cout << "complex input:  " << a << std::endl;
-  // std::cout << "fourier transform of input after ifft (usually different from before): " << a_fourier << std::endl;
-  // std::cout << "complex output: " << should_be_a << std::endl;
+void assert_results_complex(const input_t &a, const fourier_t &a_fourier, const output_t &should_be_a, bool verbose = false) {
+  if (verbose) {
+    std::cout << "complex input:  " << a << std::endl;
+    std::cout << "fourier transform of input after ifft (usually different from before): " << a_fourier << std::endl;
+    std::cout << "complex output: " << should_be_a << std::endl;
+  }
   ASSERT_TRUE(xt::allclose(xt::real(a), xt::real(should_be_a), 1e-03)
               && xt::allclose(xt::imag(a), xt::imag(should_be_a), 1e-03));
 }
