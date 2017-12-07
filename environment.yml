@@ -12,5 +12,5 @@ dependencies:
   - xeus-cling
 #  - xwidgets
   - notebook
-  - xtensor-fftw
+  - xtensor-fftw >= 0.2.1
   - fftw
