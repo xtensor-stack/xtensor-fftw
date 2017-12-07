@@ -4,7 +4,7 @@ channels:
   - QuantStack
   - conda-forge
 dependencies:
-  - xtensor
+  - xtensor >= 0.14.0
   - boost ==1.65.1
   - boost-cpp ==1.65.1
   - widgetsnbextension
