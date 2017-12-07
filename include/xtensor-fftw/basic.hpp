@@ -165,26 +165,34 @@ namespace xt {
 
     // input vs output shape conversion
     template <typename output_t>
-    inline std::vector<std::size_t> output_shape_from_input(xt::xarray<output_t, xt::layout_type::row_major> input, bool half_plus_one_out, bool half_plus_one_in) {
+    inline std::vector<std::size_t> output_shape_from_input(xt::xarray<output_t, xt::layout_type::row_major> input, bool half_plus_one_out, bool half_plus_one_in, bool odd_last_dim = false) {
       std::vector<std::size_t> output_shape = input.shape();
-      if (half_plus_one_out) {
+      if (half_plus_one_out) {        // r2c
         auto n = output_shape.size();
         output_shape[n-1] = output_shape[n-1]/2 + 1;
-      } else if (half_plus_one_in) {
+      } else if (half_plus_one_in) {  // c2r
         auto n = output_shape.size();
-        output_shape[n-1] = (output_shape[n-1] - 1)*2;
+        if (!odd_last_dim) {
+          output_shape[n - 1] = (output_shape[n - 1] - 1) * 2;
+        } else {
+          output_shape[n - 1] = (output_shape[n - 1] - 1) * 2 + 1;
+        }
       }
       return output_shape;
     }
 
     // output to DFT-dimensions conversion
     template <typename output_t>
-    inline std::vector<std::size_t> dft_dimensions_from_output(xt::xarray<output_t, xt::layout_type::row_major> output, bool half_plus_one_out) {
+    inline std::vector<std::size_t> dft_dimensions_from_output(xt::xarray<output_t, xt::layout_type::row_major> output, bool half_plus_one_out, bool odd_last_dim = false) {
       std::vector<std::size_t> dft_dimensions = output.shape();
 
-      if (half_plus_one_out) {
+      if (half_plus_one_out) {        // r2c
         auto n = dft_dimensions.size();
-        dft_dimensions[n-1] = (dft_dimensions[n-1] - 1)*2;
+        if (!odd_last_dim) {
+          dft_dimensions[n - 1] = (dft_dimensions[n - 1] - 1) * 2;
+        } else {
+          dft_dimensions[n - 1] = (dft_dimensions[n - 1] - 1) * 2 + 1;
+        }
       }
 
       return dft_dimensions;
@@ -196,7 +204,7 @@ namespace xt {
 
     // REGULAR FFT N-dim
     template <std::size_t dim, int fftw_direction, bool fftw_123dim, typename input_t, typename output_t, typename fftw_plan_dft_signature<input_t, output_t, dim, fftw_direction, fftw_123dim>::type fftw_plan_dft, bool half_plus_one_out, bool half_plus_one_in>
-    inline auto fftw_plan_dft_caller(const xt::xarray<input_t, layout_type::row_major> &input, xt::xarray<output_t, layout_type::row_major> &output, unsigned int flags)
+    inline auto fftw_plan_dft_caller(const xt::xarray<input_t, layout_type::row_major> &input, xt::xarray<output_t, layout_type::row_major> &output, unsigned int flags, bool /*odd_last_dim*/ = false)
     -> std::enable_if_t<dimensional::is_n<dim, fftw_123dim>::value && (fftw_direction != 0), typename fftw_t<input_t>::plan> {
       using fftw_input_t = fftw_number_t<input_t>;
       using fftw_output_t = fftw_number_t<output_t>;
@@ -213,7 +221,7 @@ namespace xt {
 
     // REGULAR FFT 1D
     template <std::size_t dim, int fftw_direction, bool fftw_123dim, typename input_t, typename output_t, typename fftw_plan_dft_signature<input_t, output_t, dim, fftw_direction, fftw_123dim>::type fftw_plan_dft, bool half_plus_one_out, bool half_plus_one_in>
-    inline auto fftw_plan_dft_caller(const xt::xarray<input_t, layout_type::row_major> &input, xt::xarray<output_t, layout_type::row_major> &output, unsigned int flags)
+    inline auto fftw_plan_dft_caller(const xt::xarray<input_t, layout_type::row_major> &input, xt::xarray<output_t, layout_type::row_major> &output, unsigned int flags, bool /*odd_last_dim*/ = false)
     -> std::enable_if_t<dimensional::is_1<dim, fftw_123dim>::value && (fftw_direction != 0), typename fftw_t<input_t>::plan> {
       using fftw_input_t = fftw_number_t<input_t>;
       using fftw_output_t = fftw_number_t<output_t>;
@@ -229,7 +237,7 @@ namespace xt {
 
     // REGULAR FFT 2D
     template <std::size_t dim, int fftw_direction, bool fftw_123dim, typename input_t, typename output_t, typename fftw_plan_dft_signature<input_t, output_t, dim, fftw_direction, fftw_123dim>::type fftw_plan_dft, bool half_plus_one_out, bool half_plus_one_in>
-    inline auto fftw_plan_dft_caller(const xt::xarray<input_t, layout_type::row_major> &input, xt::xarray<output_t, layout_type::row_major> &output, unsigned int flags)
+    inline auto fftw_plan_dft_caller(const xt::xarray<input_t, layout_type::row_major> &input, xt::xarray<output_t, layout_type::row_major> &output, unsigned int flags, bool /*odd_last_dim*/ = false)
     -> std::enable_if_t<dimensional::is_2<dim, fftw_123dim>::value && (fftw_direction != 0), typename fftw_t<input_t>::plan> {
       using fftw_input_t = fftw_number_t<input_t>;
       using fftw_output_t = fftw_number_t<output_t>;
@@ -245,7 +253,7 @@ namespace xt {
 
     // REGULAR FFT 3D
     template <std::size_t dim, int fftw_direction, bool fftw_123dim, typename input_t, typename output_t, typename fftw_plan_dft_signature<input_t, output_t, dim, fftw_direction, fftw_123dim>::type fftw_plan_dft, bool half_plus_one_out, bool half_plus_one_in>
-    inline auto fftw_plan_dft_caller(const xt::xarray<input_t, layout_type::row_major> &input, xt::xarray<output_t, layout_type::row_major> &output, unsigned int flags)
+    inline auto fftw_plan_dft_caller(const xt::xarray<input_t, layout_type::row_major> &input, xt::xarray<output_t, layout_type::row_major> &output, unsigned int flags, bool /*odd_last_dim*/ = false)
     -> std::enable_if_t<dimensional::is_3<dim, fftw_123dim>::value && (fftw_direction != 0), typename fftw_t<input_t>::plan> {
       using fftw_input_t = fftw_number_t<input_t>;
       using fftw_output_t = fftw_number_t<output_t>;
@@ -261,12 +269,12 @@ namespace xt {
 
     // REAL FFT N-dim
     template <std::size_t dim, int fftw_direction, bool fftw_123dim, typename input_t, typename output_t, typename fftw_plan_dft_signature<input_t, output_t, dim, 0, fftw_123dim>::type fftw_plan_dft, bool half_plus_one_out, bool half_plus_one_in>
-    inline auto fftw_plan_dft_caller(const xt::xarray<input_t, layout_type::row_major> &input, xt::xarray<output_t, layout_type::row_major> &output, unsigned int flags)
+    inline auto fftw_plan_dft_caller(const xt::xarray<input_t, layout_type::row_major> &input, xt::xarray<output_t, layout_type::row_major> &output, unsigned int flags, bool odd_last_dim = false)
     -> std::enable_if_t<dimensional::is_n<dim, fftw_123dim>::value && (fftw_direction == 0), typename fftw_t<input_t>::plan> {
       using fftw_input_t = fftw_number_t<input_t>;
       using fftw_output_t = fftw_number_t<output_t>;
 
-      auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out);
+      auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out, odd_last_dim);
       std::vector<int> dft_dimensions(dft_dimensions_unsigned.begin(), dft_dimensions_unsigned.end());
 
       return fftw_plan_dft(static_cast<int>(dim), dft_dimensions.data(),
@@ -277,12 +285,12 @@ namespace xt {
 
     // REAL FFT 1D
     template <std::size_t dim, int fftw_direction, bool fftw_123dim, typename input_t, typename output_t, typename fftw_plan_dft_signature<input_t, output_t, dim, 0, fftw_123dim>::type fftw_plan_dft, bool half_plus_one_out, bool half_plus_one_in>
-    inline auto fftw_plan_dft_caller(const xt::xarray<input_t, layout_type::row_major> &input, xt::xarray<output_t, layout_type::row_major> &output, unsigned int flags)
+    inline auto fftw_plan_dft_caller(const xt::xarray<input_t, layout_type::row_major> &input, xt::xarray<output_t, layout_type::row_major> &output, unsigned int flags, bool odd_last_dim = false)
     -> std::enable_if_t<dimensional::is_1<dim, fftw_123dim>::value && (fftw_direction == 0), typename fftw_t<input_t>::plan> {
       using fftw_input_t = fftw_number_t<input_t>;
       using fftw_output_t = fftw_number_t<output_t>;
 
-      auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out);
+      auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out, odd_last_dim);
 
       return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]),
                const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.raw_data())),
@@ -292,12 +300,12 @@ namespace xt {
 
     // REAL FFT 2D
     template <std::size_t dim, int fftw_direction, bool fftw_123dim, typename input_t, typename output_t, typename fftw_plan_dft_signature<input_t, output_t, dim, 0, fftw_123dim>::type fftw_plan_dft, bool half_plus_one_out, bool half_plus_one_in>
-    inline auto fftw_plan_dft_caller(const xt::xarray<input_t, layout_type::row_major> &input, xt::xarray<output_t, layout_type::row_major> &output, unsigned int flags)
+    inline auto fftw_plan_dft_caller(const xt::xarray<input_t, layout_type::row_major> &input, xt::xarray<output_t, layout_type::row_major> &output, unsigned int flags, bool odd_last_dim = false)
     -> std::enable_if_t<dimensional::is_2<dim, fftw_123dim>::value && (fftw_direction == 0), typename fftw_t<input_t>::plan> {
       using fftw_input_t = fftw_number_t<input_t>;
       using fftw_output_t = fftw_number_t<output_t>;
 
-      auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out);
+      auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out, odd_last_dim);
 
       return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]), static_cast<int>(dft_dimensions_unsigned[1]),
           const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.raw_data())),
@@ -307,12 +315,12 @@ namespace xt {
 
     // REAL FFT 3D
     template <std::size_t dim, int fftw_direction, bool fftw_123dim, typename input_t, typename output_t, typename fftw_plan_dft_signature<input_t, output_t, dim, 0, fftw_123dim>::type fftw_plan_dft, bool half_plus_one_out, bool half_plus_one_in>
-    inline auto fftw_plan_dft_caller(const xt::xarray<input_t, layout_type::row_major> &input, xt::xarray<output_t, layout_type::row_major> &output, unsigned int flags)
+    inline auto fftw_plan_dft_caller(const xt::xarray<input_t, layout_type::row_major> &input, xt::xarray<output_t, layout_type::row_major> &output, unsigned int flags, bool odd_last_dim = false)
     -> std::enable_if_t<dimensional::is_3<dim, fftw_123dim>::value && (fftw_direction == 0), typename fftw_t<input_t>::plan> {
       using fftw_input_t = fftw_number_t<input_t>;
       using fftw_output_t = fftw_number_t<output_t>;
 
-      auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out);
+      auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out, odd_last_dim);
 
       return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]), static_cast<int>(dft_dimensions_unsigned[1]), static_cast<int>(dft_dimensions_unsigned[2]),
           const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.raw_data())),
@@ -347,10 +355,12 @@ namespace xt {
         >
     >
     inline xt::xarray<output_t> _fft_(const xt::xarray<input_t, layout_type::row_major> &input) {
-      auto output_shape = output_shape_from_input(input, half_plus_one_out, half_plus_one_in);
+      auto output_shape = output_shape_from_input(input, half_plus_one_out, half_plus_one_in, false);
       xt::xarray<output_t, layout_type::row_major> output(output_shape);
 
-      auto plan = fftw_plan_dft_caller<dim, fftw_direction, fftw_123dim, input_t, output_t, fftw_plan_dft, half_plus_one_out, half_plus_one_in>(input, output, FFTW_ESTIMATE);
+      bool odd_last_dim = (input.shape()[input.shape().size()-1] % 2 != 0);
+
+      auto plan = fftw_plan_dft_caller<dim, fftw_direction, fftw_123dim, input_t, output_t, fftw_plan_dft, half_plus_one_out, half_plus_one_in>(input, output, FFTW_ESTIMATE, odd_last_dim);
       if (plan == nullptr) {
         throw std::runtime_error("Plan creation returned nullptr. This usually means FFTW cannot create a plan for the given arguments (e.g. a non-destructive multi-dimensional real FFT is impossible in FFTW).");
       }
@@ -371,18 +381,18 @@ namespace xt {
                 || dimensional::is_n<dim, fftw_123dim>::value)
         >
     >
-    inline xt::xarray<output_t> _ifft_(const xt::xarray<input_t, layout_type::row_major> &input) {
-      auto output_shape = output_shape_from_input(input, half_plus_one_out, half_plus_one_in);
+    inline xt::xarray<output_t> _ifft_(const xt::xarray<input_t, layout_type::row_major> &input, bool odd_last_dim = false) {
+      auto output_shape = output_shape_from_input(input, half_plus_one_out, half_plus_one_in, odd_last_dim);
       xt::xarray<output_t, layout_type::row_major> output(output_shape);
 
-      auto plan = fftw_plan_dft_caller<dim, fftw_direction, fftw_123dim, input_t, output_t, fftw_plan_dft, half_plus_one_out, half_plus_one_in>(input, output, FFTW_ESTIMATE);
+      auto plan = fftw_plan_dft_caller<dim, fftw_direction, fftw_123dim, input_t, output_t, fftw_plan_dft, half_plus_one_out, half_plus_one_in>(input, output, FFTW_ESTIMATE, odd_last_dim);
       if (plan == nullptr) {
         throw std::runtime_error("Plan creation returned nullptr. This usually means FFTW cannot create a plan for the given arguments (e.g. a non-destructive multi-dimensional real FFT is impossible in FFTW).");
       }
 
       fftw_execute(plan);
       fftw_destroy_plan(plan);
-      auto dft_dimensions = dft_dimensions_from_output(output, half_plus_one_out);
+      auto dft_dimensions = dft_dimensions_from_output(output, half_plus_one_out, odd_last_dim);
       auto N_dft = static_cast<prec_t<output_t> >(std::accumulate(dft_dimensions.begin(), dft_dimensions.end(), 1, std::multiplies<std::size_t>()));
       return output / N_dft;
     };
@@ -620,24 +630,24 @@ namespace xt {
       return _fft_<float, std::complex<float>, 1, 0, true, true, false, fftwf_plan_dft_r2c_1d, fftwf_execute, fftwf_destroy_plan> (input);
     }
 
-    inline xt::xarray<float> irfft (const xt::xarray<std::complex<float> > &input) {
-      return _ifft_<std::complex<float>, float, 1, 0, true, false, true, fftwf_plan_dft_c2r_1d, fftwf_execute, fftwf_destroy_plan> (input);
+    inline xt::xarray<float> irfft (const xt::xarray<std::complex<float> > &input, bool odd_last_dim = false) {
+      return _ifft_<std::complex<float>, float, 1, 0, true, false, true, fftwf_plan_dft_c2r_1d, fftwf_execute, fftwf_destroy_plan> (input, odd_last_dim);
     }
 
     inline xt::xarray<std::complex<double> > rfft (const xt::xarray<double> &input) {
       return _fft_<double, std::complex<double>, 1, 0, true, true, false, fftw_plan_dft_r2c_1d, fftw_execute, fftw_destroy_plan> (input);
     }
 
-    inline xt::xarray<double> irfft (const xt::xarray<std::complex<double> > &input) {
-      return _ifft_<std::complex<double>, double, 1, 0, true, false, true, fftw_plan_dft_c2r_1d, fftw_execute, fftw_destroy_plan> (input);
+    inline xt::xarray<double> irfft (const xt::xarray<std::complex<double> > &input, bool odd_last_dim = false) {
+      return _ifft_<std::complex<double>, double, 1, 0, true, false, true, fftw_plan_dft_c2r_1d, fftw_execute, fftw_destroy_plan> (input, odd_last_dim);
     }
 
     inline xt::xarray<std::complex<long double> > rfft (const xt::xarray<long double> &input) {
       return _fft_<long double, std::complex<long double>, 1, 0, true, true, false, fftwl_plan_dft_r2c_1d, fftwl_execute, fftwl_destroy_plan> (input);
     }
 
-    inline xt::xarray<long double> irfft (const xt::xarray<std::complex<long double> > &input) {
-      return _ifft_<std::complex<long double>, long double, 1, 0, true, false, true, fftwl_plan_dft_c2r_1d, fftwl_execute, fftwl_destroy_plan> (input);
+    inline xt::xarray<long double> irfft (const xt::xarray<std::complex<long double> > &input, bool odd_last_dim = false) {
+      return _ifft_<std::complex<long double>, long double, 1, 0, true, false, true, fftwl_plan_dft_c2r_1d, fftwl_execute, fftwl_destroy_plan> (input, odd_last_dim);
     }
 
 
@@ -649,24 +659,24 @@ namespace xt {
       return _fft_<float, std::complex<float>, 2, 0, true, true, false, fftwf_plan_dft_r2c_2d, fftwf_execute, fftwf_destroy_plan> (input);
     }
 
-    inline xt::xarray<float> irfft2 (const xt::xarray<std::complex<float> > &input) {
-      return _ifft_<std::complex<float>, float, 2, 0, true, false, true, fftwf_plan_dft_c2r_2d, fftwf_execute, fftwf_destroy_plan> (input);
+    inline xt::xarray<float> irfft2 (const xt::xarray<std::complex<float> > &input, bool odd_last_dim = false) {
+      return _ifft_<std::complex<float>, float, 2, 0, true, false, true, fftwf_plan_dft_c2r_2d, fftwf_execute, fftwf_destroy_plan> (input, odd_last_dim);
     }
 
     inline xt::xarray<std::complex<double> > rfft2 (const xt::xarray<double> &input) {
       return _fft_<double, std::complex<double>, 2, 0, true, true, false, fftw_plan_dft_r2c_2d, fftw_execute, fftw_destroy_plan> (input);
     }
 
-    inline xt::xarray<double> irfft2 (const xt::xarray<std::complex<double> > &input) {
-      return _ifft_<std::complex<double>, double, 2, 0, true, false, true, fftw_plan_dft_c2r_2d, fftw_execute, fftw_destroy_plan> (input);
+    inline xt::xarray<double> irfft2 (const xt::xarray<std::complex<double> > &input, bool odd_last_dim = false) {
+      return _ifft_<std::complex<double>, double, 2, 0, true, false, true, fftw_plan_dft_c2r_2d, fftw_execute, fftw_destroy_plan> (input, odd_last_dim);
     }
 
     inline xt::xarray<std::complex<long double> > rfft2 (const xt::xarray<long double> &input) {
       return _fft_<long double, std::complex<long double>, 2, 0, true, true, false, fftwl_plan_dft_r2c_2d, fftwl_execute, fftwl_destroy_plan> (input);
     }
 
-    inline xt::xarray<long double> irfft2 (const xt::xarray<std::complex<long double> > &input) {
-      return _ifft_<std::complex<long double>, long double, 2, 0, true, false, true, fftwl_plan_dft_c2r_2d, fftwl_execute, fftwl_destroy_plan> (input);
+    inline xt::xarray<long double> irfft2 (const xt::xarray<std::complex<long double> > &input, bool odd_last_dim = false) {
+      return _ifft_<std::complex<long double>, long double, 2, 0, true, false, true, fftwl_plan_dft_c2r_2d, fftwl_execute, fftwl_destroy_plan> (input, odd_last_dim);
     }
 
 
@@ -684,24 +694,24 @@ namespace xt {
       return _fft_<float, std::complex<float>, 3, 0, true, true, false, fftwf_plan_dft_r2c_3d, fftwf_execute, fftwf_destroy_plan> (input);
     }
 
-    inline xt::xarray<float> irfft3 (const xt::xarray<std::complex<float> > &input) {
-      return _ifft_<std::complex<float>, float, 3, 0, true, false, true, fftwf_plan_dft_c2r_3d, fftwf_execute, fftwf_destroy_plan> (input);
+    inline xt::xarray<float> irfft3 (const xt::xarray<std::complex<float> > &input, bool odd_last_dim = false) {
+      return _ifft_<std::complex<float>, float, 3, 0, true, false, true, fftwf_plan_dft_c2r_3d, fftwf_execute, fftwf_destroy_plan> (input, odd_last_dim);
     }
 
     inline xt::xarray<std::complex<double> > rfft3 (const xt::xarray<double> &input) {
       return _fft_<double, std::complex<double>, 3, 0, true, true, false, fftw_plan_dft_r2c_3d, fftw_execute, fftw_destroy_plan> (input);
     }
 
-    inline xt::xarray<double> irfft3 (const xt::xarray<std::complex<double> > &input) {
-      return _ifft_<std::complex<double>, double, 3, 0, true, false, true, fftw_plan_dft_c2r_3d, fftw_execute, fftw_destroy_plan> (input);
+    inline xt::xarray<double> irfft3 (const xt::xarray<std::complex<double> > &input, bool odd_last_dim = false) {
+      return _ifft_<std::complex<double>, double, 3, 0, true, false, true, fftw_plan_dft_c2r_3d, fftw_execute, fftw_destroy_plan> (input, odd_last_dim);
     }
 
     inline xt::xarray<std::complex<long double> > rfft3 (const xt::xarray<long double> &input) {
       return _fft_<long double, std::complex<long double>, 3, 0, true, true, false, fftwl_plan_dft_r2c_3d, fftwl_execute, fftwl_destroy_plan> (input);
     }
 
-    inline xt::xarray<long double> irfft3 (const xt::xarray<std::complex<long double> > &input) {
-      return _ifft_<std::complex<long double>, long double, 3, 0, true, false, true, fftwl_plan_dft_c2r_3d, fftwl_execute, fftwl_destroy_plan> (input);
+    inline xt::xarray<long double> irfft3 (const xt::xarray<std::complex<long double> > &input, bool odd_last_dim = false) {
+      return _ifft_<std::complex<long double>, long double, 3, 0, true, false, true, fftwl_plan_dft_c2r_3d, fftwl_execute, fftwl_destroy_plan> (input, odd_last_dim);
     }
 
     ////
@@ -714,8 +724,8 @@ namespace xt {
     }
 
     template <std::size_t dim>
-    inline xt::xarray<float> irfftn (const xt::xarray<std::complex<float> > &input) {
-      return _ifft_<std::complex<float>, float, dim, 0, false, false, true, fftwf_plan_dft_c2r, fftwf_execute, fftwf_destroy_plan> (input);
+    inline xt::xarray<float> irfftn (const xt::xarray<std::complex<float> > &input, bool odd_last_dim = false) {
+      return _ifft_<std::complex<float>, float, dim, 0, false, false, true, fftwf_plan_dft_c2r, fftwf_execute, fftwf_destroy_plan> (input, odd_last_dim);
     }
 
     template <std::size_t dim>
@@ -724,8 +734,8 @@ namespace xt {
     }
 
     template <std::size_t dim>
-    inline xt::xarray<double> irfftn (const xt::xarray<std::complex<double> > &input) {
-      return _ifft_<std::complex<double>, double, dim, 0, false, false, true, fftw_plan_dft_c2r, fftw_execute, fftw_destroy_plan> (input);
+    inline xt::xarray<double> irfftn (const xt::xarray<std::complex<double> > &input, bool odd_last_dim = false) {
+      return _ifft_<std::complex<double>, double, dim, 0, false, false, true, fftw_plan_dft_c2r, fftw_execute, fftw_destroy_plan> (input, odd_last_dim);
     }
 
     template <std::size_t dim>
@@ -734,8 +744,8 @@ namespace xt {
     }
 
     template <std::size_t dim>
-    inline xt::xarray<long double> irfftn (const xt::xarray<std::complex<long double> > &input) {
-      return _ifft_<std::complex<long double>, long double, dim, 0, false, false, true, fftwl_plan_dft_c2r, fftwl_execute, fftwl_destroy_plan> (input);
+    inline xt::xarray<long double> irfftn (const xt::xarray<std::complex<long double> > &input, bool odd_last_dim = false) {
+      return _ifft_<std::complex<long double>, long double, dim, 0, false, false, true, fftwl_plan_dft_c2r, fftwl_execute, fftwl_destroy_plan> (input, odd_last_dim);
     }
 
 
