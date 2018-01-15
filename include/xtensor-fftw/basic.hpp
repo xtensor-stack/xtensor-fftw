@@ -210,7 +210,9 @@ namespace xt {
       using fftw_output_t = fftw_number_t<output_t>;
 
       auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out);
-      std::vector<int> dft_dimensions(dft_dimensions_unsigned.begin(), dft_dimensions_unsigned.end());
+      std::vector<int> dft_dimensions;
+      dft_dimensions.reserve(dft_dimensions_unsigned.size());
+      std::transform(dft_dimensions_unsigned.begin(), dft_dimensions_unsigned.end(), std::back_inserter(dft_dimensions), [&](std::size_t d) { return static_cast<int>(d); });
 
       return fftw_plan_dft(static_cast<int>(dim), dft_dimensions.data(),
                            const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.raw_data())),
@@ -275,7 +277,9 @@ namespace xt {
       using fftw_output_t = fftw_number_t<output_t>;
 
       auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out, odd_last_dim);
-      std::vector<int> dft_dimensions(dft_dimensions_unsigned.begin(), dft_dimensions_unsigned.end());
+      std::vector<int> dft_dimensions;
+      dft_dimensions.reserve(dft_dimensions_unsigned.size());
+      std::transform(dft_dimensions_unsigned.begin(), dft_dimensions_unsigned.end(), std::back_inserter(dft_dimensions), [&](std::size_t d) { return static_cast<int>(d); });
 
       return fftw_plan_dft(static_cast<int>(dim), dft_dimensions.data(),
                            const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.raw_data())),
@@ -393,7 +397,7 @@ namespace xt {
       fftw_execute(plan);
       fftw_destroy_plan(plan);
       auto dft_dimensions = dft_dimensions_from_output(output, half_plus_one_out, odd_last_dim);
-      auto N_dft = static_cast<prec_t<output_t> >(std::accumulate(dft_dimensions.begin(), dft_dimensions.end(), 1, std::multiplies<std::size_t>()));
+      auto N_dft = static_cast<prec_t<output_t> >(std::accumulate(dft_dimensions.begin(), dft_dimensions.end(), static_cast<size_t>(1u), std::multiplies<size_t>()));
       return output / N_dft;
     };
 
@@ -450,7 +454,7 @@ namespace xt {
       output = xt::conj(output);
 
       auto dft_dimensions = dft_dimensions_from_output(output, half_plus_one_out);
-      auto N_dft = static_cast<prec_t<output_t> >(std::accumulate(dft_dimensions.begin(), dft_dimensions.end(), 1, std::multiplies<std::size_t>()));
+      auto N_dft = static_cast<prec_t<output_t> >(std::accumulate(dft_dimensions.begin(), dft_dimensions.end(), static_cast<size_t>(1u), std::multiplies<size_t>()));
       return output / N_dft;
     };
 
