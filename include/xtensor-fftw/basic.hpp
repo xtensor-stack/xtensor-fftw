@@ -165,8 +165,8 @@ namespace xt {
 
     // input vs output shape conversion
     template <typename output_t>
-    inline std::vector<std::size_t> output_shape_from_input(xt::xarray<output_t, xt::layout_type::row_major> input, bool half_plus_one_out, bool half_plus_one_in, bool odd_last_dim = false) {
-      std::vector<std::size_t> output_shape = input.shape();
+    inline xt::svector<std::size_t> output_shape_from_input(xt::xarray<output_t, xt::layout_type::row_major> input, bool half_plus_one_out, bool half_plus_one_in, bool odd_last_dim = false) {
+      xt::svector<std::size_t> output_shape = input.shape();
       if (half_plus_one_out) {        // r2c
         auto n = output_shape.size();
         output_shape[n-1] = output_shape[n-1]/2 + 1;
@@ -183,8 +183,8 @@ namespace xt {
 
     // output to DFT-dimensions conversion
     template <typename output_t>
-    inline std::vector<std::size_t> dft_dimensions_from_output(xt::xarray<output_t, xt::layout_type::row_major> output, bool half_plus_one_out, bool odd_last_dim = false) {
-      std::vector<std::size_t> dft_dimensions = output.shape();
+    inline xt::svector<std::size_t> dft_dimensions_from_output(xt::xarray<output_t, xt::layout_type::row_major> output, bool half_plus_one_out, bool odd_last_dim = false) {
+      xt::svector<std::size_t> dft_dimensions = output.shape();
 
       if (half_plus_one_out) {        // r2c
         auto n = dft_dimensions.size();

@@ -4,13 +4,12 @@ channels:
   - QuantStack
   - conda-forge
 dependencies:
-  - xtensor >= 0.14.0
+  - xtensor >= 0.15.6
   - boost ==1.65.1
   - boost-cpp ==1.65.1
   - widgetsnbextension
   - xtensor-io
   - xeus-cling
-#  - xwidgets
   - notebook
   - xtensor-fftw >= 0.2.1
   - fftw
