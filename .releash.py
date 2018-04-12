@@ -14,7 +14,7 @@ gitpush = ReleaseTargetGitPush()
 
 xfftw = add_package(path=".", name="xtensor-fftw")
 version_xfftw = VersionSourceAndTargetHpp(xfftw, '{path}/include/xtensor-fftw/xtensor-fftw_config.hpp', prefix='XTENSOR_FFTW_VERSION_')
-gittag_xfftw = ReleaseTargetGitTagVersion(version_source=version_xfftw, prefix='', annotate=True, msg='')
+gittag_xfftw = ReleaseTargetGitTagVersion(version_source=version_xfftw, prefix='', annotate=True, msg=None)
 
 xfftw.version_source = version_xfftw
 
