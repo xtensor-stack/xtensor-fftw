@@ -5,12 +5,14 @@ channels:
   - conda-forge
 dependencies:
   - xtensor >= 0.15.6
-  - boost ==1.65.1
-  - boost-cpp ==1.65.1
+#  - boost ==1.65.1
+#  - boost-cpp ==1.65.1
+  - boost
+  - boost-cpp
   - widgetsnbextension
   - xtensor-io
   - xeus-cling
   - notebook
-  - xtensor-fftw >= 0.2.1
+  - xtensor-fftw >= 0.2.3
   - fftw
   - nbstripout
