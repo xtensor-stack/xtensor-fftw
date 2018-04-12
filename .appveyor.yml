@@ -11,37 +11,17 @@ platform:
 environment:
   matrix:
       # fftw from conda-forge
-    - COLUMN_MAJOR_LAYOUT: OFF
-      MINICONDA: C:\Miniconda36-x64
+    - MINICONDA: C:\Miniconda36-x64
       FFTW_INSTALL_MODE: conda-forge
       FFTW_ROOT:
-    - COLUMN_MAJOR_LAYOUT: OFF
-      MINICONDA: C:\Miniconda36
-      FFTW_INSTALL_MODE: conda-forge
-      FFTW_ROOT:
-    - COLUMN_MAJOR_LAYOUT: ON
-      MINICONDA: C:\Miniconda36-x64
-      FFTW_INSTALL_MODE: conda-forge
-      FFTW_ROOT:
-    - COLUMN_MAJOR_LAYOUT: ON
-      MINICONDA: C:\Miniconda36
+    - MINICONDA: C:\Miniconda36
       FFTW_INSTALL_MODE: conda-forge
       FFTW_ROOT:
       # fftw from the "official" fftw website build
-    - COLUMN_MAJOR_LAYOUT: OFF
-      MINICONDA: C:\Miniconda36-x64
+    - MINICONDA: C:\Miniconda36-x64
       FFTW_INSTALL_MODE: official
       FFTW_ROOT: C:\fftw_download
-    - COLUMN_MAJOR_LAYOUT: OFF
-      MINICONDA: C:\Miniconda36
-      FFTW_INSTALL_MODE: official
-      FFTW_ROOT: C:\fftw_download
-    - COLUMN_MAJOR_LAYOUT: ON
-      MINICONDA: C:\Miniconda36-x64
-      FFTW_INSTALL_MODE: official
-      FFTW_ROOT: C:\fftw_download
-    - COLUMN_MAJOR_LAYOUT: ON
-      MINICONDA: C:\Miniconda36
+    - MINICONDA: C:\Miniconda36
       FFTW_INSTALL_MODE: official
       FFTW_ROOT: C:\fftw_download
 
@@ -51,9 +31,7 @@ matrix:
       MINICONDA: C:\Miniconda36-x64
     - platform: x64
       MINICONDA: C:\Miniconda36
-  allow_failures:
-    - COLUMN_MAJOR_LAYOUT: ON
-#  fast_finish: true
+ fast_finish: true
 
 init:
   - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat %PLATFORM%
@@ -101,14 +79,14 @@ install:
         }
 
         "conda-forge" {
-          conda install fftw
+          conda.exe install fftw
         }
 
       }
   - cd %APPVEYOR_BUILD_FOLDER%
   - mkdir build
   - cd build
-  - cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DFFTW_ROOT=%FFTW_ROOT% -DCMAKE_INSTALL_PREFIX=%MINICONDA%\\Library -DBUILD_TESTS=ON -DDEFAULT_COLUMN_MAJOR=%COLUMN_MAJOR_LAYOUT% -DDOWNLOAD_GTEST=ON ..
+  - cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DFFTW_ROOT=%FFTW_ROOT% -DCMAKE_INSTALL_PREFIX=%MINICONDA%\\Library -DBUILD_TESTS=ON -DDOWNLOAD_GTEST=ON ..
   - nmake test_xtensor-fftw
 
 before_build:
