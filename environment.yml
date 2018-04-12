@@ -1,18 +1,12 @@
 name: xtensor-fftw
 channels:
-  - nodefaults
   - QuantStack
   - conda-forge
 dependencies:
-  - xtensor >= 0.15.6
-#  - boost ==1.65.1
-#  - boost-cpp ==1.65.1
-  - boost
-  - boost-cpp
-  - widgetsnbextension
+  - xtensor=0.15.9
   - xtensor-io
-  - xeus-cling
-  - notebook
+  - xeus-cling=0.3.0
   - xtensor-fftw >= 0.2.3
-  - fftw
+  - notebook
+  - widgetsnbextension
   - nbstripout
