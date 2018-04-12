@@ -31,7 +31,7 @@ matrix:
       MINICONDA: C:\Miniconda36-x64
     - platform: x64
       MINICONDA: C:\Miniconda36
- fast_finish: true
+  fast_finish: true
 
 init:
   - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat %PLATFORM%
