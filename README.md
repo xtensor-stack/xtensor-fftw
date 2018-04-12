@@ -99,6 +99,15 @@ std::cout << "cos:            " << xt::cos(x) << std::endl;
 std::cout << "sin_derivative: " << sin_derivative << std::endl;
 ```
 
+Which outputs (full output truncated):
+
+```
+x:              { 0.      ,  0.031416,  0.062832,  0.094248, ...,  6.251769}
+sin:            { 0.000000e+00,  3.141076e-02,  6.279052e-02,  9.410831e-02, ..., -3.141076e-02}
+cos:            { 1.000000e+00,  9.995066e-01,  9.980267e-01,  9.955620e-01, ...,  9.995066e-01}
+sin_derivative: { 1.000000e+00,  9.995066e-01,  9.980267e-01,  9.955620e-01, ...,  9.995066e-01}
+```
+
 ### Interactive examples
 See the [notebooks folder](https://github.com/egpbos/xtensor-fftw/tree/master/notebooks) for interactive Jupyter notebook examples using the C++14 [_xeus-cling_](https://github.com/QuantStack/xeus-cling) kernel. These can also be run from Binder, [e.g. this one](https://mybinder.org/v2/gh/egpbos/xtensor-fftw/master?filepath=notebooks%2Fintensely_edgy_cat.ipynb).
 
