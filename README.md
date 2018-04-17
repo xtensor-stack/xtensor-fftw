@@ -40,7 +40,6 @@ make install
 ## Dependencies
 
 * [xtensor](https://github.com/QuantStack/xtensor)
-* [xtl](https://github.com/QuantStack/xtl)
 * [FFTW](http://www.fftw.org/) version 3
 * A compiler supporting C++14
 
