@@ -35,7 +35,7 @@ matrix:
 
 init:
   - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat %PLATFORM%
-  - "set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%MINICONDA%\\Library\\bin;%PATH%"
+  - "set PATH=%FFTW_ROOT%;%MINICONDA%;%MINICONDA%\\Scripts;%MINICONDA%\\Library\\bin;%PATH%"
 
 install:
   - conda config --set always_yes yes --set changeps1 no
