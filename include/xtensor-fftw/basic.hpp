@@ -215,8 +215,8 @@ namespace xt {
       std::transform(dft_dimensions_unsigned.begin(), dft_dimensions_unsigned.end(), std::back_inserter(dft_dimensions), [&](std::size_t d) { return static_cast<int>(d); });
 
       return fftw_plan_dft(static_cast<int>(dim), dft_dimensions.data(),
-                           const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.raw_data())),
-                           reinterpret_cast<fftw_output_t *>(output.raw_data()),
+                           const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
+                           reinterpret_cast<fftw_output_t *>(output.data()),
                            fftw_direction,
                            flags);
     };
@@ -231,8 +231,8 @@ namespace xt {
       auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out);
 
       return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]),
-                           const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.raw_data())),
-                           reinterpret_cast<fftw_output_t *>(output.raw_data()),
+                           const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
+                           reinterpret_cast<fftw_output_t *>(output.data()),
                            fftw_direction,
                            flags);
     };
@@ -247,8 +247,8 @@ namespace xt {
       auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out);
 
       return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]), static_cast<int>(dft_dimensions_unsigned[1]),
-                           const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.raw_data())),
-                           reinterpret_cast<fftw_output_t *>(output.raw_data()),
+                           const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
+                           reinterpret_cast<fftw_output_t *>(output.data()),
                            fftw_direction,
                            flags);
     };
@@ -263,8 +263,8 @@ namespace xt {
       auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out);
 
       return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]), static_cast<int>(dft_dimensions_unsigned[1]), static_cast<int>(dft_dimensions_unsigned[2]),
-                           const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.raw_data())),
-                           reinterpret_cast<fftw_output_t *>(output.raw_data()),
+                           const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
+                           reinterpret_cast<fftw_output_t *>(output.data()),
                            fftw_direction,
                            flags);
     };
@@ -282,8 +282,8 @@ namespace xt {
       std::transform(dft_dimensions_unsigned.begin(), dft_dimensions_unsigned.end(), std::back_inserter(dft_dimensions), [&](std::size_t d) { return static_cast<int>(d); });
 
       return fftw_plan_dft(static_cast<int>(dim), dft_dimensions.data(),
-                           const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.raw_data())),
-                           reinterpret_cast<fftw_output_t *>(output.raw_data()),
+                           const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
+                           reinterpret_cast<fftw_output_t *>(output.data()),
                            flags);
     };
 
@@ -297,8 +297,8 @@ namespace xt {
       auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out, odd_last_dim);
 
       return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]),
-               const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.raw_data())),
-               reinterpret_cast<fftw_output_t *>(output.raw_data()),
+               const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
+               reinterpret_cast<fftw_output_t *>(output.data()),
                flags);
     };
 
@@ -312,8 +312,8 @@ namespace xt {
       auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out, odd_last_dim);
 
       return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]), static_cast<int>(dft_dimensions_unsigned[1]),
-          const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.raw_data())),
-          reinterpret_cast<fftw_output_t *>(output.raw_data()),
+          const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
+          reinterpret_cast<fftw_output_t *>(output.data()),
           flags);
     };
 
@@ -327,8 +327,8 @@ namespace xt {
       auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out, odd_last_dim);
 
       return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]), static_cast<int>(dft_dimensions_unsigned[1]), static_cast<int>(dft_dimensions_unsigned[2]),
-          const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.raw_data())),
-          reinterpret_cast<fftw_output_t *>(output.raw_data()),
+          const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
+          reinterpret_cast<fftw_output_t *>(output.data()),
           flags);
     };
 
@@ -470,8 +470,8 @@ namespace xt {
 //      xt::xtensor<std::complex<real_t>, dim> output(input.shape(), input.strides());
 //
 //      fftw_plan_t plan = fftwXXXXX_plan_dft_r2c_1d(static_cast<int>(input.size()),
-//                                              const_cast<real_t *>(input.raw_data()),
-//                                              reinterpret_cast<fftwXXXXXXX_complex*>(output.raw_data()),
+//                                              const_cast<real_t *>(input.data()),
+//                                              reinterpret_cast<fftwXXXXXXX_complex*>(output.data()),
 //                                              FFTW_ESTIMATE);
 //
 //      fftwXXXXX_execute(plan);
@@ -486,8 +486,8 @@ namespace xt {
 //      xt::xtensor<real_t, dim> output(input.shape(), input.strides());
 //
 //      fftw_plan_t plan = fftwXXXXX_plan_dft_c2r_1d(static_cast<int>(input.size()),
-//                                                      const_cast<fftwXXXXX_complex *>(reinterpret_cast<const fftwXXXXX_complex *>(input.raw_data())),
-//                                                      output.raw_data(),
+//                                                      const_cast<fftwXXXXX_complex *>(reinterpret_cast<const fftwXXXXX_complex *>(input.data())),
+//                                                      output.data(),
 //                                                      FFTW_ESTIMATE | FFTW_PRESERVE_INPUT);
 //
 //      fftwXXXXX_execute(plan);
