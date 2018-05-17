@@ -1,5 +1,7 @@
 # ![xtensor-fftw](http://quantstack.net/assets/images/xtensor-fftw.svg)
 
+[FFTW](http://www.fftw.org/) bindings for the [xtensor](https://github.com/QuantStack/xtensor) C++ multi-dimensional array library.
+
 [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/egpbos/xtensor-fftw/master?filepath=notebooks%2Fintensely_edgy_cat.ipynb)
 [![Join the Gitter Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/QuantStack/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -8,7 +10,8 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/18861a283cf84b2e95886ba79c66e028)](https://www.codacy.com/app/egpbos/xtensor-fftw?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=egpbos/xtensor-fftw&amp;utm_campaign=Badge_Grade)
 [![Coverage Status](https://coveralls.io/repos/github/egpbos/xtensor-fftw/badge.svg)](https://coveralls.io/github/egpbos/xtensor-fftw)
 
-[FFTW](http://www.fftw.org/) bindings for the [xtensor](https://github.com/QuantStack/xtensor) C++ multi-dimensional array library.
+[![Anaconda-Server Badge](https://anaconda.org/conda-forge/xtensor-fftw/badges/version.svg)](https://anaconda.org/conda-forge/xtensor-fftw)
+[![Anaconda-Server Badge](https://anaconda.org/conda-forge/xtensor-fftw/badges/downloads.svg)](https://anaconda.org/conda-forge/xtensor-fftw)
 
 ## Introduction
 
