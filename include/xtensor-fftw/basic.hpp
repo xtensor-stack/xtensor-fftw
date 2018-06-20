@@ -181,19 +181,58 @@ namespace xt {
       return output_shape;
     }
 
+
+    namespace detail {
+      template<std::size_t, class T>
+      using T_ = T;
+
+      template<class T, typename input_t, std::size_t... Is>
+      auto gen_tuple(std::index_sequence<Is...>, input_t & input) { return std::tuple<T_<Is, T>...>{input[Is]...}; }
+
+      template<
+          class T, std::size_t N, typename input_t,
+          typename = std::enable_if<std::is_same<typename input_t::value_type, T>::value>
+      >
+      auto tuple_from_container(input_t & input)
+      {
+        return gen_tuple<T>(std::make_index_sequence<N>{}, input);
+      }
+
+      template<class C, class Tuple, std::size_t... Is>
+      auto gen_container(std::index_sequence<Is...>, Tuple & input) { return C{std::get<Is>(input)...}; }
+
+      template<class C, class Tuple>
+      auto container_from_tuple(Tuple & input) {
+        return gen_container<C>(std::make_index_sequence<std::tuple_size<Tuple>::value>{}, input);
+        };
+    }
+
     // output to DFT-dimensions conversion
-    template <typename output_t>
-    inline typename xt::xarray<output_t, xt::layout_type::row_major>::shape_type dft_dimensions_from_output(xt::xarray<output_t, xt::layout_type::row_major> output, bool half_plus_one_out, bool odd_last_dim = false) {
+    template <std::size_t dim, typename output_t>
+    inline auto
+    dft_dims_tuple(xt::xarray<output_t, xt::layout_type::row_major> output,
+                   bool half_plus_one_out, bool odd_last_dim = false) {
       auto dft_dimensions = output.shape();
+      auto dft_dimensions_tuple = detail::tuple_from_container<std::size_t, dim>(dft_dimensions);
 
       if (half_plus_one_out) {        // r2c
-        auto n = dft_dimensions.size();
         if (!odd_last_dim) {
-          dft_dimensions[n - 1] = (dft_dimensions[n - 1] - 1) * 2;
+          std::get<dim - 1>(dft_dimensions_tuple) = (std::get<dim - 1>(dft_dimensions_tuple) - 1) * 2;
         } else {
-          dft_dimensions[n - 1] = (dft_dimensions[n - 1] - 1) * 2 + 1;
+          std::get<dim - 1>(dft_dimensions_tuple) = (std::get<dim - 1>(dft_dimensions_tuple) - 1) * 2 + 1;
         }
       }
+
+      return dft_dimensions_tuple;
+    }
+
+    // output to DFT-dimensions conversion
+    template <std::size_t dim, typename output_t>
+    inline typename xt::xarray<output_t, xt::layout_type::row_major>::shape_type
+    dft_dims_shape_t(xt::xarray<output_t, xt::layout_type::row_major> output,
+                               bool half_plus_one_out, bool odd_last_dim = false) {
+      using C = typename xt::xarray<output_t, xt::layout_type::row_major>::shape_type;
+      auto dft_dimensions = detail::container_from_tuple<C, typename output_t::value_type>(dft_dims_tuple<dim>(output, half_plus_one_out, odd_last_dim));
 
       return dft_dimensions;
     }
@@ -209,7 +248,7 @@ namespace xt {
       using fftw_input_t = fftw_number_t<input_t>;
       using fftw_output_t = fftw_number_t<output_t>;
 
-      auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out);
+      auto dft_dimensions_unsigned = dft_dims_shape_t<dim>(output, half_plus_one_out);
       std::vector<int> dft_dimensions;
       dft_dimensions.reserve(dft_dimensions_unsigned.size());
       std::transform(dft_dimensions_unsigned.begin(), dft_dimensions_unsigned.end(), std::back_inserter(dft_dimensions), [&](std::size_t d) { return static_cast<int>(d); });
@@ -221,6 +260,18 @@ namespace xt {
                            flags);
     };
 
+
+    // fftw_plan_dft caller (i.e. the actual caller) for 1, 2, 3 dim
+//    template <std::size_t dim, typename input_t, typename output_t, typename... Dims>
+//    auto fftw_plan_dft_actual_caller(const xt::xarray<input_t, layout_type::row_major> &input,
+//                                     xt::xarray<output_t, layout_type::row_major> &output,
+//                                     unsigned int flags, bool /*odd_last_dim*/ = false)
+//    -> std::enable_if_t<dim == , typename fftw_t<input_t>::plan>
+//    {
+//
+//    }
+
+
     // REGULAR FFT 1D
     template <std::size_t dim, int fftw_direction, bool fftw_123dim, typename input_t, typename output_t, typename fftw_plan_dft_signature<input_t, output_t, dim, fftw_direction, fftw_123dim>::type fftw_plan_dft, bool half_plus_one_out, bool half_plus_one_in>
     inline auto fftw_plan_dft_caller(const xt::xarray<input_t, layout_type::row_major> &input, xt::xarray<output_t, layout_type::row_major> &output, unsigned int flags, bool /*odd_last_dim*/ = false)
@@ -228,9 +279,9 @@ namespace xt {
       using fftw_input_t = fftw_number_t<input_t>;
       using fftw_output_t = fftw_number_t<output_t>;
 
-      auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out);
+      auto dft_dimensions_unsigned = dft_dims_tuple<dim>(output, half_plus_one_out);
 
-      return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]),
+      return fftw_plan_dft(static_cast<int>(std::get<0>(dft_dimensions_unsigned)),
                            const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
                            reinterpret_cast<fftw_output_t *>(output.data()),
                            fftw_direction,
@@ -244,9 +295,9 @@ namespace xt {
       using fftw_input_t = fftw_number_t<input_t>;
       using fftw_output_t = fftw_number_t<output_t>;
 
-      auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out);
+      auto dft_dimensions_unsigned = dft_dims_tuple<dim>(output, half_plus_one_out);
 
-      return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]), static_cast<int>(dft_dimensions_unsigned[1]),
+      return fftw_plan_dft(static_cast<int>(std::get<0>(dft_dimensions_unsigned)), static_cast<int>(std::get<1>(dft_dimensions_unsigned)),
                            const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
                            reinterpret_cast<fftw_output_t *>(output.data()),
                            fftw_direction,
@@ -260,9 +311,9 @@ namespace xt {
       using fftw_input_t = fftw_number_t<input_t>;
       using fftw_output_t = fftw_number_t<output_t>;
 
-      auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out);
+      auto dft_dimensions_unsigned = dft_dims_tuple<dim>(output, half_plus_one_out);
 
-      return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]), static_cast<int>(dft_dimensions_unsigned[1]), static_cast<int>(dft_dimensions_unsigned[2]),
+      return fftw_plan_dft(static_cast<int>(std::get<0>(dft_dimensions_unsigned)), static_cast<int>(std::get<1>(dft_dimensions_unsigned)), static_cast<int>(std::get<2>(dft_dimensions_unsigned)),
                            const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
                            reinterpret_cast<fftw_output_t *>(output.data()),
                            fftw_direction,
@@ -276,7 +327,7 @@ namespace xt {
       using fftw_input_t = fftw_number_t<input_t>;
       using fftw_output_t = fftw_number_t<output_t>;
 
-      auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out, odd_last_dim);
+      auto dft_dimensions_unsigned = dft_dims_shape_t<dim>(output, half_plus_one_out, odd_last_dim);
       std::vector<int> dft_dimensions;
       dft_dimensions.reserve(dft_dimensions_unsigned.size());
       std::transform(dft_dimensions_unsigned.begin(), dft_dimensions_unsigned.end(), std::back_inserter(dft_dimensions), [&](std::size_t d) { return static_cast<int>(d); });
@@ -294,9 +345,9 @@ namespace xt {
       using fftw_input_t = fftw_number_t<input_t>;
       using fftw_output_t = fftw_number_t<output_t>;
 
-      auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out, odd_last_dim);
+      auto dft_dimensions_unsigned = dft_dims_tuple<dim>(output, half_plus_one_out, odd_last_dim);
 
-      return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]),
+      return fftw_plan_dft(static_cast<int>(std::get<0>(dft_dimensions_unsigned)),
                const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
                reinterpret_cast<fftw_output_t *>(output.data()),
                flags);
@@ -309,9 +360,9 @@ namespace xt {
       using fftw_input_t = fftw_number_t<input_t>;
       using fftw_output_t = fftw_number_t<output_t>;
 
-      auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out, odd_last_dim);
+      auto dft_dimensions_unsigned = dft_dims_tuple<dim>(output, half_plus_one_out, odd_last_dim);
 
-      return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]), static_cast<int>(dft_dimensions_unsigned[1]),
+      return fftw_plan_dft(static_cast<int>(std::get<0>(dft_dimensions_unsigned)), static_cast<int>(std::get<1>(dft_dimensions_unsigned)),
           const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
           reinterpret_cast<fftw_output_t *>(output.data()),
           flags);
@@ -324,9 +375,9 @@ namespace xt {
       using fftw_input_t = fftw_number_t<input_t>;
       using fftw_output_t = fftw_number_t<output_t>;
 
-      auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out, odd_last_dim);
+      auto dft_dimensions_unsigned = dft_dims_tuple<dim>(output, half_plus_one_out, odd_last_dim);
 
-      return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]), static_cast<int>(dft_dimensions_unsigned[1]), static_cast<int>(dft_dimensions_unsigned[2]),
+      return fftw_plan_dft(static_cast<int>(std::get<0>(dft_dimensions_unsigned)), static_cast<int>(std::get<1>(dft_dimensions_unsigned)), static_cast<int>(std::get<2>(dft_dimensions_unsigned)),
           const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
           reinterpret_cast<fftw_output_t *>(output.data()),
           flags);
@@ -396,7 +447,7 @@ namespace xt {
 
       fftw_execute(plan);
       fftw_destroy_plan(plan);
-      auto dft_dimensions = dft_dimensions_from_output(output, half_plus_one_out, odd_last_dim);
+      auto dft_dimensions = dft_dims_shape_t<dim>(output, half_plus_one_out, odd_last_dim);
       auto N_dft = static_cast<prec_t<output_t> >(std::accumulate(dft_dimensions.begin(), dft_dimensions.end(), static_cast<size_t>(1u), std::multiplies<size_t>()));
       return output / N_dft;
     };
@@ -453,7 +504,7 @@ namespace xt {
 
       output = xt::conj(output);
 
-      auto dft_dimensions = dft_dimensions_from_output(output, half_plus_one_out);
+      auto dft_dimensions = dft_dims_shape_t<dim>(output, half_plus_one_out);
       auto N_dft = static_cast<prec_t<output_t> >(std::accumulate(dft_dimensions.begin(), dft_dimensions.end(), static_cast<size_t>(1u), std::multiplies<size_t>()));
       return output / N_dft;
     };
