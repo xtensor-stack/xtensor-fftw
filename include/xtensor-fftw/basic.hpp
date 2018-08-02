@@ -31,6 +31,10 @@
 
 #include <fftw3.h>
 
+#ifdef __CLING__
+  #pragma cling load("fftw3")
+#endif
+
 namespace xt {
   namespace fftw {
     // The implementations must be inline to avoid multiple definition errors due to multiple compilations (e.g. when
