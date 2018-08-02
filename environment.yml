@@ -4,6 +4,7 @@ channels:
   - conda-forge
 dependencies:
   - xtensor
+  - openimageio == 1.8.9
   - xtensor-io ==0.5.1
   - boost ==1.66.0
   - boost-cpp ==1.66.0
