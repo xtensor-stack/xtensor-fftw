@@ -59,6 +59,7 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-trusty-3.6
           packages:
+            - g++-4.9
             - clang-3.6
             - libfftw3-dev
       env: COMPILER=clang CLANG=3.6
@@ -69,6 +70,7 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-trusty-3.9
           packages:
+            - g++-4.9
             - clang-3.9
             - libfftw3-dev
       env: COMPILER=clang CLANG=3.9
@@ -76,21 +78,23 @@ matrix:
       addons:
         apt:
           sources:
-          - ubuntu-toolchain-r-test
-          - llvm-toolchain-trusty-4.0
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-4.0
           packages:
-          - clang-4.0
-          - libfftw3-dev
+            - g++-4.9
+            - clang-4.0
+            - libfftw3-dev
       env: COMPILER=clang CLANG=4.0
     - os: linux
       addons:
         apt:
           sources:
-          - ubuntu-toolchain-r-test
-          - llvm-toolchain-trusty-5.0
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-5.0
           packages:
-          - clang-5.0
-          - libfftw3-dev
+            - g++-4.9
+            - clang-5.0
+            - libfftw3-dev
       env: COMPILER=clang CLANG=5.0
     - os: linux
       addons:
