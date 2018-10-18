@@ -53,57 +53,66 @@ matrix:
             - libfftw3-dev
       env: COMPILER=gcc GCC=7
     - os: linux
-      dist: precise
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.6
+            - llvm-toolchain-trusty-3.6
           packages:
             - clang-3.6
             - libfftw3-dev
       env: COMPILER=clang CLANG=3.6
     - os: linux
-      dist: precise
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.7
-          packages:
-            - clang-3.7
-            - libfftw3-dev
-      env: COMPILER=clang CLANG=3.7
-    - os: linux
-      dist: precise
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.8
-          packages:
-            - clang-3.8
-            - libfftw3-dev
-      env: COMPILER=clang CLANG=3.8
-    - os: linux
-      dist: precise
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.9
+            - llvm-toolchain-trusty-3.9
           packages:
             - clang-3.9
             - libfftw3-dev
       env: COMPILER=clang CLANG=3.9
+    - os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-4.0
+          packages:
+          - clang-4.0
+          - libfftw3-dev
+      env: COMPILER=clang CLANG=4.0
+    - os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-5.0
+          packages:
+          - clang-5.0
+          - libfftw3-dev
+      env: COMPILER=clang CLANG=5.0
+    - os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-6.0
+          packages:
+          - clang-6.0
+          - libfftw3-dev
+      env: COMPILER=clang CLANG=6.0
+    # osx 10.11
     - os: osx
       osx_image: xcode8
       compiler: clang
+    # osx 10.12
     - os: osx
-      osx_image: xcode8.3
+      osx_image: xcode9.2
       compiler: clang
+    # osx 10.13
     - os: osx
-      osx_image: xcode9.1
+      osx_image: xcode10
       compiler: clang
 
 env:
