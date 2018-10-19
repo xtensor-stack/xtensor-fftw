@@ -24,6 +24,7 @@
 #include <tuple>
 #include <type_traits>
 #include <exception>
+#include <mutex>
 
 // for product accumulate:
 #include <numeric>
@@ -47,6 +48,13 @@ namespace xt {
 
     // We use the convention that the inverse fft divides by N, like numpy does.
 
+    // FFTW is not thread-safe, so we need to guard around its functions (except fftw_execute).
+    namespace detail {
+      inline std::mutex& fftw_global_mutex() {
+        static std::mutex m;
+        return m;
+      }
+    }
 
     ///////////////////////////////////////////////////////////////////////////////
     // General: templates defining the basic interaction logic with fftw. These
@@ -218,6 +226,7 @@ namespace xt {
       dft_dimensions.reserve(dft_dimensions_unsigned.size());
       std::transform(dft_dimensions_unsigned.begin(), dft_dimensions_unsigned.end(), std::back_inserter(dft_dimensions), [&](std::size_t d) { return static_cast<int>(d); });
 
+      std::lock_guard<std::mutex> guard(detail::fftw_global_mutex());
       return fftw_plan_dft(static_cast<int>(dim), dft_dimensions.data(),
                            const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
                            reinterpret_cast<fftw_output_t *>(output.data()),
@@ -234,6 +243,7 @@ namespace xt {
 
       auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out);
 
+      std::lock_guard<std::mutex> guard(detail::fftw_global_mutex());
       return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]),
                            const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
                            reinterpret_cast<fftw_output_t *>(output.data()),
@@ -250,6 +260,7 @@ namespace xt {
 
       auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out);
 
+      std::lock_guard<std::mutex> guard(detail::fftw_global_mutex());
       return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]), static_cast<int>(dft_dimensions_unsigned[1]),
                            const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
                            reinterpret_cast<fftw_output_t *>(output.data()),
@@ -266,6 +277,7 @@ namespace xt {
 
       auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out);
 
+      std::lock_guard<std::mutex> guard(detail::fftw_global_mutex());
       return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]), static_cast<int>(dft_dimensions_unsigned[1]), static_cast<int>(dft_dimensions_unsigned[2]),
                            const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
                            reinterpret_cast<fftw_output_t *>(output.data()),
@@ -285,6 +297,7 @@ namespace xt {
       dft_dimensions.reserve(dft_dimensions_unsigned.size());
       std::transform(dft_dimensions_unsigned.begin(), dft_dimensions_unsigned.end(), std::back_inserter(dft_dimensions), [&](std::size_t d) { return static_cast<int>(d); });
 
+      std::lock_guard<std::mutex> guard(detail::fftw_global_mutex());
       return fftw_plan_dft(static_cast<int>(dim), dft_dimensions.data(),
                            const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
                            reinterpret_cast<fftw_output_t *>(output.data()),
@@ -300,10 +313,11 @@ namespace xt {
 
       auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out, odd_last_dim);
 
+      std::lock_guard<std::mutex> guard(detail::fftw_global_mutex());
       return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]),
-               const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
-               reinterpret_cast<fftw_output_t *>(output.data()),
-               flags);
+                           const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
+                           reinterpret_cast<fftw_output_t *>(output.data()),
+                           flags);
     };
 
     // REAL FFT 2D
@@ -315,10 +329,11 @@ namespace xt {
 
       auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out, odd_last_dim);
 
+      std::lock_guard<std::mutex> guard(detail::fftw_global_mutex());
       return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]), static_cast<int>(dft_dimensions_unsigned[1]),
-          const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
-          reinterpret_cast<fftw_output_t *>(output.data()),
-          flags);
+                           const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
+                           reinterpret_cast<fftw_output_t *>(output.data()),
+                           flags);
     };
 
     // REAL FFT 3D
@@ -330,10 +345,11 @@ namespace xt {
 
       auto dft_dimensions_unsigned = dft_dimensions_from_output(output, half_plus_one_out, odd_last_dim);
 
+      std::lock_guard<std::mutex> guard(detail::fftw_global_mutex());
       return fftw_plan_dft(static_cast<int>(dft_dimensions_unsigned[0]), static_cast<int>(dft_dimensions_unsigned[1]), static_cast<int>(dft_dimensions_unsigned[2]),
-          const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
-          reinterpret_cast<fftw_output_t *>(output.data()),
-          flags);
+                           const_cast<fftw_input_t *>(reinterpret_cast<const fftw_input_t *>(input.data())),
+                           reinterpret_cast<fftw_output_t *>(output.data()),
+                           flags);
     };
 
 
@@ -374,7 +390,10 @@ namespace xt {
       }
 
       fftw_execute(plan);
-      fftw_destroy_plan(plan);
+      {
+        std::lock_guard<std::mutex> guard(detail::fftw_global_mutex());
+        fftw_destroy_plan(plan);
+      }
       return output;
     };
 
@@ -399,7 +418,10 @@ namespace xt {
       }
 
       fftw_execute(plan);
-      fftw_destroy_plan(plan);
+      {
+        std::lock_guard<std::mutex> guard(detail::fftw_global_mutex());
+        fftw_destroy_plan(plan);
+      }
       auto dft_dimensions = dft_dimensions_from_output(output, half_plus_one_out, odd_last_dim);
       auto N_dft = static_cast<prec_t<output_t> >(std::accumulate(dft_dimensions.begin(), dft_dimensions.end(), static_cast<size_t>(1u), std::multiplies<size_t>()));
       return output / N_dft;
@@ -428,7 +450,10 @@ namespace xt {
       }
 
       fftw_execute(plan);
-      fftw_destroy_plan(plan);
+      {
+        std::lock_guard<std::mutex> guard(detail::fftw_global_mutex());
+        fftw_destroy_plan(plan);
+      }
       return output;
     };
 
@@ -453,8 +478,10 @@ namespace xt {
       }
 
       fftw_execute(plan);
-      fftw_destroy_plan(plan);
-
+      {
+        std::lock_guard<std::mutex> guard(detail::fftw_global_mutex());
+        fftw_destroy_plan(plan);
+      }
       output = xt::conj(output);
 
       auto dft_dimensions = dft_dimensions_from_output(output, half_plus_one_out);
