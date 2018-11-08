@@ -177,7 +177,7 @@ namespace xt {
 
     // input vs output shape conversion
     template <typename output_t>
-    inline typename xt::xarray<output_t, xt::layout_type::row_major>::shape_type output_shape_from_input(xt::xarray<output_t, xt::layout_type::row_major> input, bool half_plus_one_out, bool half_plus_one_in, bool odd_last_dim = false) {
+    inline auto output_shape_from_input(const xt::xarray<output_t, xt::layout_type::row_major>& input, bool half_plus_one_out, bool half_plus_one_in, bool odd_last_dim = false) {
       auto output_shape = input.shape();
       if (half_plus_one_out) {        // r2c
         auto n = output_shape.size();
@@ -195,7 +195,7 @@ namespace xt {
 
     // output to DFT-dimensions conversion
     template <typename output_t>
-    inline typename xt::xarray<output_t, xt::layout_type::row_major>::shape_type dft_dimensions_from_output(xt::xarray<output_t, xt::layout_type::row_major> output, bool half_plus_one_out, bool odd_last_dim = false) {
+    inline auto dft_dimensions_from_output(const xt::xarray<output_t, xt::layout_type::row_major>& output, bool half_plus_one_out, bool odd_last_dim = false) {
       auto dft_dimensions = output.shape();
 
       if (half_plus_one_out) {        // r2c
