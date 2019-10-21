@@ -2,11 +2,11 @@
 
 [FFTW](http://www.fftw.org/) bindings for the [xtensor](https://github.com/QuantStack/xtensor) C++ multi-dimensional array library.
 
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/egpbos/xtensor-fftw/master?filepath=notebooks%2Fintensely_edgy_cat.ipynb)
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/xtensor-stack/xtensor-fftw/master?filepath=notebooks%2Fintensely_edgy_cat.ipynb)
 [![Join the Gitter Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/QuantStack/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![Travis](https://travis-ci.org/egpbos/xtensor-fftw.svg?branch=master)](https://travis-ci.org/egpbos/xtensor-fftw)
-[![Appveyor](https://ci.appveyor.com/api/projects/status/l4wgk98kwospu7n1?svg=true)](https://ci.appveyor.com/project/egpbos/xtensor-fftw)
+[![Travis](https://travis-ci.org/xtensor-stack/xtensor-fftw.svg?branch=master)](https://travis-ci.org/xtensor-stack/xtensor-fftw)
+[![Appveyor](https://ci.appveyor.com/api/projects/status/6h369haechmjeofj/branch/master?svg=true)](https://ci.appveyor.com/project/egpbos/xtensor-fftw-ivn9w/branch/master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/18861a283cf84b2e95886ba79c66e028)](https://www.codacy.com/app/egpbos/xtensor-fftw?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=egpbos/xtensor-fftw&amp;utm_campaign=Badge_Grade)
 [![Coverage Status](https://coveralls.io/repos/github/egpbos/xtensor-fftw/badge.svg)](https://coveralls.io/github/egpbos/xtensor-fftw)
 
@@ -32,7 +32,7 @@ This automatically installs dependencies as well (see [list of dependencies](#de
 Installing from source into `$PREFIX` (for instance `$CONDA_PREFIX` when in a conda environment, or `$HOME/.local`) after manually installing the [dependencies](#dependencies):
 
 ```bash
-git clone https://github.com/egpbos/xtensor-fftw
+git clone https://github.com/xtensor-stack/xtensor-fftw
 cd xtensor-fftw
 mkdir build
 cd build
@@ -111,7 +111,7 @@ sin_derivative: { 1.000000e+00,  9.995066e-01,  9.980267e-01,  9.955620e-01, ...
 ```
 
 ### Interactive examples
-See the [notebooks folder](https://github.com/egpbos/xtensor-fftw/tree/master/notebooks) for interactive Jupyter notebook examples using the C++14 [_xeus-cling_](https://github.com/QuantStack/xeus-cling) kernel. These can also be run from Binder, [e.g. this one](https://mybinder.org/v2/gh/egpbos/xtensor-fftw/master?filepath=notebooks%2Fintensely_edgy_cat.ipynb).
+See the [notebooks folder](https://github.com/xtensor-stack/xtensor-fftw/tree/master/notebooks) for interactive Jupyter notebook examples using the C++14 [_xeus-cling_](https://github.com/QuantStack/xeus-cling) kernel. These can also be run from Binder, [e.g. this one](https://mybinder.org/v2/gh/xtensor-stack/xtensor-fftw/master?filepath=notebooks%2Fintensely_edgy_cat.ipynb).
 
 
 ## Building and running tests
