@@ -46,6 +46,10 @@ make install
 * [FFTW](http://www.fftw.org/) version 3
 * A compiler supporting C++14
 
+| `xtensor-fftw` | `xtensor` | `xtl`   | `fftw`  |
+|----------------|-----------|---------|---------|
+|  master        | ^0.20.10  |  ^0.6.7 | ^3.3.8  |
+
 ## Usage
 
 _xtensor-fftw_ is a header-only library.
