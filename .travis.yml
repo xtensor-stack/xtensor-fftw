@@ -1,7 +1,6 @@
 language: cpp
-addons:
-  apt:
-    packages:
+dist: trusty
+env:
 matrix:
   include:
     # code coverage:
@@ -144,32 +143,20 @@ install:
       elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
         MINCONDA_OS=$MINCONDA_OSX;
       fi
-    - wget "http://repo.continuum.io/miniconda/Miniconda3-$MINCONDA_VERSION-$MINCONDA_OS.sh" -O miniconda.sh;
+    - wget --tries=10 "http://repo.continuum.io/miniconda/Miniconda3-$MINCONDA_VERSION-$MINCONDA_OS.sh" -O miniconda.sh;
     - bash miniconda.sh -b -p $HOME/miniconda
     - export PATH="$HOME/miniconda/bin:$PATH"
     - hash -r
     - conda update -yq conda
+    - conda install -y cmake xtl==0.6.7 xtensor=0.20.10 nlohmann_json=3.7.1 -c conda-forge
     - |
-      # install deps with conda: cmake, gtest, xtensor (and fftw on osx); if conda-forge fails, use xtensor from source
       if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-        conda install -y gtest cmake xtensor fftw -c conda-forge
-      elif [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-        if ! conda install -y gtest cmake xtensor -c conda-forge; then
-          echo "conda-forge install failed! Installing gtest and cmake from default conda channel."
-          conda install -y gtest cmake
-          echo "Installing xtensor from source"
-          cd $TRAVIS_HOME
-          git clone https://github.com/QuantStack/xtensor.git
-          cd xtensor
-          cmake . -DCMAKE_INSTALL_PREFIX=$HOME/miniconda
-          make install
-          cd $TRAVIS_BUILD_DIR
-        fi
+        conda install -y fftw -c conda-forge
       fi
     # Testing
     - mkdir $TRAVIS_BUILD_DIR/build
     - cd $TRAVIS_BUILD_DIR/build
-    - cmake -DBUILD_TESTS=ON -DCOVERAGE=$COVERAGE ..
+    - cmake -DBUILD_TESTS=ON -DDOWNLOAD_GTEST=ON -DCOVERAGE=$COVERAGE ..
     - make -j2 test_xtensor-fftw VERBOSE=1
     - if [[ "$COVERAGE" == "ON" ]]; then gem install coveralls-lcov; fi
 script:

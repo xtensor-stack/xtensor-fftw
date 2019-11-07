@@ -33,10 +33,6 @@ string(TOUPPER "${CMAKE_BUILD_TYPE}" U_CMAKE_BUILD_TYPE)
 
 set(CMAKE_CXX_STANDARD 14)
 
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Intel")
-    add_compile_options(-march=native) #-Wunused-parameter -Wextra -Wreorder -Wconversion)
-endif()
-
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-ftemplate-backtrace-limit=0)
 endif()
