@@ -65,12 +65,14 @@ set(CMAKE_CXX_EXTENSIONS NO)
 include_directories(${XTENSOR_FFTW_INCLUDE_DIR})
 
 # .. xtensor
-find_package(xtensor REQUIRED)
+set(xtensor_REQUIRED_VERSION 0.21.2)
+find_package(xtensor ${xtensor_REQUIRED_VERSION} REQUIRED)
 message(STATUS "Found xtensor: ${xtensor_INCLUDE_DIRS}/xtensor")
 include_directories(${xtensor_INCLUDE_DIRS})
 
 # .. xtl
-find_package(xtl REQUIRED)
+set(xtl_REQUIRED_VERSION 0.6.9)
+find_package(xtl ${xtl_REQUIRED_VERSION} REQUIRED)
 message(STATUS "Found xtl: ${xtl_INCLUDE_DIRS}/xtl")
 include_directories(${xtl_INCLUDE_DIRS})
 
