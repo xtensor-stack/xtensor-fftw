@@ -41,7 +41,7 @@ install:
   - cd %APPVEYOR_BUILD_FOLDER%
   - mkdir build
   - cd build
-  - cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DFFTW_ROOT=%FFTW_ROOT% -DCMAKE_INSTALL_PREFIX=%MINICONDA%\\Library -DBUILD_TESTS=ON -DDOWNLOAD_GTEST=ON ..
+  - cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DFFTW_ROOT=%FFTW_ROOT% -DCMAKE_INSTALL_PREFIX=%MINICONDA%\\Library -DDOWNLOAD_GTEST=ON ..
   - nmake test_xtensor-fftw
 
 before_build:

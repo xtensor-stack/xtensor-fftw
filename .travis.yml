@@ -165,7 +165,7 @@ install:
     # Testing
     - mkdir $TRAVIS_BUILD_DIR/build
     - cd $TRAVIS_BUILD_DIR/build
-    - cmake -DBUILD_TESTS=ON -DDOWNLOAD_GTEST=ON -DCOVERAGE=$COVERAGE ..
+    - cmake -DDOWNLOAD_GTEST=ON -DCOVERAGE=$COVERAGE ..
     - make -j2 test_xtensor-fftw VERBOSE=1
     - if [[ "$COVERAGE" == "ON" ]]; then gem install coveralls-lcov; fi
 script:
