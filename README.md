@@ -2,7 +2,7 @@
 
 [FFTW](http://www.fftw.org/) bindings for the [xtensor](https://github.com/QuantStack/xtensor) C++ multi-dimensional array library.
 
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/xtensor-stack/xtensor-fftw/master?filepath=notebooks%2Fintensely_edgy_cat.ipynb)
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/xtensor-stack/xtensor-fftw/stable?filepath=notebooks%2Fintensely_edgy_cat.ipynb)
 [![Join the Gitter Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/QuantStack/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![Travis](https://travis-ci.org/xtensor-stack/xtensor-fftw.svg?branch=master)](https://travis-ci.org/xtensor-stack/xtensor-fftw)
