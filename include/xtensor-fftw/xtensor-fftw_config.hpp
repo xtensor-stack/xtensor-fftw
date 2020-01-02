@@ -13,4 +13,22 @@
 #define XTENSOR_FFTW_VERSION_MINOR 2
 #define XTENSOR_FFTW_VERSION_PATCH 5
 
+// Define if the library is going to be using exceptions.
+#if (!defined(__cpp_exceptions) && !defined(__EXCEPTIONS) && !defined(_CPPUNWIND))
+#undef XTENSOR_FFTW_DISABLE_EXCEPTIONS
+#define XTENSOR_FFTW_DISABLE_EXCEPTIONS
+#endif
+
+// Exception support.
+#if defined(XTENSOR_FFTW_DISABLE_EXCEPTIONS)
+#include <iostream>
+#define XTENSOR_FFTW_THROW(_, msg)       \
+    {                                    \
+      std::cerr << msg << std::endl;     \
+      std::abort();                      \
+    }
+#else
+#define XTENSOR_FFTW_THROW(exception, msg) throw exception(msg)
+#endif
+
 #endif //XTENSOR_FFTW_CONFIG_HPP

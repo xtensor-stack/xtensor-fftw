@@ -14,14 +14,8 @@ environment:
     - MINICONDA: C:\Miniconda36-x64
       FFTW_INSTALL_MODE: conda-forge
       FFTW_ROOT:
-    - MINICONDA: C:\Miniconda36
-      FFTW_INSTALL_MODE: conda-forge
-      FFTW_ROOT:
       # fftw from the "official" fftw website build
     - MINICONDA: C:\Miniconda36-x64
-      FFTW_INSTALL_MODE: official
-      FFTW_ROOT: C:\fftw_download
-    - MINICONDA: C:\Miniconda36
       FFTW_INSTALL_MODE: official
       FFTW_ROOT: C:\fftw_download
 
@@ -42,7 +36,7 @@ install:
   - conda config --add channels conda-forge
   - conda update -q conda
   - conda info -a
-  - conda install xtensor
+  - conda install xtensor=0.21.2 -c conda-forge
   - IF "%FFTW_INSTALL_MODE%"=="official" ( Powershell.exe -File appveyor_install_fftw.ps1 ) ELSE IF "%FFTW_INSTALL_MODE%"=="conda-forge" ( conda install fftw )
   - cd %APPVEYOR_BUILD_FOLDER%
   - mkdir build
