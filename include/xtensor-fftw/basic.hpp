@@ -32,6 +32,8 @@
 
 #include <fftw3.h>
 
+#include "xtensor-fftw_config.hpp"
+
 #ifdef __CLING__
   #pragma cling load("fftw3")
 #endif
@@ -386,7 +388,8 @@ namespace xt {
 
       auto plan = fftw_plan_dft_caller<dim, fftw_direction, fftw_123dim, input_t, output_t, fftw_plan_dft, half_plus_one_out, half_plus_one_in>(input, output, FFTW_ESTIMATE, odd_last_dim);
       if (plan == nullptr) {
-        throw std::runtime_error("Plan creation returned nullptr. This usually means FFTW cannot create a plan for the given arguments (e.g. a non-destructive multi-dimensional real FFT is impossible in FFTW).");
+        XTENSOR_FFTW_THROW(std::runtime_error,
+                           "Plan creation returned nullptr. This usually means FFTW cannot create a plan for the given arguments (e.g. a non-destructive multi-dimensional real FFT is impossible in FFTW).");
       }
 
       fftw_execute(plan);
@@ -414,7 +417,8 @@ namespace xt {
 
       auto plan = fftw_plan_dft_caller<dim, fftw_direction, fftw_123dim, input_t, output_t, fftw_plan_dft, half_plus_one_out, half_plus_one_in>(input, output, FFTW_ESTIMATE, odd_last_dim);
       if (plan == nullptr) {
-        throw std::runtime_error("Plan creation returned nullptr. This usually means FFTW cannot create a plan for the given arguments (e.g. a non-destructive multi-dimensional real FFT is impossible in FFTW).");
+        XTENSOR_FFTW_THROW(std::runtime_error,
+                           "Plan creation returned nullptr. This usually means FFTW cannot create a plan for the given arguments (e.g. a non-destructive multi-dimensional real FFT is impossible in FFTW).");
       }
 
       fftw_execute(plan);
@@ -446,7 +450,8 @@ namespace xt {
 
       auto plan = fftw_plan_dft_caller<dim, fftw_direction, fftw_123dim, input_t, output_t, fftw_plan_dft, half_plus_one_out, half_plus_one_in>(input_conj, output, FFTW_ESTIMATE);
       if (plan == nullptr) {
-        throw std::runtime_error("Plan creation returned nullptr. This usually means FFTW cannot create a plan for the given arguments (e.g. a non-destructive multi-dimensional real FFT is impossible in FFTW).");
+        XTENSOR_FFTW_THROW(std::runtime_error,
+                           "Plan creation returned nullptr. This usually means FFTW cannot create a plan for the given arguments (e.g. a non-destructive multi-dimensional real FFT is impossible in FFTW).");
       }
 
       fftw_execute(plan);
@@ -474,7 +479,8 @@ namespace xt {
 
       auto plan = fftw_plan_dft_caller<dim, fftw_direction, fftw_123dim, input_t, output_t, fftw_plan_dft, half_plus_one_out, half_plus_one_in>(input, output, FFTW_ESTIMATE);
       if (plan == nullptr) {
-        throw std::runtime_error("Plan creation returned nullptr. This usually means FFTW cannot create a plan for the given arguments (e.g. a non-destructive multi-dimensional real FFT is impossible in FFTW).");
+        XTENSOR_FFTW_THROW(std::runtime_error,
+                           "Plan creation returned nullptr. This usually means FFTW cannot create a plan for the given arguments (e.g. a non-destructive multi-dimensional real FFT is impossible in FFTW).");
       }
 
       fftw_execute(plan);

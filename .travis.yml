@@ -56,6 +56,15 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+            - libfftw3-dev
+      env: COMPILER=gcc GCC=7 DISABLE_EXCEPTION=1
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
             - llvm-toolchain-trusty-3.6
           packages:
             - g++-4.9
