@@ -1,6 +1,6 @@
 # ![xtensor-fftw](xtensor-fftw.svg)
 
-[FFTW](http://www.fftw.org/) bindings for the [xtensor](https://github.com/QuantStack/xtensor) C++ multi-dimensional array library.
+[FFTW](http://www.fftw.org/) bindings for the [xtensor](https://github.com/xtensor-stack/xtensor) C++ multi-dimensional array library.
 
 [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/xtensor-stack/xtensor-fftw/stable?filepath=notebooks%2Fintensely_edgy_cat.ipynb)
 [![Join the Gitter Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/QuantStack/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -15,7 +15,7 @@
 
 ## Introduction
 
-_xtensor-fftw_ enables easy access to Fast Fourier Transforms (FFTs) from the [FFTW library](http://www.fftw.org/) for use on `xarray` numerical arrays from the [_xtensor_](https://github.com/QuantStack/xtensor) library.
+_xtensor-fftw_ enables easy access to Fast Fourier Transforms (FFTs) from the [FFTW library](http://www.fftw.org/) for use on `xarray` numerical arrays from the [_xtensor_](https://github.com/xtensor-stack/xtensor) library.
 
 Syntax and functionality are inspired by `numpy.fft`, the FFT module in the Python array programming library [NumPy](http://www.numpy.org/).
 
@@ -42,13 +42,14 @@ make install
 
 ## Dependencies
 
-* [xtensor](https://github.com/QuantStack/xtensor)
+* [xtensor](https://github.com/xtensor-stack/xtensor)
+* [xtl](https://github.com/xtensor-stack/xtl)
 * [FFTW](http://www.fftw.org/) version 3
 * A compiler supporting C++14
 
-| `xtensor-fftw` | `xtensor` | `xtl`   | `fftw`  |
-|----------------|-----------|---------|---------|
-|  master        | ^0.21.2   |  ^0.6.9 | ^3.3.8  |
+| `xtensor-fftw` | `xtensor`        | `xtl`   | `fftw`  |
+|----------------|------------------|---------|---------|
+|  master        | >=0.20.9,<0.22   |  ^0.6.9 | ^3.3.8  |
 
 ## Usage
 
@@ -115,7 +116,7 @@ sin_derivative: { 1.000000e+00,  9.995066e-01,  9.980267e-01,  9.955620e-01, ...
 ```
 
 ### Interactive examples
-See the [notebooks folder](https://github.com/xtensor-stack/xtensor-fftw/tree/master/notebooks) for interactive Jupyter notebook examples using the C++14 [_xeus-cling_](https://github.com/QuantStack/xeus-cling) kernel. These can also be run from Binder, [e.g. this one](https://mybinder.org/v2/gh/xtensor-stack/xtensor-fftw/master?filepath=notebooks%2Fintensely_edgy_cat.ipynb).
+See the [notebooks folder](https://github.com/xtensor-stack/xtensor-fftw/tree/master/notebooks) for interactive Jupyter notebook examples using the C++14 [_xeus-cling_](https://github.com/jupyter-xeus/xeus-cling) kernel. These can also be run from Binder, [e.g. this one](https://mybinder.org/v2/gh/xtensor-stack/xtensor-fftw/stable?filepath=notebooks%2Fintensely_edgy_cat.ipynb).
 
 
 ## Building and running tests

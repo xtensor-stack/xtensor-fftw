@@ -66,7 +66,7 @@ set(CMAKE_CXX_EXTENSIONS NO)
 include_directories(${XTENSOR_FFTW_INCLUDE_DIR})
 
 # .. xtensor
-set(xtensor_REQUIRED_VERSION 0.21.2)
+set(xtensor_REQUIRED_VERSION 0.20.9)
 find_package(xtensor ${xtensor_REQUIRED_VERSION} REQUIRED)
 message(STATUS "Found xtensor: ${xtensor_INCLUDE_DIRS}/xtensor")
 include_directories(${xtensor_INCLUDE_DIRS})

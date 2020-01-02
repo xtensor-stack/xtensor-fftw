@@ -9,7 +9,7 @@
  * basic.hpp:
  * Contains the basic functions needed to do FFTs and inverse FFTs on real and
  * complex arrays. The behavior of these functions mimics that of the numpy.fft
- * module, see https://github.com/egpbos/xtensor-fftw/issues/6.
+ * module, see https://github.com/xtensor-stack/xtensor-fftw/issues/6.
  *
  */
 

@@ -7,7 +7,7 @@
 ############################################################################
 #
 # Original version of this file:
-# https://github.com/QuantStack/xtensor/blob/master/test/CMakeLists.txt
+# https://github.com/xtensor-stack/xtensor/blob/master/test/CMakeLists.txt
 # commit e25330a7fe7a303c65b97ac3792a0ff934712551
 #
 # Adaptation from GoogleTest to Google Benchmark:
