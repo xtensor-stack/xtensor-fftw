@@ -3,7 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - xeus-cling ==0.8.1
-  - xtensor-fftw ==0.2.5
+  - xtensor-fftw ==0.2.6
   - xtensor-io
   - notebook
   - widgetsnbextension

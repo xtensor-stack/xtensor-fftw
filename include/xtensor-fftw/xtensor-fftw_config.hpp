@@ -11,7 +11,7 @@
 
 #define XTENSOR_FFTW_VERSION_MAJOR 0
 #define XTENSOR_FFTW_VERSION_MINOR 2
-#define XTENSOR_FFTW_VERSION_PATCH 5
+#define XTENSOR_FFTW_VERSION_PATCH 6
 
 // Define if the library is going to be using exceptions.
 #if (!defined(__cpp_exceptions) && !defined(__EXCEPTIONS) && !defined(_CPPUNWIND))
