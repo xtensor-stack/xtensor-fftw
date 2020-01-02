@@ -45,6 +45,7 @@ OPTION(BENCHMARK_ENABLE_TESTING "Build tests for Google Benchmark" OFF)
 OPTION(FIX_RPATH "Correctly set rpath for the linker" OFF)
 OPTION(DEFAULT_COLUMN_MAJOR "Set xtensor default layout to column major. This is currently not supported, since FFTW demands row major layout." OFF)
 OPTION(COVERAGE "Enable coverage compile flags (gcc only!)" OFF)
+OPTION(DISABLE_EXCEPTIONS "Disable C++ exceptions" OFF)
 
 if (COVERAGE)
     if(NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_COMPILER_ID MATCHES "GNU")
@@ -65,13 +66,13 @@ set(CMAKE_CXX_EXTENSIONS NO)
 include_directories(${XTENSOR_FFTW_INCLUDE_DIR})
 
 # .. xtensor
-set(xtensor_REQUIRED_VERSION 0.20.10)
+set(xtensor_REQUIRED_VERSION 0.21.2)
 find_package(xtensor ${xtensor_REQUIRED_VERSION} REQUIRED)
 message(STATUS "Found xtensor: ${xtensor_INCLUDE_DIRS}/xtensor")
 include_directories(${xtensor_INCLUDE_DIRS})
 
 # .. xtl
-set(xtl_REQUIRED_VERSION 0.6.7)
+set(xtl_REQUIRED_VERSION 0.6.9)
 find_package(xtl ${xtl_REQUIRED_VERSION} REQUIRED)
 message(STATUS "Found xtl: ${xtl_INCLUDE_DIRS}/xtl")
 include_directories(${xtl_INCLUDE_DIRS})

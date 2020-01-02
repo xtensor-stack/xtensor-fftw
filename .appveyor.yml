@@ -36,7 +36,7 @@ install:
   - conda config --add channels conda-forge
   - conda update -q conda
   - conda info -a
-  - conda install xtensor=0.20.10 -c conda-forge
+  - conda install xtensor=0.21.2 -c conda-forge
   - IF "%FFTW_INSTALL_MODE%"=="official" ( Powershell.exe -File appveyor_install_fftw.ps1 ) ELSE IF "%FFTW_INSTALL_MODE%"=="conda-forge" ( conda install fftw )
   - cd %APPVEYOR_BUILD_FOLDER%
   - mkdir build

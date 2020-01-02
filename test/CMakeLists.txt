@@ -33,12 +33,25 @@ string(TOUPPER "${CMAKE_BUILD_TYPE}" U_CMAKE_BUILD_TYPE)
 
 set(CMAKE_CXX_STANDARD 14)
 
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR (CMAKE_CXX_COMPILER_ID MATCHES "Intel" AND NOT WIN32))
+    if (DISABLE_EXCEPTIONS)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
+    endif()
+endif()
+
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-ftemplate-backtrace-limit=0)
+    if (DISABLE_EXCEPTIONS)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
+    endif()
 endif()
 
 if(MSVC)
-    add_compile_options(/EHsc /MP /bigobj)
+    if (DISABLE_EXCEPTIONS)
+        add_compile_options(/EHs-c- /MP /bigobj)
+    else()
+        add_compile_options(/EHsc /MP /bigobj)
+    endif()
     set(CMAKE_EXE_LINKER_FLAGS /MANIFEST:NO)
     foreach(flag_var
             CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
