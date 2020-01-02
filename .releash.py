@@ -22,6 +22,6 @@ xfftw.version_targets.append(version_xfftw)
 xfftw.release_targets.append(gittag_xfftw)
 xfftw.release_targets.append(gitpush)
 
-source_tarball_filename = 'https://github.com/egpbos/xtensor-fftw/archive/{version}.tar.gz'.format(version=version_xfftw)
+source_tarball_filename = 'https://github.com/xtensor-stack/xtensor-fftw/archive/{version}.tar.gz'.format(version=version_xfftw)
 conda_forge_xfftw = ReleaseTargetCondaForge(xfftw, '../xtensor-fftw-feedstock', source_tarball_filename=source_tarball_filename)
 xfftw.release_targets.append(conda_forge_xfftw)
