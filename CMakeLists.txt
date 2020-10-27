@@ -31,8 +31,8 @@ message(STATUS "Building xtensor-fftw v${${PROJECT_NAME}_VERSION}")
 
 #--------------------------------------- cmake modules
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/findFFTW/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/findFFTW/")
 
 #--------------------------------------- user options
 set(FFTW_ROOT "" CACHE STRING "The FFTW prefix, i.e. the base directory under which FFTW is installed (see README.md).")
@@ -67,15 +67,33 @@ include_directories(${XTENSOR_FFTW_INCLUDE_DIR})
 
 # .. xtensor
 set(xtensor_REQUIRED_VERSION 0.20.9)
-find_package(xtensor ${xtensor_REQUIRED_VERSION} REQUIRED)
-message(STATUS "Found xtensor: ${xtensor_INCLUDE_DIRS}/xtensor")
-include_directories(${xtensor_INCLUDE_DIRS})
+if(TARGET xtensor)
+    set(xtensor_VERSION ${XTENSOR_VERSION_MAJOR}.${XTENSOR_VERSION_MINOR}.${XTENSOR_VERSION_PATCH})
+    # Note: This is not SEMVER compatible comparison
+    if( NOT ${xtensor_VERSION} VERSION_GREATER_EQUAL ${xtensor_REQUIRED_VERSION})
+        message(ERROR "Mismatch xtensor versions. Found '${xtensor_VERSION}' but requires: '${xtensor_REQUIRED_VERSION}'")
+    else()
+        message(STATUS "Found xtensor v${xtensor_VERSION}")
+    endif()
+else()
+    find_package(xtensor ${xtensor_REQUIRED_VERSION} REQUIRED)
+    message(STATUS "Found xtensor: ${xtensor_INCLUDE_DIRS}/xtensor")
+endif()
 
 # .. xtl
 set(xtl_REQUIRED_VERSION 0.6.9)
-find_package(xtl ${xtl_REQUIRED_VERSION} REQUIRED)
-message(STATUS "Found xtl: ${xtl_INCLUDE_DIRS}/xtl")
-include_directories(${xtl_INCLUDE_DIRS})
+if(TARGET xtl)
+    set(xtl_VERSION ${XTL_VERSION_MAJOR}.${XTL_VERSION_MINOR}.${XTL_VERSION_PATCH})
+    # Note: This is not SEMVER compatible comparison
+    if( NOT ${xtl_VERSION} VERSION_GREATER_EQUAL ${xtl_REQUIRED_VERSION})
+        message(ERROR "Mismatch xtl versions. Found '${xtl_VERSION}' but requires: '${xtl_REQUIRED_VERSION}'")
+    else()
+        message(STATUS "Found xtl v${xtl_VERSION}")
+    endif()
+else()
+    find_package(xtl ${xtl_REQUIRED_VERSION} REQUIRED)
+    message(STATUS "Found xtl: ${xtl_INCLUDE_DIRS}/xtl")
+endif()
 
 # .. fftw
 if(MSVC)
