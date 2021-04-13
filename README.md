@@ -21,10 +21,10 @@ Syntax and functionality are inspired by `numpy.fft`, the FFT module in the Pyth
 
 ## Installation
 
-Using `conda`:
+Using `mamba` (or conda):
 
 ```bash
-conda install xtensor-fftw -c conda-forge
+mamba install xtensor-fftw -c conda-forge
 ```
 
 This automatically installs dependencies as well (see [list of dependencies](#dependencies) below).
