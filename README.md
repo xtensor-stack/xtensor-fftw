@@ -58,6 +58,25 @@ _xtensor-fftw_ is a header-only library.
 To use, include one of the header files in the `include` directory, e.g. `xtensor-fftw/basic.hpp`, in your c++ code.
 To compile, one should also include the paths to the FFTW header and libraries and link to the appropriate FFTW library.
 
+FFTW allows three modes of calculus : `float`, `double` and `long double`.  
+The impact of the precision type can be see below in the benchmark results.  
+Use the following matrix to include, compile and link the right target:  
+
+| `#include`                         | `precision types`          | `xtensor-fftw compile options`    | `FFTW compile options`  |
+|------------------------------------|----------------------------|-----------------------------------|-------------------------|
+| xtensor-fftw/basic_float.hpp       | float                      | -DXTENSOR_FFTW_USE_FLOAT=ON       | -DENABLE_FLOAT=ON       |
+| xtensor-fftw/basic_double.hpp      | double                     | -DXTENSOR_FFTW_USE_DOUBLE=ON      | -DENABLE_DOUBLE=ON      |
+| xtensor-fftw/basic_long_double.hpp | long double                | -DXTENSOR_FFTW_USE_LONG_DOUBLE=ON | -DENABLE_LONGDOUBLE=ON  |
+| xtensor-fftw/basic_option.hpp      | depends by compile options | subset of above options           | subset of above options |
+| xtensor-fftw/basic.hpp             | all types                  | no option                         | all above options       |
+
+Specify only the required precision type to reduce the dependencies size of your application (for example for a Mobile App it matters), in fact FFTW needs to compile a specific library for each precision thus creating:
+* `libfftw3f` for float precision
+* `libfftw3` for double precision
+* `libfftw3l` for long double precision
+
+>__*Notes*__: FFTW allow SIMD instructions (SSE,SSE2,AVX,AVX2), OpenMP and Threads optimizations. Take a look to the availables options before compile it.  
+
 The functions in `xtensor-fftw/basic.hpp` mimic the behavior of `numpy.fft` as much as possible.
 In most cases transforms on identical input data should produce identical results within reasonable machine precision error bounds.
 However, there are a few differences that one should keep in mind:
@@ -126,11 +145,10 @@ What follows are instructions for compiling and running the _xtensor-fftw_ tests
 These also serve as an example of how to do build your own code using _xtensor-fftw_ (excluding the GoogleTest specific parts).
 
 ### Dependencies for building tests
+
 The main dependency is a version of FFTW 3.
-For the tests, we need the floating point version which is enabled in the FFTW configuration step using:
-```bash
-./configure --enable-float
-```
+To enable all the precision types, FFTW must be compiled with the related flags:  
+`cmake -DENABLE_FLOAT:BOOL=ON -DENABLE_LONGDOUBLE:BOOL=ON /path/of/fftw3-src`
 
 CMake and _xtensor_ must also be installed in order to compile the _xtensor-fftw_ tests.
 Both can either be installed through Conda or built/installed manually.
@@ -178,6 +196,64 @@ From the build directory, change to the test directory and run the tests:
 cd test
 ./test_xtensor-fftw
 ```
+
+## Advanced Setting
+
+This section shows how to configure `cmake` in order to exploit advanced settings.  
+
+### Use only Double precision
+
+After a standard installation of FFTW library without specify a particular options, this command allow to run Test and Benchmarks using only `double` precision: 
+
+```cmake
+cmake -DBUILD_BENCHMARK=ON -DDOWNLOAD_GBENCH=ON -DBUILD_TESTS=ON -DDOWNLOAD_GTEST=ON -DFFTW_USE_FLOAT=OFF  -DFFTW_USE_LONG_DOUBLE=OFF -DFFTW_USE_DOUBLE=ON  -DCMAKE_BUILD_TYPE=Release  ..
+```
+
+Let's see what `./bench/benchmark_xtensor-fftw` produce:
+
+```
+Run on (16 X 2300 MHz CPU s)
+-------------------------------------------------------------------------------
+Benchmark                                        Time           CPU Iterations
+-------------------------------------------------------------------------------
+rfft1Dxarray_double/TransformAndInvert         66375 ns      66354 ns      10149
+rfft1Dxarray_double/TransformAndInvert_nD      70856 ns      70829 ns      10128
+rfft2Dxarray_double/TransformAndInvert         61264 ns      61256 ns      11456
+rfft2Dxarray_double/TransformAndInvert_nD      62297 ns      62269 ns      10851
+```
+
+### Manually specify FFTW headers and link flags
+
+This can be very useful: in this case FFTW is not required to be installed, just compiled.  
+The following command produce the same results as before:  
+
+```cmake
+cmake -DBUILD_BENCHMARK=ON -DDOWNLOAD_GBENCH=ON -DBUILD_TESTS=ON -DDOWNLOAD_GTEST=ON -DFFTW_USE_FLOAT=OFF -DFFTW_USE_LONG_DOUBLE=OFF -DFFTW_USE_DOUBLE=ON -DFFTW_INCLUDE_CUSTOM_DIRS=/path/to/fftw3/api -DFFTW_LINK_FLAGS="-L/path/to/fftw3/build -lfftw3" ..
+```
+
+### Use Intel MKL
+
+Since 2018 Intel has release a version of his famous MKL (Math Kernel Library) with a C++ and Fortran wrapper of FFTW.  
+Once MKL (or oneAPI MKL) installed on the system enter the following command with adjusted path to your system:
+
+```cmake
+cmake -DBUILD_BENCHMARK=ON -DDOWNLOAD_GBENCH=ON -DBUILD_TESTS=ON -DDOWNLOAD_GTEST=ON -DFFTW_USE_FLOAT=OFF  -DFFTW_USE_LONG_DOUBLE=OFF -DFFTW_USE_DOUBLE=ON -DFFTW_INCLUDE_CUSTOM_DIRS=/opt/intel/oneapi/mkl/2021.2.0/include/fftw -DFFTW_LINK_FLAGS="-L/opt/intel/oneapi/mkl/2021.2.0/lib -L/opt/intel/oneapi/compiler/2021.2.0/mac/compiler/lib -lmkl_core -lmkl_intel_thread -lmkl_intel_lp64 -liomp5" -DRUN_HAVE_STD_REGEX=0 -DCMAKE_BUILD_TYPE=Release ..
+```
+
+Let's see what `./bench/benchmark_xtensor-fftw` now produce:
+
+```
+Run on (16 X 2300 MHz CPU s)
+-------------------------------------------------------------------------------
+Benchmark                                        Time           CPU Iterations
+-------------------------------------------------------------------------------
+rfft1Dxarray_double/TransformAndInvert          9265 ns       9258 ns      58371
+rfft1Dxarray_double/TransformAndInvert_nD       9636 ns       9602 ns      73961
+rfft2Dxarray_double/TransformAndInvert         34428 ns      34427 ns      20216
+rfft2Dxarray_double/TransformAndInvert_nD      37401 ns      37393 ns      19480
+```
+
+>__*Note*__: Before running test or benchmark remember to export the intel library path, e.g. on OS X: `export DYLD_LIBRARY_PATH=/opt/intel/oneapi/mkl/2021.2.0/lib/:/opt/intel/oneapi/compiler/2021.2.0/mac/compiler/lib/`
 
 ## License
 

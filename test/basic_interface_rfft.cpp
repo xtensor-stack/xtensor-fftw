@@ -7,7 +7,7 @@
  * The full license is in the file LICENSE, distributed with this software.
  */
 
-#include <xtensor-fftw/basic.hpp>
+#include <xtensor-fftw/basic_option.hpp>
 #include "basic_interface.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////

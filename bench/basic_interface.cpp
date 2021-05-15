@@ -14,7 +14,7 @@
 #include <cmath> // pow
 #include <array>
 
-#include "xtensor-fftw/basic.hpp"
+#include "xtensor-fftw/basic_option.hpp"
 
 #include "benchmark/benchmark.h"
 
@@ -49,29 +49,58 @@ public:
   xt::xarray<precision_t> a;
 };
 
-using rfft1Dxarray_float = rfft1Dxarray<float>;
-
-BENCHMARK_F(rfft1Dxarray_float, TransformAndInvert)(::benchmark::State& st) {
+auto TransformAndInvert = [](auto& a, ::benchmark::State& st) {
   while (st.KeepRunning()) {
     auto a_fourier = xt::fftw::rfft(a);
     ::benchmark::DoNotOptimize(a_fourier);
     auto should_be_a = xt::fftw::irfft(a_fourier);
     ::benchmark::DoNotOptimize(should_be_a);
   }
-}
+};
 
 ////
 // Real FFT: nD with n = 1
 ////
 
-BENCHMARK_F(rfft1Dxarray_float, TransformAndInvert_nD)(::benchmark::State& st) {
+auto TransformAndInvert_nD = [](auto& a, ::benchmark::State& st) {
   while (st.KeepRunning()) {
     auto a_fourier = xt::fftw::rfftn<1>(a);
     ::benchmark::DoNotOptimize(a_fourier);
     auto should_be_a = xt::fftw::irfftn<1>(a_fourier);
     ::benchmark::DoNotOptimize(should_be_a);
   }
+};
+
+#ifdef XTENSOR_FFTW_USE_FLOAT
+using rfft1Dxarray_float = rfft1Dxarray<float>;
+BENCHMARK_F(rfft1Dxarray_float, TransformAndInvert)(::benchmark::State& st) {
+  TransformAndInvert(a, st);
 }
+BENCHMARK_F(rfft1Dxarray_float, TransformAndInvert_nD)(::benchmark::State& st) {
+  TransformAndInvert_nD(a, st);
+}
+#endif
+
+#ifdef XTENSOR_FFTW_USE_DOUBLE
+using rfft1Dxarray_double = rfft1Dxarray<double>;
+BENCHMARK_F(rfft1Dxarray_double, TransformAndInvert)(::benchmark::State& st) {
+  TransformAndInvert(a, st);
+}
+BENCHMARK_F(rfft1Dxarray_double, TransformAndInvert_nD)(::benchmark::State& st) {
+  TransformAndInvert_nD(a, st);
+}
+#endif
+
+#ifdef XTENSOR_FFTW_USE_LONG_DOUBLE
+using rfft1Dxarray_longdouble = rfft1Dxarray<long double>;
+BENCHMARK_F(rfft1Dxarray_longdouble, TransformAndInvert)(::benchmark::State& st) {
+  TransformAndInvert(a, st);
+}
+BENCHMARK_F(rfft1Dxarray_longdouble, TransformAndInvert_nD)(::benchmark::State& st) {
+  TransformAndInvert_nD(a, st);
+}
+#endif
+
 
 ////
 // Real FFT: 2D
@@ -95,30 +124,59 @@ public:
   xt::xarray<precision_t> a;
 };
 
-using rfft2Dxarray_float = rfft2Dxarray<float>;
 
-BENCHMARK_F(rfft2Dxarray_float, TransformAndInvert)(::benchmark::State& st) {
+auto TransformAndInvert2 = [](auto& a, ::benchmark::State& st) {
   while (st.KeepRunning()) {
     auto a_fourier = xt::fftw::rfft2(a);
     ::benchmark::DoNotOptimize(a_fourier);
     auto should_be_a = xt::fftw::irfft2(a_fourier);
     ::benchmark::DoNotOptimize(should_be_a);
   }
-}
+};
+
 
 ////
 // Real FFT: nD with n = 2
 ////
 
-BENCHMARK_F(rfft2Dxarray_float, TransformAndInvert_nD)(::benchmark::State& st) {
+auto TransformAndInvert_nD2 = [](auto& a, ::benchmark::State& st) {
   while (st.KeepRunning()) {
     auto a_fourier = xt::fftw::rfftn<2>(a);
     ::benchmark::DoNotOptimize(a_fourier);
     auto should_be_a = xt::fftw::irfftn<2>(a_fourier);
     ::benchmark::DoNotOptimize(should_be_a);
   }
-}
+};
 
+#ifdef XTENSOR_FFTW_USE_FLOAT
+using rfft2Dxarray_float = rfft2Dxarray<float>;
+BENCHMARK_F(rfft2Dxarray_float, TransformAndInvert)(::benchmark::State& st) {
+  TransformAndInvert2(a, st);
+}
+BENCHMARK_F(rfft2Dxarray_float, TransformAndInvert_nD)(::benchmark::State& st) {
+  TransformAndInvert_nD2(a, st);
+}
+#endif
+
+#ifdef XTENSOR_FFTW_USE_DOUBLE
+using rfft2Dxarray_double = rfft2Dxarray<double>;
+BENCHMARK_F(rfft2Dxarray_double, TransformAndInvert)(::benchmark::State& st) {
+  TransformAndInvert2(a, st);
+}
+BENCHMARK_F(rfft2Dxarray_double, TransformAndInvert_nD)(::benchmark::State& st) {
+  TransformAndInvert_nD2(a, st);
+}
+#endif
+
+#ifdef XTENSOR_FFTW_USE_LONG_DOUBLE
+using rfft2Dxarray_longdouble = rfft2Dxarray<long double>;
+BENCHMARK_F(rfft2Dxarray_longdouble, TransformAndInvert)(::benchmark::State& st) {
+  TransformAndInvert2(a, st);
+}
+BENCHMARK_F(rfft2Dxarray_longdouble, TransformAndInvert_nD)(::benchmark::State& st) {
+  TransformAndInvert_nD2(a, st);
+}
+#endif
 
 //BENCHMARK_TEMPLATE_F(rfft1Dxarray, TransformAndInvert, double)(::benchmark::State& st) {
 //  for (auto _ : st) {

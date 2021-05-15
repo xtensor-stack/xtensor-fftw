@@ -7,12 +7,12 @@
  */
 
 // real life examples
-
+#ifdef XTENSOR_FFTW_USE_DOUBLE
 #define _USE_MATH_DEFINES  // for MSVC ("Math Constants are not defined in Standard C/C++")
 #include <cmath>           // M_PI
 #include <complex>
 
-#include <xtensor-fftw/basic.hpp>
+#include <xtensor-fftw/basic_double.hpp>
 #include <xtensor-fftw/helper.hpp>
 #include <xtensor/xarray.hpp>
 #include <xtensor/xbuilder.hpp>  // xt::arange
@@ -20,7 +20,6 @@
 #include <xtensor/xio.hpp>
 
 #include "gtest/gtest.h"
-
 
 TEST(examples, sin_derivative) {
   // generate a sinusoid field
@@ -45,3 +44,4 @@ TEST(examples, sin_derivative) {
 //  std::cout << "cos:            " << xt::cos(x) << std::endl;
 //  std::cout << "sin_derivative: " << sin_derivative << std::endl;
 }
+#endif
