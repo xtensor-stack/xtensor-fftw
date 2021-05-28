@@ -101,6 +101,6 @@ add_executable(${XTENSOR_FFTW_TARGET} ${XTENSOR_FFTW_BENCHMARKS} ${XTENSOR_HEADE
 if(DOWNLOAD_GBENCH OR GBENCH_SRC_DIR)
     add_dependencies(${XTENSOR_FFTW_TARGET} benchmark)
 endif()
-target_link_libraries(${XTENSOR_FFTW_TARGET} ${benchmark_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}  ${FFTW_FLOAT_LIB} ${FFTW_DOUBLE_LIB} ${FFTW_LONGDOUBLE_LIB})
+target_link_libraries(${XTENSOR_FFTW_TARGET} ${benchmark_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${FFTW_LINK_FLAGS})
 
 add_custom_target(xbench COMMAND benchmark_xtensor-fftw DEPENDS ${XTENSOR_FFTW_TARGET})
