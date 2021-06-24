@@ -15,7 +15,8 @@ cmake_minimum_required(VERSION 3.1.3)  # 3.1.3 for set(CMAKE_CXX_STANDARD 14)
 project(xtensor-fftw)
 
 set(XTENSOR_FFTW_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
+set(FFTW_INCLUDE_CUSTOM_DIRS "" CACHE STRING "Set the FFTW include dir without the requirement of FFTW installation.")
+set(FFTW_LINK_FLAGS "" CACHE STRING "Set the CXX library to link, e.g.: -L/usr/local -lfftw3")
 #--------------------------------------- versioning
 
 file(STRINGS "${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/xtensor-fftw_config.hpp" xtensor-fftw_version_defines
@@ -46,6 +47,35 @@ OPTION(FIX_RPATH "Correctly set rpath for the linker" OFF)
 OPTION(DEFAULT_COLUMN_MAJOR "Set xtensor default layout to column major. This is currently not supported, since FFTW demands row major layout." OFF)
 OPTION(COVERAGE "Enable coverage compile flags (gcc only!)" OFF)
 OPTION(DISABLE_EXCEPTIONS "Disable C++ exceptions" OFF)
+OPTION(FFTW_USE_FLOAT "Enable FFTW Float type" ON)
+OPTION(FFTW_USE_DOUBLE "Enable FFTW Double type" ON)
+OPTION(FFTW_USE_LONG_DOUBLE "Enable FFTW Long Double type" ON)
+
+if(FFTW_USE_FLOAT)
+    add_definitions(-DXTENSOR_FFTW_USE_FLOAT)
+    set(REQUIRE_FLOAT_LIB "FLOAT_LIB")
+else()
+    set(REQUIRE_FLOAT_LIB "")
+endif()
+
+if(FFTW_USE_DOUBLE)
+    add_definitions(-DXTENSOR_FFTW_USE_DOUBLE)
+    set(REQUIRE_DOUBLE_LIB "DOUBLE_LIB")
+else()
+    set(REQUIRE_DOUBLE_LIB "")
+endif()
+
+if(FFTW_USE_LONG_DOUBLE AND NOT MSVC)
+    add_definitions(-DXTENSOR_FFTW_USE_LONG_DOUBLE)
+    set(REQUIRE_LONG_DOUBLE_LIB "LONGDOUBLE_LIB")
+else()
+    set(REQUIRE_LONG_DOUBLE_LIB "")
+    set(FFTW_USE_LONG_DOUBLE OFF)
+endif()
+
+if(NOT REQUIRE_FLOAT_LIB AND NOT REQUIRE_DOUBLE_LIB AND NOT REQUIRE_LONG_DOUBLE_LIB) 
+    message(FATAL_ERROR "Please, select at least one of the available FFTW type libraries")
+endif()
 
 if (COVERAGE)
     if(NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_COMPILER_ID MATCHES "GNU")
@@ -65,21 +95,6 @@ set(CMAKE_CXX_EXTENSIONS NO)
 # .. our own
 include_directories(${XTENSOR_FFTW_INCLUDE_DIR})
 
-# .. xtensor
-set(xtensor_REQUIRED_VERSION 0.20.9)
-if(TARGET xtensor)
-    set(xtensor_VERSION ${XTENSOR_VERSION_MAJOR}.${XTENSOR_VERSION_MINOR}.${XTENSOR_VERSION_PATCH})
-    # Note: This is not SEMVER compatible comparison
-    if( NOT ${xtensor_VERSION} VERSION_GREATER_EQUAL ${xtensor_REQUIRED_VERSION})
-        message(ERROR "Mismatch xtensor versions. Found '${xtensor_VERSION}' but requires: '${xtensor_REQUIRED_VERSION}'")
-    else()
-        message(STATUS "Found xtensor v${xtensor_VERSION}")
-    endif()
-else()
-    find_package(xtensor ${xtensor_REQUIRED_VERSION} REQUIRED)
-    message(STATUS "Found xtensor: ${xtensor_INCLUDE_DIRS}/xtensor")
-endif()
-
 # .. xtl
 set(xtl_REQUIRED_VERSION 0.6.9)
 if(TARGET xtl)
@@ -95,18 +110,51 @@ else()
     message(STATUS "Found xtl: ${xtl_INCLUDE_DIRS}/xtl")
 endif()
 
-# .. fftw
-if(MSVC)
-    # no long double component, since in the Windows conda-forge build it is not available
-    # and the "official" prebuilt long double library can only be used from MinGW
-    find_package(FFTW REQUIRED
-            COMPONENTS FLOAT_LIB DOUBLE_LIB)
-    add_definitions(-DFFTW_NO_LONGDOUBLE)
+# .. xtensor
+set(xtensor_REQUIRED_VERSION 0.20.9)
+if(TARGET xtensor)
+    set(xtensor_VERSION ${XTENSOR_VERSION_MAJOR}.${XTENSOR_VERSION_MINOR}.${XTENSOR_VERSION_PATCH})
+    # Note: This is not SEMVER compatible comparison
+    if( NOT ${xtensor_VERSION} VERSION_GREATER_EQUAL ${xtensor_REQUIRED_VERSION})
+        message(ERROR "Mismatch xtensor versions. Found '${xtensor_VERSION}' but requires: '${xtensor_REQUIRED_VERSION}'")
+    else()
+        message(STATUS "Found xtensor v${xtensor_VERSION}")
+    endif()
 else()
-    find_package(FFTW REQUIRED
-            COMPONENTS FLOAT_LIB DOUBLE_LIB LONGDOUBLE_LIB)
-endif(MSVC)
-include_directories(${FFTW_INCLUDE_DIRS})
+    find_package(xtensor ${xtensor_REQUIRED_VERSION} REQUIRED)
+    message(STATUS "Found xtensor: ${xtensor_INCLUDE_DIRS}/xtensor")
+endif()
+
+# .. fftw
+if(NOT "${FFTW_INCLUDE_CUSTOM_DIRS}" STREQUAL "")
+    include_directories(${FFTW_INCLUDE_CUSTOM_DIRS})
+else()
+    if(MSVC)
+        # no long double component, since in the Windows conda-forge build it is not available
+        # and the "official" prebuilt long double library can only be used from MinGW
+        find_package(FFTW REQUIRED
+                COMPONENTS ${REQUIRE_FLOAT_LIB} ${REQUIRE_DOUBLE_LIB})
+        add_definitions(-DFFTW_NO_LONGDOUBLE)
+    else(MSVC)
+        find_package(FFTW REQUIRED
+                COMPONENTS ${REQUIRE_FLOAT_LIB} ${REQUIRE_DOUBLE_LIB} ${REQUIRE_LONG_DOUBLE_LIB})
+    endif()
+    include_directories(${FFTW_INCLUDE_DIRS})
+
+    # link only with selected libraries
+    set(FFTW_LINK_FLAGS "")
+    if(FFTW_USE_FLOAT)
+        set(FFTW_LINK_FLAGS ${FFTW_FLOAT_LIB})
+    endif()
+
+    if(FFTW_USE_DOUBLE)
+        set(FFTW_LINK_FLAGS ${FFTW_LINK_FLAGS} ${FFTW_DOUBLE_LIB})
+    endif()
+
+    if(FFTW_USE_LONG_DOUBLE)
+        set(FFTW_LINK_FLAGS ${FFTW_LINK_FLAGS} ${FFTW_LONGDOUBLE_LIB})
+    endif()
+endif()
 
 # warnings (gcc and clang)
 if (COMPILE_WARNINGS)
@@ -129,7 +177,12 @@ endif(FIX_RPATH)
 #--------------------------------------- library contents
 
 set(XTENSOR_FFTW_HEADERS
+        ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/basic_double.hpp
+        ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/basic_float.hpp
+        ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/basic_long_double.hpp
+        ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/basic_option.hpp
         ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/basic.hpp
+        ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/common.hpp
         ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/helper.hpp
         ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/xtensor-fftw_config.hpp
 )

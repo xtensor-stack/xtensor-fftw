@@ -22,12 +22,33 @@
 
 #include "gtest/gtest.h"
 
-// the GoogleTest list of typed test cases
-#ifdef FFTW_NO_LONGDOUBLE
-typedef ::testing::Types<float, double> MyTypes;
+#ifndef XTENSOR_FFTW_USE_FLOAT
+  #define Add_Float
 #else
-typedef ::testing::Types<float, double, long double> MyTypes;
-#endif  // FFTW_NO_LONGDOUBLE
+  #if defined(XTENSOR_FFTW_USE_DOUBLE) || defined(XTENSOR_FFTW_USE_LONG_DOUBLE)
+    #define Add_Float float,
+  #else
+    #define Add_Float float
+  #endif
+#endif
+
+#ifndef XTENSOR_FFTW_USE_DOUBLE
+  #define Add_Double
+#else
+  #if defined(XTENSOR_FFTW_USE_LONG_DOUBLE)
+    #define Add_Double double,
+  #else
+    #define Add_Double double
+  #endif
+#endif
+
+#ifndef XTENSOR_FFTW_USE_LONG_DOUBLE
+  #define Add_Long_Double
+#else
+  #define Add_Long_Double long double
+#endif
+
+typedef ::testing::Types<Add_Float Add_Double Add_Long_Double> MyTypes;
 
 // Generates a dim-dimensional array of size n in each dimension, filled with random numbers between 0 and the numeric
 // limit of type T divided by pow(n, dim) (the latter to keep the FFTs from generating infs and nans).
