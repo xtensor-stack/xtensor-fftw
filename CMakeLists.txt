@@ -73,7 +73,7 @@ else()
     set(FFTW_USE_LONG_DOUBLE OFF)
 endif()
 
-if(NOT FFTW_USE_FLOAT AND NOT FFTW_USE_DOUBLE AND NOT FFTW_USE_LONG_DOUBLE) 
+if(NOT REQUIRE_FLOAT_LIB AND NOT REQUIRE_DOUBLE_LIB AND NOT REQUIRE_LONG_DOUBLE_LIB) 
     message(FATAL_ERROR "Please, select at least one of the available FFTW type libraries")
 endif()
 
@@ -177,7 +177,12 @@ endif(FIX_RPATH)
 #--------------------------------------- library contents
 
 set(XTENSOR_FFTW_HEADERS
+        ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/basic_double.hpp
+        ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/basic_float.hpp
+        ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/basic_long_double.hpp
+        ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/basic_option.hpp
         ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/basic.hpp
+        ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/common.hpp
         ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/helper.hpp
         ${XTENSOR_FFTW_INCLUDE_DIR}/xtensor-fftw/xtensor-fftw_config.hpp
 )
