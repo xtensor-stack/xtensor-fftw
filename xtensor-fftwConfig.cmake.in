@@ -16,6 +16,22 @@
 
 @PACKAGE_INIT@
 
+if(FFTW_USE_FLOAT)
+    add_definitions(-DXTENSOR_FFTW_USE_FLOAT)
+endif()
+
+if(FFTW_USE_DOUBLE)
+    add_definitions(-DXTENSOR_FFTW_USE_DOUBLE)
+endif()
+
+if(FFTW_USE_LONG_DOUBLE AND NOT MSVC)
+    add_definitions(-DXTENSOR_FFTW_USE_LONG_DOUBLE)
+endif()
+
+if(NOT FFTW_USE_FLOAT AND NOT FFTW_USE_DOUBLE AND NOT FFTW_USE_LONG_DOUBLE) 
+    message(FATAL_ERROR "Please, select at least one of the available FFTW type libraries")
+endif()
+
 set(PN xtensor-fftw)
 set_and_check(${PN}_INCLUDE_DIRS "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_INCLUDEDIR@")
 set(${PN}_LIBRARY "")
