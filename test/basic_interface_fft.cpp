@@ -18,7 +18,7 @@
 template <typename T>
 class TransformAndInvert_FFT : public ::testing::Test {};
 
-TYPED_TEST_CASE(TransformAndInvert_FFT, MyTypes);
+TYPED_TEST_SUITE(TransformAndInvert_FFT, MyTypes);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Regular FFT (complex to complex)

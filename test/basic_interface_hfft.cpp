@@ -18,7 +18,7 @@
 template <typename T>
 class TransformAndInvert_hermFFT : public ::testing::Test {};
 
-TYPED_TEST_CASE(TransformAndInvert_hermFFT, MyTypes);
+TYPED_TEST_SUITE(TransformAndInvert_hermFFT, MyTypes);
 
 
 ///////////////////////////////////////////////////////////////////////////////

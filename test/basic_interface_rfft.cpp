@@ -18,7 +18,7 @@
 template <typename T>
 class TransformAndInvert_realFFT : public ::testing::Test {};
 
-TYPED_TEST_CASE(TransformAndInvert_realFFT, MyTypes);
+TYPED_TEST_SUITE(TransformAndInvert_realFFT, MyTypes);
 
 
 ///////////////////////////////////////////////////////////////////////////////
