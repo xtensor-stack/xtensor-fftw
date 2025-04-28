@@ -15,7 +15,7 @@
 #
 ############################################################################
 
-cmake_minimum_required(VERSION 3.29)  # 3.1.3 for set(CMAKE_CXX_STANDARD 14)
+cmake_minimum_required(VERSION 3.29)
 
 if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     project(xtensor-fftw-bench)
