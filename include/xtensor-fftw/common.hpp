@@ -14,10 +14,9 @@
 #ifndef XTENSOR_FFTW_COMMON_HPP
 #define XTENSOR_FFTW_COMMON_HPP
 
-#include <xtensor/xarray.hpp>
-#include "xtensor/xcomplex.hpp"
-#include "xtensor/xeval.hpp"
-#include <xtl/xcomplex.hpp>
+#include <xtensor/containers/xarray.hpp>
+#include <xtensor/core/xeval.hpp>
+#include <xtensor/misc/xcomplex.hpp>
 #include <complex>
 #include <tuple>
 #include <type_traits>

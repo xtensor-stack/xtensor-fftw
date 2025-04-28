@@ -10,7 +10,7 @@
 # - Copyright 2017 Johan Mabille (rpath fix)
 #
 
-cmake_minimum_required(VERSION 3.1.3)  # 3.1.3 for set(CMAKE_CXX_STANDARD 14)
+cmake_minimum_required(VERSION 3.29)  # 3.1.3 for set(CMAKE_CXX_STANDARD 14)
 
 project(xtensor-fftw)
 
@@ -86,7 +86,7 @@ endif()
 #--------------------------------------- build parameters for all targets
 # c++ standard build options
 # N.B.: these have to be set before defining targets!
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 set(CMAKE_CXX_EXTENSIONS NO)
 
