@@ -20,6 +20,7 @@ jobs:
             - name: Set up micromamba
               uses: mamba-org/setup-micromamba@v1
               with:
+                  environment-name: ci
                   create-args: >-
                       cmake
                       fftw
