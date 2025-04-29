@@ -37,9 +37,7 @@ jobs:
                   mkdir build
                   cd build
                   cmake .. -DDOWNLOAD_GTEST=ON 
-                  cmake --build test_xtensor-fftw
+                  cmake --build test
 
             - name: Run tests
-              run: |
-                  cd test
-                  ./test_xtensor-fftw
+              run: build/test/test_xtensor-fftw
