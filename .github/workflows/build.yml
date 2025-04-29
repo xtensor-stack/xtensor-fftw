@@ -6,6 +6,10 @@ on:
             - main
     pull_request:
 
+defaults:
+  run:
+    shell: bash -e -l {0}
+
 jobs:
     build-and-test:
         runs-on: ${{ matrix.os }}
@@ -21,6 +25,7 @@ jobs:
               uses: mamba-org/setup-micromamba@v1
               with:
                   environment-name: ci
+                  init-shell: bash
                   create-args: >-
                       cmake
                       fftw
