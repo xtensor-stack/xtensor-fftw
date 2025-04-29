@@ -15,10 +15,10 @@
 #include <array>
 
 #include <stdexcept> // workaround for xt bug, where only including xarray does not include stdexcept; TODO: remove this include when bug is fixed!
-#include <xtensor/xarray.hpp>
-#include <xtensor/xio.hpp>
-#include <xtensor/xrandom.hpp>
-#include <xtensor/xcomplex.hpp>
+#include <xtensor/containers/xarray.hpp>
+#include <xtensor/io/xio.hpp>
+#include <xtensor/generators/xrandom.hpp>
+#include <xtensor/misc/xcomplex.hpp>
 
 #include "gtest/gtest.h"
 

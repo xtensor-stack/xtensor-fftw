@@ -14,10 +14,10 @@
 
 #include <xtensor-fftw/basic_double.hpp>
 #include <xtensor-fftw/helper.hpp>
-#include <xtensor/xarray.hpp>
-#include <xtensor/xbuilder.hpp>  // xt::arange
-#include <xtensor/xmath.hpp>  // xt::sin, cos
-#include <xtensor/xio.hpp>
+#include <xtensor/containers/xarray.hpp>
+#include <xtensor/generators/xbuilder.hpp>  // xt::arange
+#include <xtensor/core/xmath.hpp>  // xt::sin, cos
+#include <xtensor/io/xio.hpp>
 
 #include "gtest/gtest.h"
 

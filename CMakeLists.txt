@@ -10,7 +10,7 @@
 # - Copyright 2017 Johan Mabille (rpath fix)
 #
 
-cmake_minimum_required(VERSION 3.1.3)  # 3.1.3 for set(CMAKE_CXX_STANDARD 14)
+cmake_minimum_required(VERSION 3.29) 
 
 project(xtensor-fftw)
 
@@ -86,7 +86,7 @@ endif()
 #--------------------------------------- build parameters for all targets
 # c++ standard build options
 # N.B.: these have to be set before defining targets!
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 set(CMAKE_CXX_EXTENSIONS NO)
 
@@ -96,7 +96,7 @@ set(CMAKE_CXX_EXTENSIONS NO)
 include_directories(${XTENSOR_FFTW_INCLUDE_DIR})
 
 # .. xtl
-set(xtl_REQUIRED_VERSION 0.6.9)
+set(xtl_REQUIRED_VERSION 0.8.0)
 if(TARGET xtl)
     set(xtl_VERSION ${XTL_VERSION_MAJOR}.${XTL_VERSION_MINOR}.${XTL_VERSION_PATCH})
     # Note: This is not SEMVER compatible comparison
@@ -111,7 +111,7 @@ else()
 endif()
 
 # .. xtensor
-set(xtensor_REQUIRED_VERSION 0.20.9)
+set(xtensor_REQUIRED_VERSION 0.26.0)
 if(TARGET xtensor)
     set(xtensor_VERSION ${XTENSOR_VERSION_MAJOR}.${XTENSOR_VERSION_MINOR}.${XTENSOR_VERSION_PATCH})
     # Note: This is not SEMVER compatible comparison

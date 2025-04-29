@@ -12,7 +12,7 @@
 #define _USE_MATH_DEFINES  // for MSVC ("Math Constants are not defined in Standard C/C++")
 #include <cmath>           // M_PI
 
-#include <xtensor/xarray.hpp>
+#include <xtensor/containers/xarray.hpp>
 
 namespace xt {
   namespace fftw {

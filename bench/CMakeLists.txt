@@ -15,7 +15,7 @@
 #
 ############################################################################
 
-cmake_minimum_required(VERSION 3.1.3)  # 3.1.3 for set(CMAKE_CXX_STANDARD 14)
+cmake_minimum_required(VERSION 3.29)
 
 if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     project(xtensor-fftw-bench)
@@ -32,7 +32,7 @@ include(CheckCXXCompilerFlag)
 
 #string(TOUPPER "${CMAKE_BUILD_TYPE}" U_CMAKE_BUILD_TYPE)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 20)
 
 #if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Intel")
 #    add_compile_options(-march=native) #-Wunused-parameter -Wextra -Wreorder -Wconversion)

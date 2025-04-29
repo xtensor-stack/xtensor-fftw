@@ -157,7 +157,7 @@ install:
     - export PATH="$HOME/miniconda/bin:$PATH"
     - hash -r
     - conda update -yq conda
-    - conda install -y cmake xtl==0.6.9 xtensor=0.21.2 nlohmann_json=3.7.1 -c conda-forge
+    - conda install -y cmake xtl=>0.8.0 xtensor=>0.26.0 nlohmann_json=3.7.1 -c conda-forge
     - |
       if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
         conda install -y fftw -c conda-forge
