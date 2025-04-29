@@ -1,0 +1,39 @@
+name: Build and Test xtensor-fftw
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+
+jobs:
+    build-and-test:
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-latest, windows-latest]
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+
+            - name: Set up micromamba
+              uses: mamba-org/setup-micromamba@v1
+              with:
+                  create-args: >-
+                      cmake
+                      fftw
+                      xtensor
+                      xtl
+
+            - name: Configure and build
+              run: |
+                  mkdir build
+                  cd build
+                  cmake .. -DDOWNLOAD_GTEST=ON 
+                  cmake --build test_xtensor-fftw
+
+            - name: Run tests
+              run: |
+                  cd test
+                  ./test_xtensor-fftw
