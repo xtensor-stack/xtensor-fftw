@@ -1,0 +1,47 @@
+name: Build and Test xtensor-fftw
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+
+defaults:
+  run:
+    shell: bash -e -l {0}
+
+jobs:
+    build-and-test:
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-13, macos-latest, windows-latest]
+
+        steps:
+            - name: Setup MSVC on Windows
+              if: matrix.os == 'windows-latest'
+              uses: ilammy/msvc-dev-cmd@v1
+      
+            - name: Checkout repository
+              uses: actions/checkout@v3
+
+            - name: Set up micromamba
+              uses: mamba-org/setup-micromamba@v1
+              with:
+                  environment-name: ci
+                  init-shell: bash
+                  create-args: >-
+                      cmake
+                      fftw
+                      xtensor
+                      xtl
+
+            - name: Configure and build
+              run: |
+                  mkdir build
+                  cd build
+                  cmake .. -DDOWNLOAD_GTEST=ON -DFFTW_USE_LONG_DOUBLE=${{ matrix.os == 'macos-latest' && 'OFF' || 'ON' }}
+                  cmake --build test
+
+            - name: Run tests
+              run: build/test/test_xtensor-fftw
