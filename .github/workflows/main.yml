@@ -13,29 +13,39 @@ defaults:
   run:
     shell: bash -e -l {0}
 jobs:
-  unix:
+  build-and-test:
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.name }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-24.04
+          - os: ubuntu-latest
             name: Linux
             extra-cmake-args: ""
-          - os: ubuntu-24.04
+          - os: ubuntu-latest
             name: Linux (no exceptions)
             extra-cmake-args: "-DDISABLE_EXCEPTIONS=ON"
-          - os: macos-13
-            name: macOS
+          - os: macos-latest
+            name: macOS arm
             extra-cmake-args: ""
+          - os: macos-latest-intel
+            name: macOS intel
+            extra-cmake-args: ""
+          - os: windows-latest
+            name: Windows
+            extra-cmake-args: "-DCMAKE_BUILD_TYPE=Release"
 
     steps:
+      - name: Setup MSVC
+        if: matrix.os == 'windows-latest'
+        uses: ilammy/msvc-dev-cmd@v1
+
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set conda environment
-        uses: mamba-org/setup-micromamba@add3a49764cedee8ee24e82dfde87f5bc2914462
+        uses: mamba-org/setup-micromamba@v3
         with:
           environment-name: xtensor-fftw
           init-shell: bash
@@ -59,45 +69,12 @@ jobs:
         working-directory: build
         run: cmake --build . --target test_xtensor-fftw --parallel 2
 
-      - name: Run tests
+      - name: Run tests (Unix)
+        if: matrix.os != 'windows-latest'
         working-directory: build/test
         run: ./test_xtensor-fftw
 
-  windows:
-    runs-on: windows-latest
-
-    steps:
-      - name: Setup MSVC
-        uses: ilammy/msvc-dev-cmd@v1
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set conda environment
-        uses: mamba-org/setup-micromamba@add3a49764cedee8ee24e82dfde87f5bc2914462
-        with:
-          environment-name: xtensor-fftw
-          init-shell: bash
-          cache-downloads: true
-          condarc: |
-            channels:
-              - conda-forge
-            channel_priority: strict
-          create-args: >-
-            cmake
-            ninja
-            xtl
-            xtensor
-            fftw
-            gtest
-
-      - name: Configure using CMake
-        run: cmake -G Ninja -Bbuild -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DCMAKE_PREFIX_PATH=$CONDA_PREFIX
-
-      - name: Build
-        working-directory: build
-        run: cmake --build . --target test_xtensor-fftw --parallel 2
-
-      - name: Run tests
+      - name: Run tests (Windows)
+        if: matrix.os == 'windows-latest'
         working-directory: build/test
         run: ./test_xtensor-fftw.exe
