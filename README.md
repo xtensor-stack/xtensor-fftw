@@ -5,8 +5,7 @@
 [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/xtensor-stack/xtensor-fftw/stable?filepath=notebooks%2Fintensely_edgy_cat.ipynb)
 [![Join the Gitter Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/QuantStack/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![Travis](https://travis-ci.org/xtensor-stack/xtensor-fftw.svg?branch=master)](https://travis-ci.org/xtensor-stack/xtensor-fftw)
-[![Appveyor](https://ci.appveyor.com/api/projects/status/6h369haechmjeofj/branch/master?svg=true)](https://ci.appveyor.com/project/egpbos/xtensor-fftw-ivn9w/branch/master)
+[![CI](https://github.com/xtensor-stack/xtensor-fftw/actions/workflows/main.yml/badge.svg)](https://github.com/xtensor-stack/xtensor-fftw/actions/workflows/main.yml)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/18861a283cf84b2e95886ba79c66e028)](https://www.codacy.com/app/egpbos/xtensor-fftw?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=egpbos/xtensor-fftw&amp;utm_campaign=Badge_Grade)
 [![Coverage Status](https://coveralls.io/repos/github/egpbos/xtensor-fftw/badge.svg)](https://coveralls.io/github/egpbos/xtensor-fftw)
 
