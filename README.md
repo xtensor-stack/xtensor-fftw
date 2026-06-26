@@ -44,12 +44,7 @@ make install
 * [xtensor](https://github.com/xtensor-stack/xtensor)
 * [xtl](https://github.com/xtensor-stack/xtl)
 * [FFTW](http://www.fftw.org/) version 3
-* A compiler supporting C++14
-
-| `xtensor-fftw` | `xtensor`        | `xtl`   | `fftw`  |
-|----------------|------------------|---------|---------|
-|  master        | >=0.20.9,<0.22   |  ^0.6.9 | ^3.3.8  |
-|  0.2.6         | >=0.20.9,<0.22   |  ^0.6.9 | ^3.3.8  |
+* A compiler supporting C++20
 
 ## Usage
 
